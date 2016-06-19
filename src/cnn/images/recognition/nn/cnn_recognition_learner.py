@@ -39,7 +39,7 @@ class cnn_learner:
         
         mnist = self.init_mnist()
         # Launch the graph
-        with tf.Session() as sess:
+        with tf.Graph().as_default(), tf.Session() as sess:
             sess.run(init)
             step = 1
             # Keep training until reach max iterations
@@ -53,7 +53,7 @@ class cnn_learner:
                     loss, acc = sess.run([self.cost, self.accuracy], feed_dict={self.cnn_fnc.x: batch_x,
                                                                       self.cnn_fnc.y: batch_y,
                                                                       self.cnn_fnc.keep_prob: 1.})
-                    print "Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
+                    print "Iter " + str(step * batch_size) + ", Minibatch Loss= " + \
                           "{:.6f}".format(loss) + ", Training Accuracy= " + \
                           "{:.5f}".format(acc)
                 step += 1
@@ -71,5 +71,5 @@ def main():
     lrn = cnn_learner()
     lrn.traint()
     
-if __name__ ==  "__main__":
+if __name__ == "__main__":
     main()   
