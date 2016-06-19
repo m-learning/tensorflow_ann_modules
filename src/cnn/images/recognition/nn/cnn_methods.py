@@ -1,6 +1,8 @@
 '''
 Created on Jun 18, 2016
 
+Initializes convolutional and pooling layers for network
+
 @author: Levan Tsinadze
 '''
 

@@ -40,6 +40,7 @@ class cnn_learner:
         mnist = self.init_mnist()
         # Launch the graph
         with tf.Graph().as_default(), tf.Session() as sess:
+            
             sess.run(init)
             step = 1
             # Keep training until reach max iterations
