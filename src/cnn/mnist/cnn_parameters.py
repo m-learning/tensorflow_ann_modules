@@ -33,6 +33,7 @@ class cnn_weights:
             'out': tf.Variable(tf.random_normal([1024, N_CLASSES]))
         }
         
+        # Biases
         self.biases = {
             'bc1': tf.Variable(tf.random_normal([32])),
             'bc2': tf.Variable(tf.random_normal([64])),
