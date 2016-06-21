@@ -8,6 +8,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 from cnn_methods import cnn_functions
 import cnn_parameters
+from cnn_files import training_file
 
 # Parameters
 learning_rate = 0.001
@@ -26,8 +27,13 @@ class cnn_learner:
         self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.cost)
         
     
+    #Initializes and gets training data
     def init_mnist(self):
-        mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
+        
+        self.tr_files = training_file()
+        data_path = self.tr_files.get_data_directory()
+        mnist = input_data.read_data_sets(data_path, one_hot=True)
+        
         return mnist
     
     def traint(self):
@@ -38,6 +44,7 @@ class cnn_learner:
         saver = tf.train.Saver()
         
         mnist = self.init_mnist()
+        parameters_path = self.tr_files.get_files_directory()
         # Launch the graph
         with tf.Session() as sess:
             
@@ -59,7 +66,7 @@ class cnn_learner:
                           "{:.5f}".format(acc)
                 step += 1
             print "Optimization Finished!"
-            save_path = saver.save(sess, cnn_parameters.PARAMETERS_FILE_CONV_PATH)
+            save_path = saver.save(sess, parameters_path)
             print "Model saved in file: %s" % save_path
         
             # Calculate accuracy for 256 mnist test images
