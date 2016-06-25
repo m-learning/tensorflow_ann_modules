@@ -8,7 +8,7 @@ Files for training data
 
 import os
 
-PATH_CNN_DIRECTORY = '/cnn/mnist/'
+PATH_CNN_DIRECTORY = '/datas/mnist/'
 PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
 WEIGHTS_FILE = 'conv_model.ckpt'
@@ -21,7 +21,7 @@ class training_file:
         current_dir = os.path.dirname(os.path.realpath(__file__))
         
         dirs = os.path.split(current_dir)
-        for _ in range(2):
+        for _ in range(1):
             dirs = os.path.split(dirs[0])
         current_dir = dirs[0]
         

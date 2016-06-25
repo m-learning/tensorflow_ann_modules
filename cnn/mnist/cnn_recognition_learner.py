@@ -27,7 +27,7 @@ class cnn_learner:
         self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.cost)
         
     
-    #Initializes and gets training data
+    # Initializes and gets training data
     def init_mnist(self):
         
         self.tr_files = training_file()
