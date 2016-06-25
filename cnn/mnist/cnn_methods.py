@@ -20,7 +20,7 @@ class cnn_functions:
         self.keep_prob = tf.placeholder(tf.float32)  # dropout (keep probability)
 
 
-    # Create some wrappers for simplicity
+    # Convolutional layer
     def conv2d(self, x, W, b, strides=1):
         
         # Conv2D wrapper, with bias and relu activation
@@ -29,7 +29,7 @@ class cnn_functions:
         
         return tf.nn.relu(x)
     
-    
+    # Pooling layer
     def maxpool2d(self, x, k=2):
         # MaxPool2D wrapper
         return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1],

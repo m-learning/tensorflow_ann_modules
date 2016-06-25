@@ -17,6 +17,7 @@ CNN_DROPOUT = 0.75  # Dropout, probability to keep units
 PARAMETERS_FILE_CONV_PATH = '/storage/ann/digits/parameters/mt/conv_model.ckpt'
 PARAMETERS_FILE_CONV_PATH_SAVED = '/storage/ann/digits/parameters_saved/mt/conv_model.ckpt'
 
+# Defile weights and biases
 class cnn_weights:
     
     def __init__(self):

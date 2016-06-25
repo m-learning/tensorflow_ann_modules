@@ -1,7 +1,7 @@
 MNIST Digit Recognition
 ==========================
 
-Digit recognition CNN on **MNIST** training set on _TensorFlow_ framework
+Digit recognition CNN for **MNIST** training set on _TensorFlow_ framework
 
 # Use it!
 =========
