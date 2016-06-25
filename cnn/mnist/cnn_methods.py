@@ -10,6 +10,7 @@ import tensorflow as tf
 import cnn_parameters as pr
 from cnn_parameters import cnn_weights
 
+# CNN network functions
 class cnn_functions:
     
     def __init__(self):
