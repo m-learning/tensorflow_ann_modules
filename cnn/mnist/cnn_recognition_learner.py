@@ -81,5 +81,5 @@ def main():
         lrn = cnn_learner()
         lrn.traint()
     
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()   

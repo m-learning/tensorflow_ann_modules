@@ -64,7 +64,7 @@ class cnn_functions:
         
         return out
     
-    # Neural network training parameters
+    # Neural network training functions
     def cnn_pred(self):
         
         cnn_params = cnn_weights()
