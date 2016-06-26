@@ -2,4 +2,4 @@
 **/.pydevproject
 **/.settings/
 **/*.pyc
-cnn/mnist/trained_data/*
+**/trained_data

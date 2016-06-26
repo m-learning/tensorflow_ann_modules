@@ -44,7 +44,7 @@ class cnn_learner:
         saver = tf.train.Saver()
         
         mnist = self.init_mnist()
-        parameters_path = self.tr_files.get_files_directory()
+        parameters_path = self.tr_files.get_or_init_files_path()
         # Launch the graph
         with tf.Session() as sess:
             

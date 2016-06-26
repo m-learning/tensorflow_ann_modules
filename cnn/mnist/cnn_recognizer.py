@@ -4,9 +4,9 @@ Recognizes for image
 @author: Levan Tsinadze
 '''
 import tensorflow as tf
-from cnn.images.recognition import cnn_functions
 from cnn.mnist.cnn_input_reader import read_input_file
 from cnn_files import training_file
+from cnn_methods import cnn_functions
 
 class image_recognizer:
     
@@ -22,7 +22,7 @@ class image_recognizer:
             saver = tf.train.Saver()
             tf.initialize_all_variables()
             tr_files = training_file()
-            model_path = tr_files.get_files_directory()
+            model_path = tr_files.get_or_init_files_path()
             with tf.Session() as sess:
                 print 'Start session'
                 # Initialize variables
