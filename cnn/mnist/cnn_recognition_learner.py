@@ -16,6 +16,7 @@ training_iters = 200000
 batch_size = 128
 display_step = 10
 
+# Training methods
 class cnn_learner:
     
     def __init__(self):
@@ -36,6 +37,7 @@ class cnn_learner:
         
         return mnist
     
+    # Trains neural net
     def traint(self):
         
         # Initializing the variables

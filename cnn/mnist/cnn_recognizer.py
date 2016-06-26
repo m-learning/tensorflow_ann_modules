@@ -8,9 +8,10 @@ from cnn.mnist.cnn_input_reader import read_input_file
 from cnn_files import training_file
 from cnn_methods import cnn_functions
 
+# Recognizer class
 class image_recognizer:
     
-    
+        # Recognizes digit from file
         def recognize_image(self, image_file_path):
         
             cnn_fnc = cnn_functions()

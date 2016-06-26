@@ -13,10 +13,6 @@ N_INPUT = 784  # MNIST data input (img shape: 28*28)
 N_CLASSES = 10  # MNIST total classes (0-9 digits)
 CNN_DROPOUT = 0.75  # Dropout, probability to keep units
 
-# File path to save trained model
-PARAMETERS_FILE_CONV_PATH = '/storage/ann/digits/parameters/mt/conv_model.ckpt'
-PARAMETERS_FILE_CONV_PATH_SAVED = '/storage/ann/digits/parameters_saved/mt/conv_model.ckpt'
-
 # Defile weights and biases
 class cnn_weights:
     
