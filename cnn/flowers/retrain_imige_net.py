@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+from cnn.flowers.cnn_files import training_file
 """Simple transfer learning with an Inception v3 architecture model.
 
 This example shows how to take a Inception v3 architecture model trained on
@@ -649,6 +650,9 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
 
 def main(_):
   
+  # Gets training set for neural network
+  tr_file = training_file()
+  tr_file.get_or_init_training_set()
   # Set up the pre-trained graph.
   maybe_download_and_extract()
   graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (

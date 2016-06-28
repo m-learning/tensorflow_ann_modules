@@ -5,3 +5,5 @@
 **/trained_data
 **/bottleneck
 **/imagenet
+**/training_arch
+**/test_images
