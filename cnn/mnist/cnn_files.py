@@ -9,6 +9,7 @@ Files for training data
 import os
 
 PATH_CNN_DIRECTORY = '/datas/mnist/'
+PATH_FLOWER_DIRECTORY = '/datas/mnist/'
 PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
 WEIGHTS_FILE = 'conv_model.ckpt'

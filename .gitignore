@@ -3,3 +3,5 @@
 **/.settings/
 **/*.pyc
 **/trained_data
+**/bottleneck
+**/imagenet
