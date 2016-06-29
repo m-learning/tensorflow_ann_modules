@@ -8,3 +8,5 @@
 **/training_arch
 **/test_images
 /datas/flowers/
+.idea/
+*.iml
