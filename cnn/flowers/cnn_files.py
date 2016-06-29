@@ -17,7 +17,8 @@ from six.moves import urllib
 
 PATH_CNN_DIRECTORY = '/datas/flowers/'
 PATH_FOR_PARAMETERS = 'trained_data/'
-PATH_FOR_TRAINING = 'training_data/flower_photos/'
+PATH_FOR_TRAINING = 'training_data/'
+PATH_FOR_TRAINING_PHOTOS = 'flower_photos/'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
 TEST_IMAGES_DIR = 'test_images/'
@@ -46,11 +47,19 @@ class training_file:
       
       return current_dir
     
+    def get_training_directory(self):
+      
+      current_dir = self.get_data_general_directory()
+      current_dir += PATH_FOR_TRAINING
+      
+      return current_dir
+      
+    
     # Gets directory for training set and parameters
     def get_data_directory(self):
         
-        current_dir = self.get_data_general_directory()
-        current_dir += PATH_FOR_TRAINING
+        current_dir = self.get_training_directory()
+        current_dir += PATH_FOR_TRAINING_PHOTOS
         
         return current_dir
     
@@ -105,14 +114,16 @@ class training_file:
         def _progress(count, block_size, total_size):
           sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
           sys.stdout.flush()
-      filepath, _ = urllib.request.urlretrieve(TRAINIG_SET_URL, filepath, _progress)
+        filepath, _ = urllib.request.urlretrieve(TRAINIG_SET_URL, filepath, _progress)
       print()
       statinfo = os.stat(filepath)
       print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
-      training_dir = self.get_data_directory()
+      training_dir = self.get_training_directory()
       if not os.path.exists(training_dir):
         os.mkdir(training_dir)  
       else:
         shutil.rmtree(training_dir, ignore_errors=True)
         os.mkdir(training_dir)
       tarfile.open(filepath, 'r:gz').extractall(training_dir)
+
+print training_file().get_or_init_training_set()

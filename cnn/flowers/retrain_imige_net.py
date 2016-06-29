@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-from cnn.flowers.cnn_files import training_file
+
 """Simple transfer learning with an Inception v3 architecture model.
 
 This example shows how to take a Inception v3 architecture model trained on
@@ -73,6 +73,7 @@ from tensorflow.python.framework import tensor_shape
 from tensorflow.python.platform import gfile
 
 import cnn.flowers.training_flags as tr_flags
+from cnn.flowers.cnn_files import training_file
 
 # Initializes flags
 FLAGS = tr_flags.init_flaged_data()
