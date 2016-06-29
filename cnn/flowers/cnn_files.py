@@ -32,14 +32,15 @@ class training_file:
     # Gets current directory of script
     def get_current(self):
         
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        
-        dirs = os.path.split(current_dir)
-        dirs = os.path.split(dirs[0])
-        current_dir = dirs[0]
-        
-        return current_dir
+      current_dir = os.path.dirname(os.path.realpath(__file__))
       
+      dirs = os.path.split(current_dir)
+      dirs = os.path.split(dirs[0])
+      current_dir = dirs[0]
+      
+      return current_dir
+    
+    # Gets or creates directories
     def get_data_general_directory(self):
       
       current_dir = self.get_current()
@@ -58,48 +59,51 @@ class training_file:
     # Gets directory for training set and parameters
     def get_data_directory(self):
         
-        current_dir = self.get_training_directory()
-        current_dir += PATH_FOR_TRAINING_PHOTOS
-        
-        return current_dir
+      current_dir = self.get_training_directory()
+      current_dir += PATH_FOR_TRAINING_PHOTOS
+      
+      return current_dir
     
+    # Gets or creates directory for trained parameters
     def init_files_directory(self):
         
-        current_dir = self.get_data_general_directory()
-        
-        current_dir += PATH_FOR_PARAMETERS
-        if not os.path.exists(current_dir):
-            os.makedirs(current_dir)
-        
-        return current_dir
+      current_dir = self.get_data_general_directory()
+      
+      current_dir += PATH_FOR_PARAMETERS
+      if not os.path.exists(current_dir):
+          os.makedirs(current_dir)
+      
+      return current_dir
     
     # Gets training data  / parameters directory path
     def get_or_init_files_path(self):
         
-        current_dir = self.init_files_directory()
-        current_dir += WEIGHTS_FILE
-        
-        return current_dir
+      current_dir = self.init_files_directory()
+      current_dir += WEIGHTS_FILE
       
-      # Gets training data  / parameters directory path
+      return current_dir
+      
+    # Gets training data  / parameters directory path
     def get_or_init_labels_path(self):
         
-        current_dir = self.init_files_directory()
-        current_dir += LABELS_FILE
-        
-        return current_dir
+      current_dir = self.init_files_directory()
+      current_dir += LABELS_FILE
       
+      return current_dir
+      
+    # Gets or initializes test image
     def get_or_init_test_path(self):
         
-        current_dir = self.get_data_general_directory()
-        
-        current_dir += TEST_IMAGES_DIR
-        current_dir += TEST_IMAGE_NAME
-        if not os.path.exists(current_dir):
-          os.mkdir(current_dir)  
-        
-        return current_dir
+      current_dir = self.get_data_general_directory()
       
+      current_dir += TEST_IMAGES_DIR
+      current_dir += TEST_IMAGE_NAME
+      if not os.path.exists(current_dir):
+        os.mkdir(current_dir)  
+      
+      return current_dir
+    
+    # Gets or generates training set
     def get_or_init_training_set(self):
       
       dest_directory = self.get_data_general_directory()
@@ -125,5 +129,3 @@ class training_file:
         shutil.rmtree(training_dir, ignore_errors=True)
         os.mkdir(training_dir)
       tarfile.open(filepath, 'r:gz').extractall(training_dir)
-
-print training_file().get_or_init_training_set()

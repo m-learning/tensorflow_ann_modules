@@ -10,6 +10,7 @@ import numpy as np
 import tensorflow as tf
 from cnn.flowers.cnn_files import training_file
 
+# Initializes trained neural network graph
 def create_graph(model_path):
   
     """Creates a graph from saved GraphDef file and returns a saver."""
@@ -19,6 +20,7 @@ def create_graph(model_path):
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
 
+# Generates forward propagation for recognition
 def run_inference_on_image():
     
     answer = None
@@ -35,7 +37,7 @@ def run_inference_on_image():
     model_path = tr_file.get_or_init_files_path()
     create_graph(model_path)
 
-    #initializes labels path
+    # initializes labels path
     labels_path = tr_file.get_or_init_labels_path()
     with tf.Session() as sess:
 
