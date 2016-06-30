@@ -31,10 +31,8 @@ def init_flaged_data():
   # Details of the training configuration.
   tf.app.flags.DEFINE_integer('how_many_training_steps', 4000, """How many training steps to run before ending.""")
   tf.app.flags.DEFINE_float('learning_rate', 0.01, """How large a learning rate to use when training.""")
-  tf.app.flags.DEFINE_integer(
-      'testing_percentage', 10, """What percentage of images to use as a test set.""")
-  tf.app.flags.DEFINE_integer(
-      'validation_percentage', 10, """What percentage of images to use as a validation set.""")
+  tf.app.flags.DEFINE_integer('testing_percentage', 10, """What percentage of images to use as a test set.""")
+  tf.app.flags.DEFINE_integer('validation_percentage', 10, """What percentage of images to use as a validation set.""")
   tf.app.flags.DEFINE_integer('eval_step_interval', 10, """How often to evaluate the training results.""")
   tf.app.flags.DEFINE_integer('train_batch_size', 100, """How many images to train on at a time.""")
   tf.app.flags.DEFINE_integer('test_batch_size', 500, """How many images to test on at a time. This"""
@@ -55,19 +53,15 @@ def init_flaged_data():
                              """ the retrained graph.""")
   
   # Controls the distortions used during training.
-  tf.app.flags.DEFINE_boolean(
-      'flip_left_right', False,
+  tf.app.flags.DEFINE_boolean('flip_left_right', False,
       """Whether to randomly flip half of the training images horizontally.""")
-  tf.app.flags.DEFINE_integer(
-      'random_crop', 0,
+  tf.app.flags.DEFINE_integer('random_crop', 0,
       """A percentage determining how much of a margin to randomly crop off the"""
       """ training images.""")
-  tf.app.flags.DEFINE_integer(
-      'random_scale', 0,
+  tf.app.flags.DEFINE_integer('random_scale', 0,
       """A percentage determining how much to randomly scale up the size of the"""
       """ training images by.""")
-  tf.app.flags.DEFINE_integer(
-      'random_brightness', 0,
+  tf.app.flags.DEFINE_integer('random_brightness', 0,
       """A percentage determining how much to randomly multiply the training"""
       """ image input pixels up or down by.""")
   

@@ -55,8 +55,3 @@ class training_file:
         current_dir += WEIGHTS_FILE
         
         return current_dir
-        
-        
-
-
-print training_file().get_or_init_files_path()

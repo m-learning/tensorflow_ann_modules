@@ -198,6 +198,7 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
   base_name = category_list[mod_index]
   sub_dir = label_lists['dir']
   full_path = os.path.join(image_dir, sub_dir, base_name)
+  
   return full_path
 
 
