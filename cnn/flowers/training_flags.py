@@ -8,8 +8,8 @@ Initializes training flags
 
 import tensorflow as tf
 
-import cnn.flowers.cnn_files as tr_datas
-from cnn.flowers.cnn_files import training_file
+import cnn_files as tr_datas
+from cnn_files import training_file
 
 def init_flaged_data():
     

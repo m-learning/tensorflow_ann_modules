@@ -72,8 +72,8 @@ from tensorflow.python.client import graph_util
 from tensorflow.python.framework import tensor_shape
 from tensorflow.python.platform import gfile
 
-import cnn.flowers.training_flags as tr_flags
-from cnn.flowers.cnn_files import training_file
+import training_flags as tr_flags
+from cnn_files import training_file
 
 # Initializes flags
 FLAGS = tr_flags.init_flaged_data()

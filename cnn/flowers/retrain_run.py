@@ -8,7 +8,7 @@ Runs retrain neural network for recognition
 
 import numpy as np
 import tensorflow as tf
-from cnn.flowers.cnn_files import training_file
+from cnn_files import training_file
 
 # Recognizes image thru trained neural networks
 class image_recognizer:
