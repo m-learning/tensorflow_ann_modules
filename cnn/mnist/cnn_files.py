@@ -14,6 +14,7 @@ PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
 WEIGHTS_FILE = 'conv_model.ckpt'
 
+# Files and directories for parameters (trained), training, validation and test
 class training_file:
     
     # Gets current directory of script

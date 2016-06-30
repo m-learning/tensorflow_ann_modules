@@ -11,11 +11,14 @@ import os
 import re
 import sys
 import tarfile
+import zipfile
 import shutil
+import glob
 
 from six.moves import urllib
+import Image
 
-PATH_CNN_DIRECTORY = '/datas/flowers/'
+PATH_CNN_DIRECTORY = '/datas/flomen/'
 PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
 PATH_FOR_TRAINING_PHOTOS = 'flower_photos/'
@@ -25,7 +28,9 @@ TEST_IMAGES_DIR = 'test_images/'
 TEST_IMAGE_NAME = 'test_image'
 
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
+PERSONS_SET = 'http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip'
 TRAINIG_ZIP_FOLDER = 'training_arch'
+PERSONS_DIR = 'persons/'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
@@ -110,6 +115,41 @@ class training_file:
       
       return current_dir
     
+    # Converts person images
+    def convert_person_images(self, persons_dir):
+      
+      i = 0
+      scan_persons_dir = persons_dir + "*.bmp"
+      for pr in glob.glob(scan_persons_dir):
+        im = Image.open(pr)
+        n_im = persons_dir + 'cnvrt_prs_' + str(i) + '.jpg'
+        if not os.path.exists(n_im):
+          im.save(n_im)
+          os.remove(pr)
+        i += 1
+      
+    
+    # Gets persons dataset
+    def get_persons_set(self, dest_directory):
+      
+      filename = PERSONS_SET.split('/')[-1]
+      filepath = os.path.join(dest_directory, filename)
+      if not os.path.exists(filepath):
+        def _progress(count, block_size, total_size):
+          sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
+          sys.stdout.flush()
+        filepath, _ = urllib.request.urlretrieve(PERSONS_SET, filepath, _progress)
+      print()
+      statinfo = os.stat(filepath)
+      print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+      training_dir = self.get_data_directory()
+      zip_ref = zipfile.ZipFile(filepath, 'r')
+      zip_ref.extractall(training_dir)
+      persons_dir = training_dir + PERSONS_DIR
+      self.convert_person_images(persons_dir)
+      
+      
+    
     # Gets or generates training set
     def get_or_init_training_set(self):
       
@@ -136,3 +176,4 @@ class training_file:
         shutil.rmtree(training_dir, ignore_errors=True)
         os.mkdir(training_dir)
       tarfile.open(filepath, 'r:gz').extractall(training_dir)
+      self.get_persons_set(dest_directory)
