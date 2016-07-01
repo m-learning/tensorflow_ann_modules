@@ -28,9 +28,13 @@ TEST_IMAGES_DIR = 'test_images/'
 TEST_IMAGE_NAME = 'test_image'
 
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
-PERSONS_SET = 'http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip'
+PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/person.zip',
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_01/bikes.zip',
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip']
 TRAINIG_ZIP_FOLDER = 'training_arch'
-PERSONS_DIR = 'persons/'
+PERSONS_DIRS = ['persons/', 'persons/', 'bikes/', 'cars/']
+PERSON_DIR = 'person/'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
@@ -116,13 +120,13 @@ class training_file:
       return current_dir
     
     # Converts person images
-    def convert_person_images(self, persons_dir):
+    def convert_person_images(self, prfx, src_dir, persons_dir):
       
       i = 0
-      scan_persons_dir = persons_dir + "*.bmp"
+      scan_persons_dir = src_dir + "*.bmp"
       for pr in glob.glob(scan_persons_dir):
         im = Image.open(pr)
-        n_im = persons_dir + 'cnvrt_prs_' + str(i) + '.jpg'
+        n_im = persons_dir + prfx + 'cnvrt_prs_' + str(i) + '.jpg'
         if not os.path.exists(n_im):
           im.save(n_im)
           os.remove(pr)
@@ -132,22 +136,31 @@ class training_file:
     # Gets persons dataset
     def get_persons_set(self, dest_directory):
       
-      filename = PERSONS_SET.split('/')[-1]
-      filepath = os.path.join(dest_directory, filename)
-      if not os.path.exists(filepath):
-        def _progress(count, block_size, total_size):
-          sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
-          sys.stdout.flush()
-        filepath, _ = urllib.request.urlretrieve(PERSONS_SET, filepath, _progress)
-      print()
-      statinfo = os.stat(filepath)
-      print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
       training_dir = self.get_data_directory()
-      zip_ref = zipfile.ZipFile(filepath, 'r')
-      zip_ref.extractall(training_dir)
-      persons_dir = training_dir + PERSONS_DIR
-      self.convert_person_images(persons_dir)
-      
+      for i in  range(len(PERSONS_SETS)):
+        prfx = str(i) + '_'
+        person_set = PERSONS_SETS[i]
+        filename = prfx + person_set.split('/')[-1]
+        filepath = os.path.join(dest_directory, filename)
+        if not os.path.exists(filepath):
+          def _progress(count, block_size, total_size):
+            sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
+            sys.stdout.flush()
+          filepath, _ = urllib.request.urlretrieve(person_set, filepath, _progress)
+        print()
+        statinfo = os.stat(filepath)
+        print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+        zip_ref = zipfile.ZipFile(filepath, 'r')
+        persons_dir = training_dir + PERSONS_DIRS[i]
+        if i == 1:
+          pers_dir = dest_directory + '/' + PERSON_DIR
+          if os.path.exists(pers_dir):
+            shutil.rmtree(pers_dir, ignore_errors=True)
+          zip_ref.extractall(dest_directory)
+        else:
+          zip_ref.extractall(training_dir)
+          pers_dir = persons_dir
+        self.convert_person_images(prfx, pers_dir, persons_dir)      
       
     
     # Gets or generates training set
@@ -177,3 +190,4 @@ class training_file:
         os.mkdir(training_dir)
       tarfile.open(filepath, 'r:gz').extractall(training_dir)
       self.get_persons_set(dest_directory)
+      print 'Training set is prepared'

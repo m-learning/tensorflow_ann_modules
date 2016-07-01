@@ -11,6 +11,7 @@ import tensorflow as tf
 import cnn_files as tr_datas
 from cnn_files import training_file
 
+# Initializes flags for training
 def init_flaged_data():
     
   FLAGS = tf.app.flags.FLAGS
