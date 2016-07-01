@@ -221,7 +221,7 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
   return get_image_path(image_lists, label_name, index, bottleneck_dir,
                         category) + '.txt'
 
-
+# Generates neural network model graph
 def create_inception_graph():
   """"Creates a graph from saved GraphDef file and returns a Graph object.
 
@@ -624,13 +624,10 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   ground_truth_input = tf.placeholder(tf.float32,
                                       [None, class_count],
                                       name='GroundTruthInput')
-  cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
-      logits, ground_truth_input)
+  cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, ground_truth_input)
   cross_entropy_mean = tf.reduce_mean(cross_entropy)
-  train_step = tf.train.GradientDescentOptimizer(FLAGS.learning_rate).minimize(
-      cross_entropy_mean)
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
-          final_tensor)
+  train_step = tf.train.GradientDescentOptimizer(FLAGS.learning_rate).minimize(cross_entropy_mean)
+  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
 
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
@@ -644,13 +641,12 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   Returns:
     Nothing.
   """
-  correct_prediction = tf.equal(
-      tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
+  correct_prediction = tf.equal(tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
   evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
   return evaluation_step
 
-
-def main(_):
+# Runs training and testing
+def retrain_net_main(_):
   
   # Gets training set for neural network
   tr_file = training_file()
@@ -767,4 +763,4 @@ def main(_):
 
 
 if __name__ == '__main__':
-  tf.app.run()
+  tf.app.run(retrain_net_main)

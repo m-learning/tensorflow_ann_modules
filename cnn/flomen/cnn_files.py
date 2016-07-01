@@ -31,10 +31,13 @@ TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.t
 PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/person.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_01/bikes.zip',
-                'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip']
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip',
+                'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip']
 TRAINIG_ZIP_FOLDER = 'training_arch'
-PERSONS_DIRS = ['persons/', 'persons/', 'bikes/', 'cars/']
+PERSONS_DIRS = ['persons/', 'persons/', 'bikes/', 'cars/', 'persons/']
 PERSON_DIR = 'person/'
+PEDESTRIAN_DIR = 'PennFudanPed/'
+PEDESTRIAN_IMG_DIR = 'PNGImages/'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
@@ -120,10 +123,10 @@ class training_file:
       return current_dir
     
     # Converts person images
-    def convert_person_images(self, prfx, src_dir, persons_dir):
+    def convert_person_images(self, prfx, src_dir, persons_dir, img_type):
       
       i = 0
-      scan_persons_dir = src_dir + "*.bmp"
+      scan_persons_dir = src_dir + img_type
       for pr in glob.glob(scan_persons_dir):
         im = Image.open(pr)
         n_im = persons_dir + prfx + 'cnvrt_prs_' + str(i) + '.jpg'
@@ -152,15 +155,23 @@ class training_file:
         print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
         zip_ref = zipfile.ZipFile(filepath, 'r')
         persons_dir = training_dir + PERSONS_DIRS[i]
+        img_type = '*.bmp'
         if i == 1:
           pers_dir = dest_directory + '/' + PERSON_DIR
           if os.path.exists(pers_dir):
             shutil.rmtree(pers_dir, ignore_errors=True)
           zip_ref.extractall(dest_directory)
+        elif i == 4:
+          extr_dir = dest_directory + '/' + PEDESTRIAN_DIR
+          pers_dir = extr_dir + PEDESTRIAN_IMG_DIR
+          img_type = '*.png'
+          if os.path.exists(pers_dir):
+            shutil.rmtree(extr_dir, ignore_errors=True)
+          zip_ref.extractall(dest_directory)
         else:
           zip_ref.extractall(training_dir)
           pers_dir = persons_dir
-        self.convert_person_images(prfx, pers_dir, persons_dir)      
+        self.convert_person_images(prfx, pers_dir, persons_dir, img_type)      
       
     
     # Gets or generates training set

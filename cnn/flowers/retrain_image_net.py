@@ -649,7 +649,7 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
   return evaluation_step
 
-# Runs training and testing
+
 def main(_):
   
   # Gets training set for neural network
@@ -767,4 +767,4 @@ def main(_):
 
 
 if __name__ == '__main__':
-  tf.app.run()
+  tf.app.run(main)
