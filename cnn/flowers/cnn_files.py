@@ -6,16 +6,14 @@ Files for training data
 @author: Levan Tsinadze
 '''
 
-import gzip
 import os
-import re
 import sys
 import tarfile
 import shutil
 
 from six.moves import urllib
 
-PATH_CNN_DIRECTORY = '/datas/flowers/'
+PATH_CNN_DIRECTORY = os.path.join('datas', 'flowers')
 PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
 PATH_FOR_TRAINING_PHOTOS = 'flower_photos/'
@@ -45,14 +43,14 @@ class training_file:
     def get_data_general_directory(self):
       
       current_dir = self.get_current()
-      current_dir += PATH_CNN_DIRECTORY
+      current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY)
       
       return current_dir
     
     def get_training_directory(self):
       
       current_dir = self.get_data_general_directory()
-      current_dir += PATH_FOR_TRAINING
+      current_dir = os.path.join(current_dir, PATH_FOR_TRAINING)
       
       return current_dir
       
@@ -61,7 +59,7 @@ class training_file:
     def get_data_directory(self):
         
       current_dir = self.get_training_directory()
-      current_dir += PATH_FOR_TRAINING_PHOTOS
+      current_dir = os.path.join(current_dir, PATH_FOR_TRAINING_PHOTOS)
       
       return current_dir
     
@@ -70,7 +68,7 @@ class training_file:
         
       current_dir = self.get_data_general_directory()
       
-      current_dir += PATH_FOR_PARAMETERS
+      current_dir = os.path.join(current_dir, PATH_FOR_PARAMETERS)
       if not os.path.exists(current_dir):
           os.makedirs(current_dir)
       
@@ -80,7 +78,7 @@ class training_file:
     def get_or_init_files_path(self):
         
       current_dir = self.init_files_directory()
-      current_dir += WEIGHTS_FILE
+      current_dir = os.path.join(current_dir, WEIGHTS_FILE)
       
       return current_dir
       
@@ -88,7 +86,7 @@ class training_file:
     def get_or_init_labels_path(self):
         
       current_dir = self.init_files_directory()
-      current_dir += LABELS_FILE
+      current_dir = os.path.join(current_dir, LABELS_FILE)
       
       return current_dir
   
@@ -96,7 +94,7 @@ class training_file:
     def get_or_init_test_dir(self):
       
       current_dir = self.get_data_general_directory()
-      current_dir += TEST_IMAGES_DIR
+      current_dir = os.path.join(current_dir, TEST_IMAGES_DIR)
       if not os.path.exists(current_dir):
         os.mkdir(current_dir)  
       
@@ -106,7 +104,7 @@ class training_file:
     def get_or_init_test_path(self):
         
       current_dir = self.get_or_init_test_dir()
-      current_dir += TEST_IMAGE_NAME
+      current_dir = os.path.join(current_dir, TEST_IMAGE_NAME)
       
       return current_dir
     
@@ -114,7 +112,7 @@ class training_file:
     def get_or_init_training_set(self):
       
       dest_directory = self.get_data_general_directory()
-      dest_directory += TRAINIG_ZIP_FOLDER
+      dest_directory = os.path.join(dest_directory, TRAINIG_ZIP_FOLDER)
       
       if not os.path.exists(dest_directory):
         os.mkdir(dest_directory)  

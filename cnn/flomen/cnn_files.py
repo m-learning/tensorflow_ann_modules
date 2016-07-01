@@ -6,9 +6,7 @@ Files for training data
 @author: Levan Tsinadze
 '''
 
-import gzip
 import os
-import re
 import sys
 import tarfile
 import zipfile
@@ -18,13 +16,13 @@ import glob
 from six.moves import urllib
 import Image
 
-PATH_CNN_DIRECTORY = '/datas/flomen/'
-PATH_FOR_PARAMETERS = 'trained_data/'
-PATH_FOR_TRAINING = 'training_data/'
-PATH_FOR_TRAINING_PHOTOS = 'flower_photos/'
+PATH_CNN_DIRECTORY = os.path.join('datas', 'flomen')
+PATH_FOR_PARAMETERS = 'trained_data'
+PATH_FOR_TRAINING = 'training_data'
+PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
-TEST_IMAGES_DIR = 'test_images/'
+TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
@@ -35,11 +33,11 @@ PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
                 'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip',
                 'http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip']
 TRAINIG_ZIP_FOLDER = 'training_arch'
-PERSONS_DIRS = ['persons/', 'persons/', 'bikes/', 'cars/', 'persons/', 'persons/']
-PERSON_DIR = 'person/'
-PEDESTRIAN_DIR = 'PennFudanPed/'
-PEDESTRIAN_IMG_DIR = 'PNGImages/'
-PERSONS_JPEG_DIR = 'JPEGImages/'
+PERSONS_DIRS = ['persons', 'persons', 'bikes', 'cars', 'persons', 'persons']
+PERSON_DIR = 'person'
+PEDESTRIAN_DIR = 'PennFudanPed'
+PEDESTRIAN_IMG_DIR = 'PNGImages'
+PERSONS_JPEG_DIR = 'JPEGImages'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
@@ -59,14 +57,15 @@ class training_file:
     def get_data_general_directory(self):
       
       current_dir = self.get_current()
-      current_dir += PATH_CNN_DIRECTORY
+      current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY)
       
       return current_dir
     
+    # Gets training data directory
     def get_training_directory(self):
       
       current_dir = self.get_data_general_directory()
-      current_dir += PATH_FOR_TRAINING
+      current_dir = os.path.join(current_dir, PATH_FOR_TRAINING)
       
       return current_dir
       
@@ -75,7 +74,7 @@ class training_file:
     def get_data_directory(self):
         
       current_dir = self.get_training_directory()
-      current_dir += PATH_FOR_TRAINING_PHOTOS
+      current_dir = os.path.join(current_dir, PATH_FOR_TRAINING_PHOTOS)
       
       return current_dir
     
@@ -84,7 +83,7 @@ class training_file:
         
       current_dir = self.get_data_general_directory()
       
-      current_dir += PATH_FOR_PARAMETERS
+      current_dir = os.path.join(current_dir, PATH_FOR_PARAMETERS)
       if not os.path.exists(current_dir):
           os.makedirs(current_dir)
       
@@ -94,7 +93,7 @@ class training_file:
     def get_or_init_files_path(self):
         
       current_dir = self.init_files_directory()
-      current_dir += WEIGHTS_FILE
+      current_dir = os.path.join(current_dir, WEIGHTS_FILE)
       
       return current_dir
       
@@ -102,7 +101,7 @@ class training_file:
     def get_or_init_labels_path(self):
         
       current_dir = self.init_files_directory()
-      current_dir += LABELS_FILE
+      current_dir = os.path.join(current_dir, LABELS_FILE)
       
       return current_dir
   
@@ -110,7 +109,7 @@ class training_file:
     def get_or_init_test_dir(self):
       
       current_dir = self.get_data_general_directory()
-      current_dir += TEST_IMAGES_DIR
+      current_dir = os.path.join(current_dir, TEST_IMAGES_DIR)
       if not os.path.exists(current_dir):
         os.mkdir(current_dir)  
       
@@ -120,7 +119,7 @@ class training_file:
     def get_or_init_test_path(self):
         
       current_dir = self.get_or_init_test_dir()
-      current_dir += TEST_IMAGE_NAME
+      current_dir = os.path.join(current_dir, TEST_IMAGE_NAME)
       
       return current_dir
     
@@ -128,10 +127,11 @@ class training_file:
     def convert_person_images(self, prfx, src_dir, persons_dir, img_type):
       
       i = 0
-      scan_persons_dir = src_dir + img_type
+      scan_persons_dir = os.path.join(src_dir, img_type)
       for pr in glob.glob(scan_persons_dir):
         im = Image.open(pr)
-        n_im = persons_dir + prfx + 'cnvrt_prs_' + str(i) + '.jpg'
+        fl_name = prfx + 'cnvrt_prs_' + str(i) + '.jpg'
+        n_im = os.path.join(persons_dir, fl_name)
         if not os.path.exists(n_im):
           im.save(n_im)
           os.remove(pr)
@@ -156,22 +156,22 @@ class training_file:
         statinfo = os.stat(filepath)
         print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
         zip_ref = zipfile.ZipFile(filepath, 'r')
-        persons_dir = training_dir + PERSONS_DIRS[i]
+        persons_dir = os.path.join(training_dir , PERSONS_DIRS[i])
         img_type = '*.bmp'
         if i == 1:
-          pers_dir = dest_directory + '/' + PERSON_DIR
+          pers_dir = os.path.join(dest_directory , PERSON_DIR)
           if os.path.exists(pers_dir):
             shutil.rmtree(pers_dir, ignore_errors=True)
           zip_ref.extractall(dest_directory)
         elif i == 4:
-          extr_dir = dest_directory + '/' + PEDESTRIAN_DIR
-          pers_dir = extr_dir + PEDESTRIAN_IMG_DIR
+          extr_dir = os.path.join(dest_directory , PEDESTRIAN_DIR)
+          pers_dir = os.path.join(extr_dir , PEDESTRIAN_IMG_DIR)
           img_type = '*.png'
           if os.path.exists(pers_dir):
             shutil.rmtree(extr_dir, ignore_errors=True)
           zip_ref.extractall(dest_directory)
         elif i == 5:
-          pers_dir = dest_directory + '/' + PERSONS_JPEG_DIR
+          pers_dir = os.path.join(dest_directory , PERSONS_JPEG_DIR)
           img_type = '*.jpg'
           if os.path.exists(pers_dir):
             shutil.rmtree(pers_dir, ignore_errors=True)
@@ -186,7 +186,7 @@ class training_file:
     def get_or_init_training_set(self):
       
       dest_directory = self.get_data_general_directory()
-      dest_directory += TRAINIG_ZIP_FOLDER
+      dest_directory = os.path.join(dest_directory, TRAINIG_ZIP_FOLDER)
       
       if not os.path.exists(dest_directory):
         os.mkdir(dest_directory)  

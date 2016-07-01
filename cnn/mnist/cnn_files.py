@@ -8,7 +8,7 @@ Files for training data
 
 import os
 
-PATH_CNN_DIRECTORY = '/datas/mnist/'
+PATH_CNN_DIRECTORY = os.path.join('datas,mnist')
 PATH_FLOWER_DIRECTORY = '/datas/mnist/'
 PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
@@ -32,9 +32,7 @@ class training_file:
     def get_data_directory(self):
         
         current_dir = self.get_current()
-        
-        current_dir += PATH_CNN_DIRECTORY 
-        current_dir += PATH_FOR_TRAINING
+        current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY, PATH_FOR_TRAINING)
         
         return current_dir
     
@@ -42,8 +40,7 @@ class training_file:
         
         current_dir = self.get_current()
         
-        current_dir += PATH_CNN_DIRECTORY 
-        current_dir += PATH_FOR_PARAMETERS
+        current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY, PATH_FOR_PARAMETERS)
         if not os.path.exists(current_dir):
             os.makedirs(current_dir)
         
@@ -53,6 +50,6 @@ class training_file:
     def get_or_init_files_path(self):
         
         current_dir = self.init_files_directory()
-        current_dir += WEIGHTS_FILE
+        current_dir = os.path.join(current_dir, WEIGHTS_FILE)
         
         return current_dir
