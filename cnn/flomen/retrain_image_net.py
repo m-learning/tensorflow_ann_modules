@@ -168,7 +168,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     }
   return result
 
-
+# Gets training data path
 def get_image_path(image_lists, label_name, index, image_dir, category):
   """"Returns a path to an image for a label at the given index.
 

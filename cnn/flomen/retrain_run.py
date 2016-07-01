@@ -35,7 +35,7 @@ class image_recognizer:
           tf.logging.fatal('File does not exist %s', test_image_path)
           return answer
   
-      # Read image to recognize
+      # Reads image to recognize
       image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
   
       # Creates graph from saved GraphDef

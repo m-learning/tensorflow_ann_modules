@@ -18,6 +18,7 @@ def init_flaged_data():
    
   tr_files = training_file()
   
+  # Training data and cache directories
   prnt_dir = tr_files.get_current() + tr_datas.PATH_CNN_DIRECTORY
   tr_dir = tr_files.get_data_directory()
   out_grph = tr_files.get_or_init_files_path()
