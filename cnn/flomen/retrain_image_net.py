@@ -261,7 +261,7 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
   bottleneck_values = np.squeeze(bottleneck_values)
   return bottleneck_values
 
-
+# Downloads and extracts trained model
 def maybe_download_and_extract():
   """Download and extract model tar file.
 

@@ -32,12 +32,14 @@ PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/person.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_01/bikes.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip',
-                'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip']
+                'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip',
+                'http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip']
 TRAINIG_ZIP_FOLDER = 'training_arch'
-PERSONS_DIRS = ['persons/', 'persons/', 'bikes/', 'cars/', 'persons/']
+PERSONS_DIRS = ['persons/', 'persons/', 'bikes/', 'cars/', 'persons/', 'persons/']
 PERSON_DIR = 'person/'
 PEDESTRIAN_DIR = 'PennFudanPed/'
 PEDESTRIAN_IMG_DIR = 'PNGImages/'
+PERSONS_JPEG_DIR = 'JPEGImages/'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
@@ -167,6 +169,12 @@ class training_file:
           img_type = '*.png'
           if os.path.exists(pers_dir):
             shutil.rmtree(extr_dir, ignore_errors=True)
+          zip_ref.extractall(dest_directory)
+        elif i == 5:
+          pers_dir = dest_directory + '/' + PERSONS_JPEG_DIR
+          img_type = '*.jpg'
+          if os.path.exists(pers_dir):
+            shutil.rmtree(pers_dir, ignore_errors=True)
           zip_ref.extractall(dest_directory)
         else:
           zip_ref.extractall(training_dir)

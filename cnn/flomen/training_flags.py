@@ -15,7 +15,7 @@ from cnn_files import training_file
 def init_flaged_data():
     
   FLAGS = tf.app.flags.FLAGS
-    
+   
   tr_files = training_file()
   
   prnt_dir = tr_files.get_current() + tr_datas.PATH_CNN_DIRECTORY
@@ -24,7 +24,8 @@ def init_flaged_data():
   out_lbl = tr_files.get_or_init_labels_path()
   mdl_dir = prnt_dir + 'imagenet'
   btl_dir = prnt_dir + 'bottleneck'
-      # Input and output file flags.
+  
+  # Input and output file flags.
   tf.app.flags.DEFINE_string('image_dir', tr_dir, """Path to folders of labeled images.""")
   tf.app.flags.DEFINE_string('output_graph', out_grph, """Where to save the trained graph.""")
   tf.app.flags.DEFINE_string('output_labels', out_lbl, """Where to save the trained graph's labels.""")
