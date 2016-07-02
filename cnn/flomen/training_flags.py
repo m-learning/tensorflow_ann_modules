@@ -11,12 +11,14 @@ import tensorflow as tf
 import cnn_files as tr_datas
 from cnn_files import training_file
 
+# Initializes flags for training
 def init_flaged_data():
     
   FLAGS = tf.app.flags.FLAGS
-    
+   
   tr_files = training_file()
   
+  # Training data and cache directories
   prnt_dir = tr_files.get_current() + tr_datas.PATH_CNN_DIRECTORY
   tr_dir = tr_files.get_data_directory()
   out_grph = tr_files.get_or_init_files_path()

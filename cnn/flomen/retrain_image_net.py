@@ -72,8 +72,8 @@ from tensorflow.python.client import graph_util
 from tensorflow.python.framework import tensor_shape
 from tensorflow.python.platform import gfile
 
-import cnn.flowers.training_flags as tr_flags
-from cnn.flowers.cnn_files import training_file
+import training_flags as tr_flags
+from cnn_files import training_file
 
 # Initializes flags
 FLAGS = tr_flags.init_flaged_data()
@@ -166,9 +166,10 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
         'testing': testing_images,
         'validation': validation_images,
     }
+    
   return result
 
-
+# Gets training data path
 def get_image_path(image_lists, label_name, index, image_dir, category):
   """"Returns a path to an image for a label at the given index.
 
@@ -198,6 +199,7 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
   base_name = category_list[mod_index]
   sub_dir = label_lists['dir']
   full_path = os.path.join(image_dir, sub_dir, base_name)
+  
   return full_path
 
 
@@ -220,7 +222,7 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
   return get_image_path(image_lists, label_name, index, bottleneck_dir,
                         category) + '.txt'
 
-
+# Generates neural network model graph
 def create_inception_graph():
   """"Creates a graph from saved GraphDef file and returns a Graph object.
 
@@ -238,6 +240,7 @@ def create_inception_graph():
           tf.import_graph_def(graph_def, name='', return_elements=[
               BOTTLENECK_TENSOR_NAME, JPEG_DATA_TENSOR_NAME,
               RESIZED_INPUT_TENSOR_NAME]))
+  
   return sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor
 
 
@@ -260,7 +263,7 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
   bottleneck_values = np.squeeze(bottleneck_values)
   return bottleneck_values
 
-
+# Downloads and extracts trained model
 def maybe_download_and_extract():
   """Download and extract model tar file.
 
@@ -347,6 +350,7 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   with open(bottleneck_path, 'r') as bottleneck_file:
     bottleneck_string = bottleneck_file.read()
   bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+  
   return bottleneck_values
 
 
@@ -426,6 +430,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
     ground_truth[label_index] = 1.0
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
+    
   return bottlenecks, ground_truths
 
 
@@ -480,6 +485,7 @@ def get_random_distorted_bottlenecks(
     ground_truth[label_index] = 1.0
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
+  
   return bottlenecks, ground_truths
 
 
@@ -587,6 +593,7 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
                                        maxval=brightness_max)
   brightened_image = tf.mul(flipped_image, brightness_value)
   distort_result = tf.expand_dims(brightened_image, 0, name='DistortResult')
+  
   return jpeg_data, distort_result
 
 
@@ -623,13 +630,10 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   ground_truth_input = tf.placeholder(tf.float32,
                                       [None, class_count],
                                       name='GroundTruthInput')
-  cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
-      logits, ground_truth_input)
+  cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, ground_truth_input)
   cross_entropy_mean = tf.reduce_mean(cross_entropy)
-  train_step = tf.train.GradientDescentOptimizer(FLAGS.learning_rate).minimize(
-      cross_entropy_mean)
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
-          final_tensor)
+  train_step = tf.train.GradientDescentOptimizer(FLAGS.learning_rate).minimize(cross_entropy_mean)
+  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
 
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
@@ -643,13 +647,12 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   Returns:
     Nothing.
   """
-  correct_prediction = tf.equal(
-      tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
+  correct_prediction = tf.equal(tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
   evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
   return evaluation_step
 
-
-def main(_):
+# Runs training and testing
+def retrain_net_main(_):
   
   # Gets training set for neural network
   tr_file = training_file()
@@ -766,4 +769,4 @@ def main(_):
 
 
 if __name__ == '__main__':
-  tf.app.run()
+  tf.app.run(retrain_net_main)

@@ -9,22 +9,36 @@ Files for training data
 import os
 import sys
 import tarfile
+import zipfile
 import shutil
+import glob
 
 from six.moves import urllib
+import Image
 
 # Files and directory constant parameters
-PATH_CNN_DIRECTORY = os.path.join('datas', 'flowers')
-PATH_FOR_PARAMETERS = 'trained_data/'
-PATH_FOR_TRAINING = 'training_data/'
-PATH_FOR_TRAINING_PHOTOS = 'flower_photos/'
+PATH_CNN_DIRECTORY = os.path.join('datas', 'flomen')
+PATH_FOR_PARAMETERS = 'trained_data'
+PATH_FOR_TRAINING = 'training_data'
+PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
-TEST_IMAGES_DIR = 'test_images/'
+TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
+PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/person.zip',
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_01/bikes.zip',
+                'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip',
+                'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip',
+                'http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip']
 TRAINIG_ZIP_FOLDER = 'training_arch'
+PERSONS_DIRS = ['persons', 'persons', 'bikes', 'cars', 'persons', 'persons']
+PERSON_DIR = 'person'
+PEDESTRIAN_DIR = 'PennFudanPed'
+PEDESTRIAN_IMG_DIR = 'PNGImages'
+PERSONS_JPEG_DIR = 'JPEGImages'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
@@ -48,6 +62,7 @@ class training_file:
       
       return current_dir
     
+    # Gets training data directory
     def get_training_directory(self):
       
       current_dir = self.get_data_general_directory()
@@ -55,7 +70,6 @@ class training_file:
       
       return current_dir
       
-    
     # Gets directory for training set and parameters
     def get_data_directory(self):
         
@@ -109,6 +123,65 @@ class training_file:
       
       return current_dir
     
+    # Converts person images
+    def convert_person_images(self, prfx, src_dir, persons_dir, img_type):
+      
+      i = 0
+      scan_persons_dir = os.path.join(src_dir, img_type)
+      for pr in glob.glob(scan_persons_dir):
+        im = Image.open(pr)
+        fl_name = prfx + 'cnvrt_prs_' + str(i) + '.jpg'
+        n_im = os.path.join(persons_dir, fl_name)
+        if not os.path.exists(n_im):
+          im.save(n_im)
+          os.remove(pr)
+        i += 1
+      
+    
+    # Gets persons dataset
+    def get_persons_set(self, dest_directory):
+      
+      training_dir = self.get_data_directory()
+      for i in  range(len(PERSONS_SETS)):
+        prfx = str(i) + '_'
+        person_set = PERSONS_SETS[i]
+        filename = prfx + person_set.split('/')[-1]
+        filepath = os.path.join(dest_directory, filename)
+        if not os.path.exists(filepath):
+          def _progress(count, block_size, total_size):
+            sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
+            sys.stdout.flush()
+          filepath, _ = urllib.request.urlretrieve(person_set, filepath, _progress)
+        print()
+        statinfo = os.stat(filepath)
+        print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+        zip_ref = zipfile.ZipFile(filepath, 'r')
+        persons_dir = os.path.join(training_dir , PERSONS_DIRS[i])
+        img_type = '*.bmp'
+        if i == 1:
+          pers_dir = os.path.join(dest_directory , PERSON_DIR)
+          if os.path.exists(pers_dir):
+            shutil.rmtree(pers_dir, ignore_errors=True)
+          zip_ref.extractall(dest_directory)
+        elif i == 4:
+          extr_dir = os.path.join(dest_directory , PEDESTRIAN_DIR)
+          pers_dir = os.path.join(extr_dir , PEDESTRIAN_IMG_DIR)
+          img_type = '*.png'
+          if os.path.exists(pers_dir):
+            shutil.rmtree(extr_dir, ignore_errors=True)
+          zip_ref.extractall(dest_directory)
+        elif i == 5:
+          pers_dir = os.path.join(dest_directory , PERSONS_JPEG_DIR)
+          img_type = '*.jpg'
+          if os.path.exists(pers_dir):
+            shutil.rmtree(pers_dir, ignore_errors=True)
+          zip_ref.extractall(dest_directory)
+        else:
+          zip_ref.extractall(training_dir)
+          pers_dir = persons_dir
+        self.convert_person_images(prfx, pers_dir, persons_dir, img_type)      
+      
+    
     # Gets or generates training set
     def get_or_init_training_set(self):
       
@@ -135,3 +208,5 @@ class training_file:
         shutil.rmtree(training_dir, ignore_errors=True)
         os.mkdir(training_dir)
       tarfile.open(filepath, 'r:gz').extractall(training_dir)
+      self.get_persons_set(dest_directory)
+      print 'Training set is prepared'

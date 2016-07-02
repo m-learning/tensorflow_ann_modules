@@ -35,6 +35,7 @@ class image_recognizer:
           tf.logging.fatal('File does not exist %s', test_image_path)
           return answer
   
+      # Reads image to recognize
       image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
   
       # Creates graph from saved GraphDef
@@ -60,6 +61,7 @@ class image_recognizer:
               print('%s (score = %.5f)' % (human_string, score))
   
           answer = labels[top_k[0]]
+          
           return answer
 
 
