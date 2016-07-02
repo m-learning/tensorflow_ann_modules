@@ -16,6 +16,7 @@ import glob
 from six.moves import urllib
 import Image
 
+# Files and directory constant parameters
 PATH_CNN_DIRECTORY = os.path.join('datas', 'flomen')
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'

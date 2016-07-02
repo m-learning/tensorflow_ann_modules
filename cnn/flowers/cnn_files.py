@@ -13,6 +13,7 @@ import shutil
 
 from six.moves import urllib
 
+# Files and directory constant parameters
 PATH_CNN_DIRECTORY = os.path.join('datas', 'flowers')
 PATH_FOR_PARAMETERS = 'trained_data/'
 PATH_FOR_TRAINING = 'training_data/'
