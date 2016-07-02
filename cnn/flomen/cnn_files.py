@@ -69,7 +69,6 @@ class training_file:
       
       return current_dir
       
-    
     # Gets directory for training set and parameters
     def get_data_directory(self):
         

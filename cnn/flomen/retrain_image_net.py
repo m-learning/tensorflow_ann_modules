@@ -166,6 +166,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
         'testing': testing_images,
         'validation': validation_images,
     }
+    
   return result
 
 # Gets training data path
@@ -239,6 +240,7 @@ def create_inception_graph():
           tf.import_graph_def(graph_def, name='', return_elements=[
               BOTTLENECK_TENSOR_NAME, JPEG_DATA_TENSOR_NAME,
               RESIZED_INPUT_TENSOR_NAME]))
+  
   return sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor
 
 
@@ -348,6 +350,7 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   with open(bottleneck_path, 'r') as bottleneck_file:
     bottleneck_string = bottleneck_file.read()
   bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+  
   return bottleneck_values
 
 
@@ -427,6 +430,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
     ground_truth[label_index] = 1.0
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
+    
   return bottlenecks, ground_truths
 
 
@@ -481,6 +485,7 @@ def get_random_distorted_bottlenecks(
     ground_truth[label_index] = 1.0
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
+  
   return bottlenecks, ground_truths
 
 
@@ -588,6 +593,7 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
                                        maxval=brightness_max)
   brightened_image = tf.mul(flipped_image, brightness_value)
   distort_result = tf.expand_dims(brightened_image, 0, name='DistortResult')
+  
   return jpeg_data, distort_result
 
 

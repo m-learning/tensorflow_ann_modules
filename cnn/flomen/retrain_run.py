@@ -61,6 +61,7 @@ class image_recognizer:
               print('%s (score = %.5f)' % (human_string, score))
   
           answer = labels[top_k[0]]
+          
           return answer
 
 
