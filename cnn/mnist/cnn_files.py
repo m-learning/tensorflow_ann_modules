@@ -9,10 +9,9 @@ Files for training data
 import os
 
 # Files and directory constant parameters
-PATH_CNN_DIRECTORY = os.path.join('datas,mnist')
-PATH_FLOWER_DIRECTORY = '/datas/mnist/'
-PATH_FOR_PARAMETERS = 'trained_data/'
-PATH_FOR_TRAINING = 'training_data/'
+PATH_CNN_DIRECTORY = os.path.join('datas', 'mnist')
+PATH_FOR_PARAMETERS = 'trained_data'
+PATH_FOR_TRAINING = 'training_data'
 WEIGHTS_FILE = 'conv_model.ckpt'
 
 # Files and directories for parameters (trained), training, validation and test
@@ -24,7 +23,7 @@ class training_file:
       result = None
       
       init_path = path_func()
-      result = os.path.join(init_path, other_path)
+      result = os.path.join(init_path, *other_path)
       
       return result
     
@@ -43,6 +42,7 @@ class training_file:
     def get_data_directory(self):
         return self.join_path(self.get_current, PATH_CNN_DIRECTORY, PATH_FOR_TRAINING)
     
+    # Initializes weights and biases files directory
     def init_files_directory(self):
         
         current_dir = self.join_path(self.get_current, PATH_CNN_DIRECTORY, PATH_FOR_PARAMETERS)
