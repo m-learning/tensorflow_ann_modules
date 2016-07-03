@@ -42,6 +42,16 @@ PERSONS_JPEG_DIR = 'JPEGImages'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
+  
+    # Joins path from method
+    def join_path(self, path_func, other_path):
+      
+      result = None
+      
+      init_path = path_func()
+      result = os.path.join(init_path, other_path)
+      
+      return result
     
     # Gets current directory of script
     def get_current(self):
@@ -56,34 +66,21 @@ class training_file:
     
     # Gets or creates directories
     def get_data_general_directory(self):
-      
-      current_dir = self.get_current()
-      current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY)
-      
-      return current_dir
+      return self.join_path(self.get_current, PATH_CNN_DIRECTORY)
     
     # Gets training data directory
     def get_training_directory(self):
-      
-      current_dir = self.get_data_general_directory()
-      current_dir = os.path.join(current_dir, PATH_FOR_TRAINING)
-      
-      return current_dir
-      
+      return self.join_path(self.get_data_general_directory, PATH_FOR_TRAINING)
+
     # Gets directory for training set and parameters
     def get_data_directory(self):
-        
-      current_dir = self.get_training_directory()
-      current_dir = os.path.join(current_dir, PATH_FOR_TRAINING_PHOTOS)
-      
-      return current_dir
+      return self.join_path(self.get_training_directory, PATH_FOR_TRAINING_PHOTOS)
     
     # Gets or creates directory for trained parameters
     def init_files_directory(self):
         
-      current_dir = self.get_data_general_directory()
+      current_dir = self.join_path(self.get_data_general_directory, PATH_FOR_PARAMETERS)
       
-      current_dir = os.path.join(current_dir, PATH_FOR_PARAMETERS)
       if not os.path.exists(current_dir):
           os.makedirs(current_dir)
       
@@ -91,25 +88,17 @@ class training_file:
     
     # Gets training data  / parameters directory path
     def get_or_init_files_path(self):
-        
-      current_dir = self.init_files_directory()
-      current_dir = os.path.join(current_dir, WEIGHTS_FILE)
-      
-      return current_dir
+      return self.join_path(self.init_files_directory, WEIGHTS_FILE)
       
     # Gets training data  / parameters directory path
     def get_or_init_labels_path(self):
-        
-      current_dir = self.init_files_directory()
-      current_dir = os.path.join(current_dir, LABELS_FILE)
-      
-      return current_dir
+      return self.join_path(self.init_files_directory, LABELS_FILE)
   
     # Gets directory for test images
     def get_or_init_test_dir(self):
       
-      current_dir = self.get_data_general_directory()
-      current_dir = os.path.join(current_dir, TEST_IMAGES_DIR)
+      current_dir = self.join_path(self.get_data_general_directory, TEST_IMAGES_DIR)
+      
       if not os.path.exists(current_dir):
         os.mkdir(current_dir)  
       
@@ -117,11 +106,7 @@ class training_file:
       
     # Gets or initializes test image
     def get_or_init_test_path(self):
-        
-      current_dir = self.get_or_init_test_dir()
-      current_dir = os.path.join(current_dir, TEST_IMAGE_NAME)
-      
-      return current_dir
+      return self.join_path(self.get_or_init_test_dir, TEST_IMAGE_NAME)
     
     # Converts person images
     def convert_person_images(self, prfx, src_dir, persons_dir, img_type):
@@ -185,12 +170,10 @@ class training_file:
     # Gets or generates training set
     def get_or_init_training_set(self):
       
-      dest_directory = self.get_data_general_directory()
-      dest_directory = os.path.join(dest_directory, TRAINIG_ZIP_FOLDER)
-      
+      dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
       if not os.path.exists(dest_directory):
         os.mkdir(dest_directory)  
-      
+        
       filename = TRAINIG_SET_URL.split('/')[-1]
       filepath = os.path.join(dest_directory, filename)
       if not os.path.exists(filepath):

@@ -17,6 +17,16 @@ WEIGHTS_FILE = 'conv_model.ckpt'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file:
+  
+    # Joins path from method
+    def join_path(self, path_func, *other_path):
+      
+      result = None
+      
+      init_path = path_func()
+      result = os.path.join(init_path, other_path)
+      
+      return result
     
     # Gets current directory of script
     def get_current(self):
@@ -31,17 +41,12 @@ class training_file:
     
     # Gets directory for training set and parameters
     def get_data_directory(self):
-        
-        current_dir = self.get_current()
-        current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY, PATH_FOR_TRAINING)
-        
-        return current_dir
+        return self.join_path(self.get_current, PATH_CNN_DIRECTORY, PATH_FOR_TRAINING)
     
     def init_files_directory(self):
         
-        current_dir = self.get_current()
+        current_dir = self.join_path(self.get_current, PATH_CNN_DIRECTORY, PATH_FOR_PARAMETERS)
         
-        current_dir = os.path.join(current_dir, PATH_CNN_DIRECTORY, PATH_FOR_PARAMETERS)
         if not os.path.exists(current_dir):
             os.makedirs(current_dir)
         
@@ -49,8 +54,4 @@ class training_file:
     
     # Gets training data  / parameters directory path
     def get_or_init_files_path(self):
-        
-        current_dir = self.init_files_directory()
-        current_dir = os.path.join(current_dir, WEIGHTS_FILE)
-        
-        return current_dir
+        return self.join_path(self.init_files_directory, WEIGHTS_FILE)
