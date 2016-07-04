@@ -109,9 +109,10 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     A dictionary containing an entry for each label subfolder, with images split
     into training, testing, and validation sets within each label.
   """
+  result = {}
+  
   if not gfile.Exists(image_dir):
     os.mkdir(image_dir)  
-  result = {}
   sub_dirs = [x[0] for x in os.walk(image_dir)]
   # The root directory comes first, so skip it.
   is_root_dir = True
@@ -261,6 +262,7 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
       bottleneck_tensor,
       {image_data_tensor: image_data})
   bottleneck_values = np.squeeze(bottleneck_values)
+  
   return bottleneck_values
 
 # Downloads and extracts trained model
@@ -633,6 +635,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, ground_truth_input)
   cross_entropy_mean = tf.reduce_mean(cross_entropy)
   train_step = tf.train.GradientDescentOptimizer(FLAGS.learning_rate).minimize(cross_entropy_mean)
+  
   return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
 
 
@@ -649,6 +652,7 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   """
   correct_prediction = tf.equal(tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
   evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
+  
   return evaluation_step
 
 # Runs training and testing

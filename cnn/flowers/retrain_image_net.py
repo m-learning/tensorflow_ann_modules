@@ -109,9 +109,10 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     A dictionary containing an entry for each label subfolder, with images split
     into training, testing, and validation sets within each label.
   """
+  result = {}
+  
   if not gfile.Exists(image_dir):
     os.mkdir(image_dir)  
-  result = {}
   sub_dirs = [x[0] for x in os.walk(image_dir)]
   # The root directory comes first, so skip it.
   is_root_dir = True
@@ -166,6 +167,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
         'testing': testing_images,
         'validation': validation_images,
     }
+    
   return result
 
 
@@ -259,6 +261,7 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
       bottleneck_tensor,
       {image_data_tensor: image_data})
   bottleneck_values = np.squeeze(bottleneck_values)
+  
   return bottleneck_values
 
 
@@ -348,6 +351,7 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   with open(bottleneck_path, 'r') as bottleneck_file:
     bottleneck_string = bottleneck_file.read()
   bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+  
   return bottleneck_values
 
 
@@ -427,6 +431,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
     ground_truth[label_index] = 1.0
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
+    
   return bottlenecks, ground_truths
 
 
@@ -481,6 +486,7 @@ def get_random_distorted_bottlenecks(
     ground_truth[label_index] = 1.0
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
+    
   return bottlenecks, ground_truths
 
 
@@ -588,6 +594,7 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
                                        maxval=brightness_max)
   brightened_image = tf.mul(flipped_image, brightness_value)
   distort_result = tf.expand_dims(brightened_image, 0, name='DistortResult')
+  
   return jpeg_data, distort_result
 
 
@@ -629,8 +636,8 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   cross_entropy_mean = tf.reduce_mean(cross_entropy)
   train_step = tf.train.GradientDescentOptimizer(FLAGS.learning_rate).minimize(
       cross_entropy_mean)
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
-          final_tensor)
+  
+  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
 
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
@@ -647,6 +654,7 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   correct_prediction = tf.equal(
       tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
   evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
+  
   return evaluation_step
 
 
