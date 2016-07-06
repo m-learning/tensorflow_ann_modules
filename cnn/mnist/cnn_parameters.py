@@ -18,7 +18,7 @@ class cnn_weights:
     
     def __init__(self):
         
-        # Store layers weight & bias
+        # Store layers weight
         self.weights = {
             # 5x5 conv, 1 input, 32 outputs
             'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
@@ -30,7 +30,7 @@ class cnn_weights:
             'out': tf.Variable(tf.random_normal([1024, N_CLASSES]))
         }
         
-        # Biases
+        # Store layers bias
         self.biases = {
             'bc1': tf.Variable(tf.random_normal([32])),
             'bc2': tf.Variable(tf.random_normal([64])),

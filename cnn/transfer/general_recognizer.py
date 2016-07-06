@@ -8,10 +8,13 @@ Runs retrained neural network for recognition
 
 import numpy as np
 import tensorflow as tf
-from cnn_files import training_file
 
 # Recognizes image thru trained neural networks
-class image_recognizer:
+class retrained_recognizer(object):
+  
+  def __init__(self, tr_file):
+    self.tr_file = tr_file
+    
 
   # Initializes trained neural network graph
   def create_graph(self, model_path):
@@ -24,14 +27,12 @@ class image_recognizer:
         _ = tf.import_graph_def(graph_def, name='')
   
   # Generates forward propagation for recognition
-  def run_inference_on_image(self,):
+  def run_inference_on_image(self):
       
     answer = None
 
-    tr_file = training_file()
-    test_image_path = tr_file.get_or_init_test_path()
+    test_image_path = self.tr_file.get_or_init_test_path()
     if not tf.gfile.Exists(test_image_path):
-        tr_file.get_or_init_test_path
         tf.logging.fatal('File does not exist %s', test_image_path)
         return answer
 
@@ -39,11 +40,11 @@ class image_recognizer:
     image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
 
     # Creates graph from saved GraphDef
-    model_path = tr_file.get_or_init_files_path()
+    model_path = self.tr_file.get_or_init_files_path()
     self.create_graph(model_path)
 
     # initializes labels path
-    labels_path = tr_file.get_or_init_labels_path()
+    labels_path = self.tr_file.get_or_init_labels_path()
     with tf.Session() as sess:
 
       softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')

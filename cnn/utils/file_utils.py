@@ -7,11 +7,7 @@ Utility class for training test and validation data
 '''
 
 import os
-import sys
-import tarfile
-import shutil
-
-from six.moves import urllib
+import types
 
 # Files and directory constant parameters
 PATH_FOR_PARAMETERS = 'trained_data'
@@ -28,9 +24,12 @@ class cnn_file_utils(object):
     self.path_to_cnn_directory = os.path.join('datas', parent_cnn_dir)
     
     # Joins path from method
-  def join_path(self, path_func, *other_path):
+  def join_path(self, path_inst, *other_path):
     
-    init_path = path_func()
+    if isinstance(path_inst, types.StringType):
+      init_path = path_inst
+    else:
+      init_path = path_inst()
     result = os.path.join(init_path, *other_path)
     
     return result

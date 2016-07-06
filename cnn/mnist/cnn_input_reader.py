@@ -9,9 +9,10 @@ from scipy import ndimage
 
 import numpy as np
 
-
+# Image sizes
 IMAGE_SIZE = 28
 
+# Input for fully connected layer
 n_input = 784  # MNIST data input (img shape: 28*28)
 
 # Image reader for recognition
