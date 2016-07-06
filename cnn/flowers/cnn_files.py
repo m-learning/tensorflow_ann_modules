@@ -13,84 +13,18 @@ import shutil
 
 from six.moves import urllib
 
-# Files and directory constant parameters
-PATH_CNN_DIRECTORY = os.path.join('datas', 'flowers')
-PATH_FOR_PARAMETERS = 'trained_data/'
-PATH_FOR_TRAINING = 'training_data/'
-PATH_FOR_TRAINING_PHOTOS = 'flower_photos/'
-WEIGHTS_FILE = 'output_graph.pb'
-LABELS_FILE = 'output_labels.txt'
-TEST_IMAGES_DIR = 'test_images/'
-TEST_IMAGE_NAME = 'test_image'
+from cnn.utils.file_utils import cnn_file_utils
 
+# Files and directory constant parameters
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
 TRAINIG_ZIP_FOLDER = 'training_arch'
 
 # Files and directories for parameters (trained), training, validation and test
-class training_file:
-    
-  # Joins path from method
-  def join_path(self, path_func, *other_path):
-    
-    init_path = path_func()
-    result = os.path.join(init_path, *other_path)
-    
-    return result
-  # Gets current directory of script
-  def get_current(self):
+class training_file(cnn_file_utils):
+  
+  def __init__(self):
+    super(training_file, self).__init__('flowers')
       
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    
-    dirs = os.path.split(current_dir)
-    dirs = os.path.split(dirs[0])
-    current_dir = dirs[0]
-    
-    return current_dir
-  
-  # Gets or creates directories
-  def get_data_general_directory(self):
-    return self.join_path(self.get_current, PATH_CNN_DIRECTORY)
-  
-  # Gets training data directory
-  def get_training_directory(self):
-    return self.join_path(self.get_data_general_directory, PATH_FOR_TRAINING)
-
-  # Gets directory for training set and parameters
-  def get_data_directory(self):
-    return self.join_path(self.get_training_directory, PATH_FOR_TRAINING_PHOTOS)
-  
-  # Gets or creates directory for trained parameters
-  def init_files_directory(self):
-      
-    current_dir = self.join_path(self.get_data_general_directory, PATH_FOR_PARAMETERS)
-    
-    if not os.path.exists(current_dir):
-        os.makedirs(current_dir)
-    
-    return current_dir
-  
-  # Gets training data  / parameters directory path
-  def get_or_init_files_path(self):
-    return self.join_path(self.init_files_directory, WEIGHTS_FILE)
-    
-  # Gets training data  / parameters directory path
-  def get_or_init_labels_path(self):
-    return self.join_path(self.init_files_directory, LABELS_FILE)
-
-  # Gets directory for test images
-  def get_or_init_test_dir(self):
-    
-    current_dir = self.join_path(self.get_data_general_directory, TEST_IMAGES_DIR)
-    
-    if not os.path.exists(current_dir):
-      os.mkdir(current_dir)  
-    
-    return current_dir
-    
-  # Gets or initializes test image
-  def get_or_init_test_path(self):
-    return self.join_path(self.get_or_init_test_dir, TEST_IMAGE_NAME)
-  
   # Gets or generates training set
   def get_or_init_training_set(self):
     
