@@ -65,6 +65,6 @@ def retrain_net_main(_):
   tr_files = training_file()
   retrain_image_net.retrain_net_main(tr_files)
   
-
+# Runs training and test process
 if __name__ == '__main__':
   tf.app.run(retrain_net_main)

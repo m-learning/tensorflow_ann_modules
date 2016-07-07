@@ -54,7 +54,7 @@ class files_and_path_utils(object):
 class cnn_file_utils(files_and_path_utils):
   
   def __init__(self, parent_cnn_dir):
-    super(self, cnn_file_utils).__init__(files_and_path_utils)
+    super(cnn_file_utils, self).__init__(parent_cnn_dir)
   
   # Gets or creates directories
   def get_data_general_directory(self):
