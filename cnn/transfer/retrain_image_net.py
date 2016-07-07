@@ -661,7 +661,7 @@ def init_flags_and_files(tr_file):
   
 
 # Runs training and testing
-def retrain_net_main(tr_file):
+def retrain_net(tr_file):
   
   init_flags_and_files(tr_file)
   
@@ -777,4 +777,4 @@ def retrain_net_main(tr_file):
 
 
 if __name__ == '__main__':
-  tf.app.run(retrain_net_main)
+  tf.app.run(retrain_net)

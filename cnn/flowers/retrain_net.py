@@ -63,7 +63,7 @@ from cnn.flowers.cnn_files import training_file
 def retrain_net_main(_):
   
   tr_files = training_file()
-  retrain_image_net.retrain_net_main(tr_files)
+  retrain_image_net.retrain_net(tr_files)
   
 
 if __name__ == '__main__':
