@@ -459,9 +459,10 @@ def get_random_distorted_bottlenecks(
   Returns:
     List of bottleneck arrays and their corresponding ground truths.
   """
-  class_count = len(image_lists.keys())
   bottlenecks = []
   ground_truths = []
+  
+  class_count = len(image_lists.keys())
   for unused_i in range(how_many):
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
@@ -663,6 +664,7 @@ def init_flags_and_files(tr_file):
 # Runs training and testing
 def retrain_net(tr_file):
   
+  # Set up flags and training data
   init_flags_and_files(tr_file)
   
   # Set up the pre-trained graph.
@@ -774,7 +776,3 @@ def retrain_net(tr_file):
     f.write(output_graph_def.SerializeToString())
   with gfile.FastGFile(tr_flags.output_labels, 'w') as f:
     f.write('\n'.join(image_lists.keys()) + '\n')
-
-
-if __name__ == '__main__':
-  tf.app.run(retrain_net)

@@ -27,7 +27,9 @@ PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
                 'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip',
                 'http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip']
 TRAINIG_ZIP_FOLDER = 'training_arch'
-PERSONS_DIRS = ['persons', 'persons', 'bikes', 'cars', 'persons', 'persons']
+CASSIFICATION_DIRS = ['persons', 'persons', 'bikes', 'cars', 'persons', 'persons']
+
+# Directories to move training data from
 PERSON_DIR = 'person'
 PEDESTRIAN_DIR = 'PennFudanPed'
 PEDESTRIAN_IMG_DIR = 'PNGImages'
@@ -72,7 +74,7 @@ class training_file(cnn_file_utils):
       statinfo = os.stat(filepath)
       print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
       zip_ref = zipfile.ZipFile(filepath, 'r')
-      persons_dir = os.path.join(training_dir , PERSONS_DIRS[i])
+      persons_dir = os.path.join(training_dir , CASSIFICATION_DIRS[i])
       img_type = '*.bmp'
       if i == 1:
         pers_dir = os.path.join(dest_directory , PERSON_DIR)

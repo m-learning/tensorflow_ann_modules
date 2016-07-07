@@ -46,12 +46,14 @@ class retrained_recognizer(object):
     # initializes labels path
     labels_path = self.tr_file.get_or_init_labels_path()
     with tf.Session() as sess:
-
+      # Gets tensor for recognition
       softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+      # Runs recognition thru net
       predictions = sess.run(softmax_tensor,
                              {'DecodeJpeg/contents:0': image_data})
+      # Decorates predictions
       predictions = np.squeeze(predictions)
-
+      # Gets top prediction (top matchs)s
       top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
       f = open(labels_path, 'rb')
       lines = f.readlines()
@@ -60,7 +62,6 @@ class retrained_recognizer(object):
           human_string = labels[node_id]
           score = predictions[node_id]
           print('%s (score = %.5f)' % (human_string, score))
-
       answer = labels[top_k[0]]
       
-      return answer
+    return answer

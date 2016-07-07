@@ -18,6 +18,8 @@ PATH_FOR_TRAINING = 'training_data'
 PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
+
+# Test files and directories
 TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
