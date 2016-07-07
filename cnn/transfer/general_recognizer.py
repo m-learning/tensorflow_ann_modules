@@ -64,8 +64,3 @@ class retrained_recognizer(object):
       answer = labels[top_k[0]]
       
       return answer
-
-
-if __name__ == '__main__':
-  img_recognizer = image_recognizer()
-  img_recognizer.run_inference_on_image()

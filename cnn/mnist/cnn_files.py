@@ -8,23 +8,19 @@ Files for training data
 
 import os
 
+from cnn.utils.file_utils import files_and_path_utils
+
 # Files and directory constant parameters
-PATH_CNN_DIRECTORY = os.path.join('datas', 'mnist')
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
 WEIGHTS_FILE = 'conv_model.ckpt'
 
 # Files and directories for parameters (trained), training, validation and test
-class training_file:
+class training_file(files_and_path_utils):
   
-    # Joins path from method
-    def join_path(self, path_func, *other_path):
-      
-      init_path = path_func()
-      result = os.path.join(init_path, *other_path)
-      
-      return result
-    
+    def __init__(self):
+      super(self, training_file).__init__('mnist')
+        
     # Gets current directory of script
     def get_current(self):
         
@@ -38,12 +34,12 @@ class training_file:
     
     # Gets directory for training set and parameters
     def get_data_directory(self):
-        return self.join_path(self.get_current, PATH_CNN_DIRECTORY, PATH_FOR_TRAINING)
+        return self.join_path(self.get_current, self.path_to_cnn_directory, PATH_FOR_TRAINING)
     
     # Initializes weights and biases files directory
     def init_files_directory(self):
         
-        current_dir = self.join_path(self.get_current, PATH_CNN_DIRECTORY, PATH_FOR_PARAMETERS)
+        current_dir = self.join_path(self.get_current, self.path_to_cnn_directory, PATH_FOR_PARAMETERS)
         
         if not os.path.exists(current_dir):
             os.makedirs(current_dir)

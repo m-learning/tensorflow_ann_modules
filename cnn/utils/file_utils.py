@@ -9,6 +9,9 @@ Utility class for training test and validation data
 import os
 import types
 
+# General parent directory for files
+DATAS_DIR_NAME = 'datas'
+
 # Files and directory constant parameters
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
@@ -18,12 +21,13 @@ LABELS_FILE = 'output_labels.txt'
 TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
-class cnn_file_utils(object):
+# Utility class for files and directories
+class files_and_path_utils(object):
   
   def __init__(self, parent_cnn_dir):
-    self.path_to_cnn_directory = os.path.join('datas', parent_cnn_dir)
+    self.path_to_cnn_directory = os.path.join(DATAS_DIR_NAME, parent_cnn_dir)
     
-    # Joins path from method
+  # Joins path from method
   def join_path(self, path_inst, *other_path):
     
     if isinstance(path_inst, types.StringType):
@@ -44,6 +48,13 @@ class cnn_file_utils(object):
     current_dir = dirs[0]
     
     return current_dir
+  
+
+# Utility class for training and testing files and directories
+class cnn_file_utils(files_and_path_utils):
+  
+  def __init__(self, parent_cnn_dir):
+    super(self, cnn_file_utils).__init__(files_and_path_utils)
   
   # Gets or creates directories
   def get_data_general_directory(self):
@@ -67,6 +78,7 @@ class cnn_file_utils(object):
     
     return current_dir
 
+  # Initializes trained files path
   def get_or_init_files_path(self):
     return self.join_path(self.init_files_directory, WEIGHTS_FILE)
       

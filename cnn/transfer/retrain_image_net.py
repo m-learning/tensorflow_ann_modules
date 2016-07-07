@@ -651,13 +651,20 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   
   return evaluation_step
 
-# Runs training and testing
-def retrain_net_main(tr_file):
+# Initializes training flags and files
+def init_flags_and_files(tr_file):
   
   global tr_flags
   tr_flags = training_flags.init_flaged_data(tr_file)
   # Gets training set for neural network
   tr_file.get_or_init_training_set()
+  
+
+# Runs training and testing
+def retrain_net_main(tr_file):
+  
+  init_flags_and_files(tr_file)
+  
   # Set up the pre-trained graph.
   maybe_download_and_extract()
   graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (
