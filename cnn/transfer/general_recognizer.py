@@ -26,6 +26,30 @@ class retrained_recognizer(object):
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
   
+  # Runs neural net to recognize objects on image
+  def recognize_image(self, sess, image_parameter):
+    
+    (image_data, labels_path) = image_parameter
+    # Gets tensor for recognition
+    softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+    # Runs recognition thru net
+    predictions = sess.run(softmax_tensor,
+                           {'DecodeJpeg/contents:0': image_data})
+    # Decorates predictions
+    predictions = np.squeeze(predictions)
+    # Gets top prediction (top matchs)s
+    top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
+    f = open(labels_path, 'rb')
+    lines = f.readlines()
+    labels = [str(w).replace("\n", "") for w in lines]
+    for node_id in top_k:
+        human_string = labels[node_id]
+        score = predictions[node_id]
+        print('%s (score = %.5f)' % (human_string, score))
+    answer = labels[top_k[0]]
+  
+    return answer
+  
   # Generates forward propagation for recognition
   def run_inference_on_image(self):
       
@@ -45,23 +69,8 @@ class retrained_recognizer(object):
 
     # initializes labels path
     labels_path = self.tr_file.get_or_init_labels_path()
+    image_parameter = (image_data, labels_path)
     with tf.Session() as sess:
-      # Gets tensor for recognition
-      softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
-      # Runs recognition thru net
-      predictions = sess.run(softmax_tensor,
-                             {'DecodeJpeg/contents:0': image_data})
-      # Decorates predictions
-      predictions = np.squeeze(predictions)
-      # Gets top prediction (top matchs)s
-      top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
-      f = open(labels_path, 'rb')
-      lines = f.readlines()
-      labels = [str(w).replace("\n", "") for w in lines]
-      for node_id in top_k:
-          human_string = labels[node_id]
-          score = predictions[node_id]
-          print('%s (score = %.5f)' % (human_string, score))
-      answer = labels[top_k[0]]
+      answer = self.recognize_image(sess, image_parameter)
       
     return answer

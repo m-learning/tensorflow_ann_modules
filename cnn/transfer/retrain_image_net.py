@@ -659,62 +659,44 @@ def init_flags_and_files(tr_file):
   tr_flags = training_flags.init_flaged_data(tr_file)
   # Gets training set for neural network
   tr_file.get_or_init_training_set()
+
+# Saves trained weights and biases
+def save_trained_parameters(sess, graph, keys):
+  
+  output_graph_def = graph_util.convert_variables_to_constants(
+      sess, graph.as_graph_def(), [tr_flags.final_tensor_name])
+  with gfile.FastGFile(tr_flags.output_graph, 'wb') as f:
+    f.write(output_graph_def.SerializeToString())
+  with gfile.FastGFile(tr_flags.output_labels, 'w') as f:
+    f.write('\n'.join(keys) + '\n')
+
+# Test neural net
+def test_trained_network(sess, validation_parameters):
+  
+  (image_lists, jpeg_data_tensor, bottleneck_tensor, evaluation_step,
+  bottleneck_input, ground_truth_input) = validation_parameters
+  
+  test_bottlenecks, test_ground_truth = get_random_cached_bottlenecks(
+      sess, image_lists, tr_flags.test_batch_size, 'testing',
+      tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
+      bottleneck_tensor)
+  test_accuracy = sess.run(
+      evaluation_step,
+      feed_dict={bottleneck_input: test_bottlenecks,
+                 ground_truth_input: test_ground_truth})
+  print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
   
 
-# Runs training and testing
-def retrain_net(tr_file):
+# Iterates and trains neural network
+def iterate_and_train(sess, iteration_parameters):
   
-  # Set up flags and training data
-  init_flags_and_files(tr_file)
+  (do_distort_images, image_lists,
+   distorted_jpeg_data_tensor, distorted_image_tensor,
+   resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
+   train_step, bottleneck_input, ground_truth_input,
+   evaluation_step, cross_entropy) = iteration_parameters
+   
   
-  # Set up the pre-trained graph.
-  maybe_download_and_extract()
-  graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (
-      create_inception_graph())
-
-  # Look at the folder structure, and create lists of all the images.
-  image_lists = create_image_lists(tr_flags.image_dir, tr_flags.testing_percentage,
-                                   tr_flags.validation_percentage)
-  print(image_lists)
-  class_count = len(image_lists.keys())
-  if class_count == 0:
-    print('No valid folders of images found at ' + tr_flags.image_dir)
-    return -1
-  if class_count == 1:
-    print('Only one valid folder of images found at ' + tr_flags.image_dir + 
-          ' - multiple classes are needed for classification.')
-    return -1
-
-  # See if the command-line flags mean we're applying any distortions.
-  do_distort_images = should_distort_images(
-      tr_flags.flip_left_right, tr_flags.random_crop, tr_flags.random_scale,
-      tr_flags.random_brightness)
-  sess = tf.Session()
-
-  if do_distort_images:
-    # We will be applying distortions, so setup the operations we'll need.
-    distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
-        tr_flags.flip_left_right, tr_flags.random_crop, tr_flags.random_scale,
-        tr_flags.random_brightness)
-  else:
-    # We'll make sure we've calculated the 'bottleneck' image summaries and
-    # cached them on disk.
-    cache_bottlenecks(sess, image_lists, tr_flags.image_dir, tr_flags.bottleneck_dir,
-                      jpeg_data_tensor, bottleneck_tensor)
-
-  # Add the new layer that we'll be training.
-  (train_step, cross_entropy, bottleneck_input, ground_truth_input,
-   final_tensor) = add_final_training_ops(len(image_lists.keys()),
-                                          tr_flags.final_tensor_name,
-                                          bottleneck_tensor)
-
-  # Set up all our weights to their initial default values.
-  init = tf.initialize_all_variables()
-  sess.run(init)
-
-  # Create the operations we need to evaluate the accuracy of our new layer.
-  evaluation_step = add_evaluation_step(final_tensor, ground_truth_input)
-
   # Run the training for as many cycles as requested on the command line.
   for i in range(tr_flags.how_many_training_steps):
     # Get a catch of input bottleneck values, either calculated fresh every time
@@ -757,22 +739,74 @@ def retrain_net(tr_file):
       print('%s: Step %d: Validation accuracy = %.1f%%' % 
             (datetime.now(), i, validation_accuracy * 100))
 
+# Runs training and testing
+def retrain_net(tr_file):
+  
+  # Set up flags and training data
+  init_flags_and_files(tr_file)
+  
+  # Set up the pre-trained graph.
+  maybe_download_and_extract()
+  graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (
+      create_inception_graph())
+
+  # Look at the folder structure, and create lists of all the images.
+  image_lists = create_image_lists(tr_flags.image_dir, tr_flags.testing_percentage,
+                                   tr_flags.validation_percentage)
+  print(image_lists)
+  class_count = len(image_lists.keys())
+  if class_count == 0:
+    print('No valid folders of images found at ' + tr_flags.image_dir)
+    return -1
+  if class_count == 1:
+    print('Only one valid folder of images found at ' + tr_flags.image_dir + 
+          ' - multiple classes are needed for classification.')
+    return -1
+
+  # See if the command-line flags mean we're applying any distortions.
+  do_distort_images = should_distort_images(
+      tr_flags.flip_left_right, tr_flags.random_crop, tr_flags.random_scale,
+      tr_flags.random_brightness)
+
+  sess = tf.Session()
+  if do_distort_images:
+    # We will be applying distortions, so setup the operations we'll need.
+    distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
+        tr_flags.flip_left_right, tr_flags.random_crop, tr_flags.random_scale,
+        tr_flags.random_brightness)
+  else:
+    # We'll make sure we've calculated the 'bottleneck' image summaries and
+    # cached them on disk.
+    cache_bottlenecks(sess, image_lists, tr_flags.image_dir, tr_flags.bottleneck_dir,
+                      jpeg_data_tensor, bottleneck_tensor)
+
+  # Add the new layer that we'll be training.
+  (train_step, cross_entropy, bottleneck_input, ground_truth_input,
+   final_tensor) = add_final_training_ops(len(image_lists.keys()),
+                                          tr_flags.final_tensor_name,
+                                          bottleneck_tensor)
+
+  # Set up all our weights to their initial default values.
+  init = tf.initialize_all_variables()
+  sess.run(init)
+
+  # Create the operations we need to evaluate the accuracy of our new layer.
+  evaluation_step = add_evaluation_step(final_tensor, ground_truth_input)
+
+  # Run the training for as many cycles as requested on the command line.
+  iteration_parameters = (do_distort_images, image_lists,
+                        distorted_jpeg_data_tensor, distorted_image_tensor,
+                        resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
+                        train_step, bottleneck_input, ground_truth_input,
+                        evaluation_step, cross_entropy)
+  iterate_and_train(sess, iteration_parameters)
+
   # We've completed all our training, so run a final test evaluation on
   # some new images we haven't used before.
-  test_bottlenecks, test_ground_truth = get_random_cached_bottlenecks(
-      sess, image_lists, tr_flags.test_batch_size, 'testing',
-      tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
-      bottleneck_tensor)
-  test_accuracy = sess.run(
-      evaluation_step,
-      feed_dict={bottleneck_input: test_bottlenecks,
-                 ground_truth_input: test_ground_truth})
-  print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
+  validation_parameters = (image_lists, jpeg_data_tensor,
+                           bottleneck_tensor, evaluation_step,
+                           bottleneck_input, ground_truth_input)
+  test_trained_network(sess, validation_parameters)
 
   # Write out the trained graph and labels with the weights stored as constants.
-  output_graph_def = graph_util.convert_variables_to_constants(
-      sess, graph.as_graph_def(), [tr_flags.final_tensor_name])
-  with gfile.FastGFile(tr_flags.output_graph, 'wb') as f:
-    f.write(output_graph_def.SerializeToString())
-  with gfile.FastGFile(tr_flags.output_labels, 'w') as f:
-    f.write('\n'.join(image_lists.keys()) + '\n')
+  save_trained_parameters(sess, graph, image_lists.keys())

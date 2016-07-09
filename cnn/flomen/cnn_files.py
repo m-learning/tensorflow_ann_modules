@@ -54,9 +54,38 @@ class training_file(cnn_file_utils):
         im.save(n_im)
         os.remove(pr)
       i += 1
-    
   
-  # Gets persons dataset
+  # Gets persons training set
+  def get_persons_dir(self, dest_directory, zip_ref):
+    
+    pers_dir = os.path.join(dest_directory , PERSON_DIR)
+    
+    if os.path.exists(pers_dir):
+      shutil.rmtree(pers_dir, ignore_errors=True)
+    zip_ref.extractall(dest_directory)
+    
+    return pers_dir
+  
+  # Gets persons training set
+  def get_pedestrians_dir(self, dest_directory, zip_ref):
+    
+    extr_dir = os.path.join(dest_directory , PEDESTRIAN_DIR)
+    pers_dir = os.path.join(extr_dir , PEDESTRIAN_IMG_DIR)
+    if os.path.exists(pers_dir):
+      shutil.rmtree(extr_dir, ignore_errors=True)
+    zip_ref.extractall(dest_directory)
+    
+    return pers_dir
+  
+  # Gets persons JPEG files training set
+  def get_persons_jpeg_dir(self, dest_directory, zip_ref):
+    
+    pers_dir = os.path.join(dest_directory , PERSONS_JPEG_DIR)
+    if os.path.exists(pers_dir):
+      shutil.rmtree(pers_dir, ignore_errors=True)
+    zip_ref.extractall(dest_directory)
+  
+  # Gets persons dat aset
   def get_persons_set(self, dest_directory):
     
     training_dir = self.get_data_directory()
@@ -77,23 +106,13 @@ class training_file(cnn_file_utils):
       persons_dir = os.path.join(training_dir , CASSIFICATION_DIRS[i])
       img_type = '*.bmp'
       if i == 1:
-        pers_dir = os.path.join(dest_directory , PERSON_DIR)
-        if os.path.exists(pers_dir):
-          shutil.rmtree(pers_dir, ignore_errors=True)
-        zip_ref.extractall(dest_directory)
+        pers_dir = self.get_persons_dir(dest_directory, zip_ref)
       elif i == 4:
-        extr_dir = os.path.join(dest_directory , PEDESTRIAN_DIR)
-        pers_dir = os.path.join(extr_dir , PEDESTRIAN_IMG_DIR)
         img_type = '*.png'
-        if os.path.exists(pers_dir):
-          shutil.rmtree(extr_dir, ignore_errors=True)
-        zip_ref.extractall(dest_directory)
+        pers_dir = self.get_pedestrians_dir(dest_directory, zip_ref)
       elif i == 5:
-        pers_dir = os.path.join(dest_directory , PERSONS_JPEG_DIR)
         img_type = '*.jpg'
-        if os.path.exists(pers_dir):
-          shutil.rmtree(pers_dir, ignore_errors=True)
-        zip_ref.extractall(dest_directory)
+        pers_dir = self.get_persons_jpeg_dir(dest_directory, zip_ref)
       else:
         zip_ref.extractall(training_dir)
         pers_dir = persons_dir
