@@ -26,9 +26,13 @@ TEST_IMAGE_NAME = 'test_image'
 # Utility class for files and directories
 class files_and_path_utils(object):
   
-  def __init__(self, parent_cnn_dir):
-    self.path_to_cnn_directory = os.path.join(DATAS_DIR_NAME, parent_cnn_dir)
-    
+  def __init__(self, parent_cnn_dir, path_to_training_photos=None):
+    self.path_to_cnn_directory = os.path.join(DATAS_DIR_NAME, parent_cnn_dir)    
+    if path_to_training_photos is None:
+      self.path_to_training_photos = PATH_FOR_TRAINING_PHOTOS
+    else:
+      self.path_to_training_photos = path_to_training_photos
+  
   # Joins path from method
   def join_path(self, path_inst, *other_path):
     
@@ -39,6 +43,16 @@ class files_and_path_utils(object):
     result = os.path.join(init_path, *other_path)
     
     return result
+  
+  # Creates appropriated directory if such does not exists
+  def init_dir(self, dir_path, *other_path):
+    
+    result_dir = self.join_path(dir_path, *other_path)
+    
+    if not os.path.exists(result_dir):
+      os.makedirs(result_dir)
+    
+    return result_dir 
   
   # Gets current directory of script
   def get_current(self):
@@ -68,7 +82,7 @@ class cnn_file_utils(files_and_path_utils):
 
   # Gets directory for training set and parameters
   def get_data_directory(self):
-    return self.join_path(self.get_training_directory, PATH_FOR_TRAINING_PHOTOS)
+    return self.join_path(self.get_training_directory, self.path_to_training_photos)
   
   # Gets or creates directory for trained parameters
   def init_files_directory(self):
