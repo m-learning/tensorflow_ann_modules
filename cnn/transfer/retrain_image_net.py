@@ -673,8 +673,9 @@ def save_trained_parameters(sess, graph, keys):
 # Test neural net
 def test_trained_network(sess, validation_parameters):
   
-  (image_lists, jpeg_data_tensor, bottleneck_tensor, evaluation_step,
-  bottleneck_input, ground_truth_input) = validation_parameters
+  (image_lists, jpeg_data_tensor,
+   bottleneck_tensor, evaluation_step,
+   bottleneck_input, ground_truth_input) = validation_parameters
   
   test_bottlenecks, test_ground_truth = get_random_cached_bottlenecks(
       sess, image_lists, training_flags_mod.test_batch_size, 'testing',
@@ -739,6 +740,30 @@ def iterate_and_train(sess, iteration_parameters):
       print('%s: Step %d: Validation accuracy = %.1f%%' % 
             (datetime.now(), i, validation_accuracy * 100))
 
+
+# Validates and applies distortions
+def distort_images(image_lists, jpeg_data_tensor, bottleneck_tensor):
+  
+  do_distort_images = should_distort_images(
+      training_flags_mod.flip_left_right, training_flags_mod.random_crop, training_flags_mod.random_scale,
+      training_flags_mod.random_brightness)
+
+  sess = tf.Session()
+  if do_distort_images:
+    # We will be applying distortions, so setup the operations we'll need.
+    distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
+        training_flags_mod.flip_left_right, training_flags_mod.random_crop, training_flags_mod.random_scale,
+        training_flags_mod.random_brightness)
+  else:
+    distorted_jpeg_data_tensor, distorted_image_tensor = None, None
+    # We'll make sure we've calculated the 'bottleneck' image summaries and
+    # cached them on disk.
+    cache_bottlenecks(sess, image_lists, tr_flags.image_dir, tr_flags.bottleneck_dir,
+                      jpeg_data_tensor, bottleneck_tensor)
+    
+  return (sess, do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)
+
+
 # Runs training and testing
 def retrain_net(tr_file):
   
@@ -764,26 +789,14 @@ def retrain_net(tr_file):
     return -1
 
   # See if the command-line flags mean we're applying any distortions.
-  do_distort_images = should_distort_images(
-      training_flags_mod.flip_left_right, training_flags_mod.random_crop, training_flags_mod.random_scale,
-      training_flags_mod.random_brightness)
-
-  sess = tf.Session()
-  if do_distort_images:
-    # We will be applying distortions, so setup the operations we'll need.
-    distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
-        training_flags_mod.flip_left_right, training_flags_mod.random_crop, training_flags_mod.random_scale,
-        training_flags_mod.random_brightness)
-  else:
-    distorted_jpeg_data_tensor, distorted_image_tensor = None, None
-    # We'll make sure we've calculated the 'bottleneck' image summaries and
-    # cached them on disk.
-    cache_bottlenecks(sess, image_lists, tr_flags.image_dir, tr_flags.bottleneck_dir,
-                      jpeg_data_tensor, bottleneck_tensor)
+  (sess, do_distort_images,
+   distorted_jpeg_data_tensor, distorted_image_tensor) = distort_images(image_lists,
+                                                                        jpeg_data_tensor,
+                                                                        bottleneck_tensor)
 
   # Add the new layer that we'll be training.
-  (train_step, cross_entropy, bottleneck_input, ground_truth_input,
-   final_tensor) = add_final_training_ops(len(image_lists.keys()),
+  (train_step, cross_entropy, bottleneck_input,
+   ground_truth_input, final_tensor) = add_final_training_ops(len(image_lists.keys()),
                                           training_flags_mod.final_tensor_name,
                                           bottleneck_tensor)
 
@@ -796,10 +809,10 @@ def retrain_net(tr_file):
 
   # Run the training for as many cycles as requested on the command line.
   iteration_parameters = (do_distort_images, image_lists,
-                        distorted_jpeg_data_tensor, distorted_image_tensor,
-                        resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
-                        train_step, bottleneck_input, ground_truth_input,
-                        evaluation_step, cross_entropy)
+                          distorted_jpeg_data_tensor, distorted_image_tensor,
+                          resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
+                          train_step, bottleneck_input, ground_truth_input,
+                          evaluation_step, cross_entropy)
   iterate_and_train(sess, iteration_parameters)
 
   # We've completed all our training, so run a final test evaluation on

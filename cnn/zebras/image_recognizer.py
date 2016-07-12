@@ -6,6 +6,8 @@ Runs retrained neural network for recognition
 @author: Levan Tsinadze
 '''
 
+import sys
+
 from cnn.transfer.general_recognizer import retrained_recognizer
 from cnn.zebras.cnn_files import training_file
 
@@ -19,4 +21,4 @@ class image_recognizer(retrained_recognizer):
 # Runs image recognition
 if __name__ == '__main__':
   img_recognizer = image_recognizer()
-  img_recognizer.run_inference_on_image()
+  img_recognizer.run_inference_on_image(sys.argv)
