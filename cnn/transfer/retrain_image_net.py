@@ -57,7 +57,7 @@ from __future__ import print_function
 from datetime import datetime
 import tensorflow as tf
 
-from tensorflow.python.client import graph_util
+from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags_mod as training_flags_mod
