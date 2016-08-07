@@ -14,7 +14,11 @@ import shutil
 import glob
 
 from six.moves import urllib
-import Image
+try:
+  from PIL import Image
+except ImportError:
+  import Image
+#import Image
 
 from cnn.utils.file_utils import cnn_file_utils
 

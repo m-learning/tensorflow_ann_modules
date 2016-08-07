@@ -26,7 +26,7 @@ class training_file(cnn_file_utils):
   def __init__(self):
     super(training_file, self).__init__('zebras')
     
-  # Converts person images
+  # Converts person images with cross walks
   def copy_crosswalk_images(self, src_dir, dst_dir, img_type):
     
     scan_persons_dir = self.join_path(src_dir, img_type)
