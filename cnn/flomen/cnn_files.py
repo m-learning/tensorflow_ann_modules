@@ -17,6 +17,7 @@ from six.moves import urllib
 try:
   from PIL import Image
 except ImportError:
+  print "Importing Image from PIL threw exception"
   import Image
 #import Image
 

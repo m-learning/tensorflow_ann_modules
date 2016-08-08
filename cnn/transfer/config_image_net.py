@@ -137,7 +137,7 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
   
   return full_path
 
-
+# Calculates bottleneck path
 def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
                         category):
   """"Returns a path to a bottleneck file for a label at the given index.
