@@ -199,7 +199,7 @@ def ensure_dir_exists(dir_name):
 def init_flags_and_files(tr_file):
   
   global tr_flags
-  
+  # Training flags
   tr_flags = training_flags_mod.init_flaged_data(tr_file)
   # Gets training set for neural network
   tr_file.get_or_init_training_set()

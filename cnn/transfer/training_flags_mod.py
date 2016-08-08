@@ -18,7 +18,7 @@ eval_step_interval = 10  # How often to evaluate the training results
 train_batch_size = 100  # How many images to train on at a time
 test_batch_size = 500  # How many images to test on at a time. This
                             # test set is only used infrequently to verify
-                            # the overall accuracy of the model.
+# the overall accuracy of the model.
 validation_batch_size = 100
     # How many images to use in an evaluation batch. This validation set is
     # used much more often than the test set, and is an early indicator of
@@ -26,16 +26,17 @@ validation_batch_size = 100
 
 # Controls the distortions used during training.
 flip_left_right = False
-    # Whether to randomly flip half of the training images horizontallyS
+
+# Whether to randomly flip half of the training images horizontallyS
 random_crop = 0
     # A percentage determining how much of a margin to randomly crop off the
-    # training images
+# training images
 random_scale = 0
     # A percentage determining how much to randomly scale up the size of the
-    # training images by
+# training images by
 random_brightness = 0
     # A percentage determining how much to randomly multiply the training
-    # image input pixels up or down by
+# image input pixels up or down by
 final_tensor_name = 'final_result'  # The name of the output classification layer in
     # the retrained graph
 
