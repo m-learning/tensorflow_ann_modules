@@ -43,4 +43,5 @@ def create_inception_graph(tr_flags):
               BOTTLENECK_TENSOR_NAME, JPEG_DATA_TENSOR_NAME,
               RESIZED_INPUT_TENSOR_NAME]))
   
+  # Graph components
   return (sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
