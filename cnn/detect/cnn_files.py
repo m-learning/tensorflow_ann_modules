@@ -18,7 +18,7 @@ class training_file(cnn_file_utils):
   def get_trained_files_dir(self):
     return super(cnn_file_utils, self).init_files_directory()
   
-  # Gets checkpoint file to restore
+  # Gets checkpoint file to restore trained parameters
   def get_checkpoint(self, iteration=190000):
     
     file_nm = 'save.ckpt-' + str(iteration)

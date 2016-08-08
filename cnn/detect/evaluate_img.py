@@ -12,6 +12,7 @@ import os
 import json
 import subprocess
 from scipy.misc import imread
+from cnn.detect import cnn_files
 %matplotlib inline
 
 from train import build_forward
@@ -24,6 +25,8 @@ from cnn.detect.utils.stitch_wrapper import stitch_rects
 from evaluate import add_rectangles
 import cv2
 
+import cnn.detect.cnn_files
+
 hypes_file = './hypes/overfeat_rezoom.json'
 iteration = 150000
 with open(hypes_file, 'r') as f:
@@ -32,6 +35,7 @@ true_idl = './data/brainwash/brainwash_val.idl'
 pred_idl = './output/%d_val_%s.idl' % (iteration, os.path.basename(hypes_file).replace('.json', ''))
 true_annos = al.parse(true_idl)
 
+#Loads graph
 tf.reset_default_graph()
 googlenet = googlenet_load.init(H)
 x_in = tf.placeholder(tf.float32, name='x_in', shape=[H['image_height'], H['image_width'], 3])
@@ -46,7 +50,8 @@ else:
 saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
-    saver.restore(sess, './data/overfeat_rezoom/save.ckpt-%d' % iteration)
+    sess_files = cnn_files()
+    saver.restore(sess, sess_files.get_checkpoint(iteration))
 
     annolist = al.AnnoList()
     import time; t = time.time()

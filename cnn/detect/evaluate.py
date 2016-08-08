@@ -16,7 +16,8 @@ import argparse
 def get_image_dir(args):
     weights_iteration = int(args.weights.split('-')[-1])
     expname = '_' + args.expname if args.expname else ''
-    image_dir = '%s/images_%s_%d%s' % (os.path.dirname(args.weights), os.path.basename(args.test_idl)[:-4], weights_iteration, expname)
+    image_dir = '%s/images_%s_%d%s' % (os.path.dirname(args.weights), 
+                                       os.path.basename(args.test_idl)[:-4], weights_iteration, expname)
     return image_dir
 
 def get_results(args, H):
