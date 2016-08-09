@@ -8,15 +8,19 @@ Files for object detection
 
 from cnn.utils.file_utils import cnn_file_utils
 
+HYPES_DIR = 'hypes'
+DATA_DIR = 'data'
+OUTPUT_DIR = 'output'
+
 # Files and directories for parameters (trained), training, validation and test
 class training_file(cnn_file_utils):
   
   def __init__(self):
-    super(training_file, self).__init__('detect')
+    super(cnn_file_utils, self).__init__('detect')
    
   # Gets path to trained parameters 
   def get_trained_files_dir(self):
-    return super(cnn_file_utils, self).init_files_directory()
+    return self.init_files_directory()
   
   # Gets checkpoint file to restore trained parameters
   def get_checkpoint(self, iteration=190000):
@@ -26,3 +30,8 @@ class training_file(cnn_file_utils):
     checkpoint_file = self.join_path(trined_dir, file_nm)
     
     return checkpoint_file
+  
+  # Gets hyperparameters configuration file
+  def get_hypes_file(self):
+    return self.join_path(self.get_data_general_directory, HYPES_DIR, 'overfeat_rezoom.json')
+    

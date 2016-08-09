@@ -2,6 +2,7 @@ import tensorflow as tf
 from kaffe import mynet
 import os
 import numpy as np
+from cnn.detect.cnn_files import training_file
 
 def init(H, config=None):
     if config is None:
@@ -13,8 +14,9 @@ def init(H, config=None):
     input_layer = 'input'
 
     features_layers = ['output/confidences', 'output/boxes']
-
-    graph_def_orig_file = '%s/../data/googlenet.pb' % os.path.dirname(os.path.realpath(__file__))
+    
+    param_files = training_file()
+    graph_def_orig_file = param_files.join_path(param_files.get_trained_files_dir, 'googlenet.pb')
 
     dense_layer_num_output = [k, 4]
 
@@ -56,7 +58,7 @@ def init(H, config=None):
 
 
     W = [
-        tf.Variable(weight_init(dense_layer_num_output[i]), 
+        tf.Variable(weight_init(dense_layer_num_output[i]),
                     name='softmax/weights_{}'.format(i)) 
         for i in range(len(features_layers))
     ]
@@ -106,20 +108,20 @@ def model(x, googlenet, H):
         if is_early_loss(op.name):
             continue
         elif op.name == 'avgpool0':
-            pool_op = tf.nn.avg_pool(T['mixed5b'], ksize=[1,H['grid_height'],H['grid_width'],1], strides=[1,1,1,1], padding='VALID', name=op.name)
+            pool_op = tf.nn.avg_pool(T['mixed5b'], ksize=[1, H['grid_height'], H['grid_width'], 1], strides=[1, 1, 1, 1], padding='VALID', name=op.name)
             T[op.name] = pool_op
 
         else:
             copied_op = x.graph.create_op(
-                op_type = op.type, 
-                inputs = [T[t.op.name] for t in list(op.inputs)], 
-                dtypes = [o.dtype for o in op.outputs], 
-                name = op.name, 
-                attrs =  op.node_def.attr
+                op_type=op.type,
+                inputs=[T[t.op.name] for t in list(op.inputs)],
+                dtypes=[o.dtype for o in op.outputs],
+                name=op.name,
+                attrs=op.node_def.attr
             )
 
             T[op.name] = copied_op.outputs[0]
-            #T[op.name] = tf.Print(copied_op.outputs[0], [tf.shape(copied_op.outputs[0]), tf.constant(op.name)], summarize=4)
+            # T[op.name] = tf.Print(copied_op.outputs[0], [tf.shape(copied_op.outputs[0]), tf.constant(op.name)], summarize=4)
     
 
     coarse_feat = T['mixed5b']
