@@ -27,6 +27,7 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 # pylint: disable=line-too-long
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 
+# Creates images list
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
   """Builds a list of training images from the file system.
 
@@ -137,7 +138,7 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
   
   return full_path
 
-
+# Calculates bottleneck path
 def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
                         category):
   """"Returns a path to a bottleneck file for a label at the given index.

@@ -17,8 +17,9 @@ from six.moves import urllib
 try:
   from PIL import Image
 except ImportError:
+  print "Importing Image from PIL threw exception"
   import Image
-#import Image
+# import Image
 
 from cnn.utils.file_utils import cnn_file_utils
 
@@ -121,7 +122,6 @@ class training_file(cnn_file_utils):
         zip_ref.extractall(training_dir)
         pers_dir = persons_dir
       self.convert_person_images(prfx, pers_dir, persons_dir, img_type)      
-    
   
   # Gets or generates training set
   def get_or_init_training_set(self):
