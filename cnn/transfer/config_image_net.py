@@ -195,13 +195,22 @@ def ensure_dir_exists(dir_name):
   """
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)
-    
+
+# Initializing training flags
+def init_flags_only(tr_file):
+  
+  global tr_flags
+  
+  # Training flags
+  tr_flags = training_flags_mod.init_flaged_data(tr_file)
+  
+  return tr_flags
+
 # Initializes training flags and files
 def init_flags_and_files(tr_file):
   
-  global tr_flags
   # Training flags
-  tr_flags = training_flags_mod.init_flaged_data(tr_file)
+  tr_flags = init_flags_only(tr_file)
   # Gets training set for neural network
   tr_file.get_or_init_training_set()
   

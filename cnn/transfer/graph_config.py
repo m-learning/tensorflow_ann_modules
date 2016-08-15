@@ -20,9 +20,14 @@ JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 
 import os.path
+import traceback
 
 import tensorflow as tf
 from tensorflow.python.platform import gfile
+
+# Gets graph file
+def init_model_file_name(tr_flags):
+  return os.path.join(tr_flags.model_dir, 'classify_image_graph_def.pb')
 
 # Generates neural network model graph
 def create_inception_graph(tr_flags):
@@ -33,8 +38,7 @@ def create_inception_graph(tr_flags):
     manipulating.
   """
   with tf.Session() as sess:
-    model_filename = os.path.join(
-        tr_flags.model_dir, 'classify_image_graph_def.pb')
+    model_filename = init_model_file_name(tr_flags)
     with gfile.FastGFile(model_filename, 'rb') as f:
       graph_def = tf.GraphDef()
       graph_def.ParseFromString(f.read())
@@ -45,3 +49,56 @@ def create_inception_graph(tr_flags):
   
   # Graph components
   return (sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
+
+# List values of graph
+def list_layer_values(values, layer_name):
+  
+  result = None
+  
+  for value in values:
+    print type(value)
+    print value._op.name
+    print value.name
+    if value.name == layer_name:
+      result = value
+    print value
+    
+  return result
+  
+
+# Lists all layers of network
+def list_layers(sess, layer_name):
+  
+  result = None
+  
+  layer_ops = sess.graph.get_operations()
+  print layer_ops
+  for layer_op in layer_ops:
+    values = layer_op.values()
+    result = list_layer_values(values, layer_name)
+    if result is not None:
+      break
+  
+  return result
+  
+
+# Gets network graph layer by name
+def get_layer(tr_flags, layer_name):  
+  """"Creates a graph from saved GraphDef file and returns a Graph object.
+
+  Returns:
+    Graph holding the trained Inception network, and various tensors we'll be
+    manipulating.
+  """
+  with tf.Session() as sess:
+    model_filename = init_model_file_name(tr_flags)
+    with gfile.FastGFile(model_filename, 'rb') as f:
+      graph_def = tf.GraphDef()
+      graph_def.ParseFromString(f.read())
+      tf.import_graph_def(graph_def)
+      try:
+        net_layer = list_layers(sess, layer_name)
+        print net_layer
+      except Exception:
+        print 'Error occured'
+        traceback.print_exc()

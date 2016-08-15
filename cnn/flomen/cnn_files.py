@@ -89,6 +89,8 @@ class training_file(cnn_file_utils):
     if os.path.exists(pers_dir):
       shutil.rmtree(pers_dir, ignore_errors=True)
     zip_ref.extractall(dest_directory)
+    
+    return pers_dir
   
   # Gets persons dat aset
   def get_persons_set(self, dest_directory):
