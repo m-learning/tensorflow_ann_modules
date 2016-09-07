@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 
-import skimage
 import skimage.io
-import skimage.transform
 
 import os
 import scipy as scp
-import scipy.misc
 
-import numpy as np
 import logging
 import tensorflow as tf
 import sys
@@ -19,8 +15,6 @@ import cnn.fcn.utils as utils
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',
                     level=logging.INFO,
                     stream=sys.stdout)
-
-from tensorflow.python.framework import ops
 
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 

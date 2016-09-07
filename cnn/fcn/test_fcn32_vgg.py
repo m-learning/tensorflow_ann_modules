@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 
 import os
-import scipy.misc
-import skimage
 import skimage.io
-import skimage.transform
-from tensorflow.python.framework import ops
 
 import cnn.fcn.fcn32_vgg as fcn32_vgg
 import cnn.fcn.utils as utils
-import numpy as np
 import scipy as scp
 import tensorflow as tf
 
