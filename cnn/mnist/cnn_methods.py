@@ -6,9 +6,10 @@ Initializes convolutional and pooling layers for network
 @author: Levan Tsinadze
 '''
 
-import tensorflow as tf
-import cnn_parameters as pr
 from cnn_parameters import cnn_weights
+import cnn_parameters as pr
+import tensorflow as tf
+
 
 # CNN network functions
 class cnn_functions:

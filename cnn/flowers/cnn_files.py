@@ -7,13 +7,13 @@ Files for training data
 '''
 
 import os
+import shutil
 import sys
 import tarfile
-import shutil
-
-from six.moves import urllib
 
 from cnn.utils.file_utils import cnn_file_utils
+from six.moves import urllib
+
 
 # Files and directory constant parameters
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'

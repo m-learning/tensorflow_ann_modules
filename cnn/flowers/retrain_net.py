@@ -54,10 +54,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from cnn.flowers.cnn_files import training_file
+import cnn.transfer.retrain_image_net as retrain_image_net
 import tensorflow as tf
 
-import cnn.transfer.retrain_image_net as retrain_image_net
-from cnn.flowers.cnn_files import training_file
 
 # Training and testing
 def retrain_net_main(_):

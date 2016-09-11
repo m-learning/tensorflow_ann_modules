@@ -10,10 +10,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from cnn.flomen.cnn_files import training_file
+from cnn.transfer.extract_layer import layer_features
 import tensorflow as tf
 
-from cnn.transfer.extract_layer import layer_features
-from cnn.flomen.cnn_files import training_file
 
 # Training and testing
 def extract_net_main(_):
