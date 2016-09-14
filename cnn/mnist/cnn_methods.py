@@ -30,7 +30,7 @@ class cnn_functions:
       
       return tf.nn.relu(x)
   
-  # Pooling layer
+  # Pooling layer (Max-Pooling)
   def maxpool2d(self, x, k=2):
       # MaxPool2D wrapper
       return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1],
