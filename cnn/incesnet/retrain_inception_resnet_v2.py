@@ -37,6 +37,7 @@ import tensorflow as tf
 
 slim = tf.contrib.slim
 
+#Training flags
 tf.app.flags.DEFINE_string(
     'master', '', 'The address of the TensorFlow master to use.')
 

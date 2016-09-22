@@ -35,6 +35,7 @@ from cnn.preprocessing import preprocessing_factory
 
 slim = tf.contrib.slim
 
+# Flags for evaluate model
 tf.app.flags.DEFINE_integer(
     'batch_size', 100, 'The number of samples in each batch.')
 
