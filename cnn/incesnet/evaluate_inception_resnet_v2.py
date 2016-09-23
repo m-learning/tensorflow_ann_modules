@@ -141,5 +141,8 @@ def main(_):
         variables_to_restore=variables_to_restore)
 
 
+def eval_net():
+  tf.app.run()
+
 if __name__ == '__main__':
   tf.app.run()

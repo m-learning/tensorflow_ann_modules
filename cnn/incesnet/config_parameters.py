@@ -15,7 +15,7 @@ def define_training_parameters(file_mngr, dataset_name):
   FLAGS.dataset_name = dataset_name
   FLAGS.dataset_split_name = 'train'
   FLAGS.dataset_dir = file_mngr.get_data_directory()
-  FLAGS.checkpoint_path = file_mngr.join_path(file_mngr.init_files_directory, 'inception_resnet_v2')
+  FLAGS.checkpoint_path = file_mngr.join_path(file_mngr.init_files_directory, 'inception_resnet_v2.ckpt')
   FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
   FLAGS.trainable_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
   

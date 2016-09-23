@@ -1,11 +1,11 @@
-'''
-Created on Sep 14, 2016
-
-Implementation of inception_resnet_v2 retraining and fine- tuning 
-
-@author: Levan Tsinadze
-'''
-
+#'''
+#Created on Sep 14, 2016
+#
+#Implementation of inception_resnet_v2 retraining and fine- tuning 
+#
+#@author: Levan Tsinadze
+#'''
+#
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ Implementation of inception_resnet_v2 retraining and fine- tuning
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Generic training script that trains a model using a given dataset."""
+#"""Generic training script that trains a model using a given dataset."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -400,5 +400,8 @@ def main(_):
         sync_optimizer=optimizer if FLAGS.sync_replicas else None)
 
 
-if __name__ == '__main__':
+def train_net():
   tf.app.run()
+  
+if __name__ == '__main__':
+  train_net()

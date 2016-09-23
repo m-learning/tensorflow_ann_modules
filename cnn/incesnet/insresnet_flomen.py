@@ -7,7 +7,10 @@ Retraining of inception-resnet for flowers data set
 '''
 
 from cnn.flomen import cnn_files
-from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters 
+from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters
+import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
+import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
+import sys
 
 dataset_name = 'flomen'
 
@@ -22,3 +25,23 @@ def define_training_parameters():
 def define_eval_parameters():
   file_mngr = cnn_files()
   define_eval_parameters(file_mngr, dataset_name)
+
+# Trains network
+def train_net():
+  define_training_parameters()
+  train_inception.train_net()
+
+# Evaluates network
+def eval_net():
+  define_eval_parameters()
+  eval_inception.eval_net()
+
+if __name__ == '__main__':
+  
+  if len(sys.argv) > 1:
+    if sys.argv[1] == 'eval':
+      eval_net()
+    else:
+      train_net()
+  else:
+    train_net()
