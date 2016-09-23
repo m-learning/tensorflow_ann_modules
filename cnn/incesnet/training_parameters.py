@@ -1,8 +1,8 @@
-'''
-Created on Sep 23, 2016
-Training parameters 
-@author: Levan Tsinadze
-'''
+# '''
+# Created on Sep 23, 2016
+# Training parameters 
+# @author: Levan Tsinadze
+# '''
 
 master = ''  # 'The address of the TensorFlow master to use.'
 

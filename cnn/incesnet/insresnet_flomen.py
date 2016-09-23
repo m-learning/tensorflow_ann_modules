@@ -1,10 +1,10 @@
-'''
-Created on Sep 23, 2016
-
-Retraining of inception-resnet for flowers data set
-
-@author: Levan Tsinadze
-'''
+# '''
+# Created on Sep 23, 2016
+#
+# Retraining of inception-resnet for flowers data set
+#
+# @author: Levan Tsinadze
+# '''
 
 from cnn.flomen.cnn_files import training_file
 from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters

@@ -1,8 +1,8 @@
-'''
-Created on Sep 23, 2016
-General configuration parameters for training testing and evaluation
-@author: Levan Tsinadze
-'''
+# '''
+# Created on Sep 23, 2016
+# General configuration parameters for training testing and evaluation
+# @author: Levan Tsinadze
+# '''
 
 import cnn.incesnet.training_parameters as FLAGS
 import cnn.incesnet.evaluation_parameters as EVAL_FLAGS

@@ -9,6 +9,7 @@ Utility class for training test and validation data files
 import os
 import types
 
+
 # General parent directory for files
 DATAS_DIR_NAME = 'datas'
 
@@ -88,7 +89,7 @@ class cnn_file_utils(files_and_path_utils):
   
   # Gets or creates directories
   def get_data_general_directory(self):
-    return self.join_path(self.get_current, self.path_to_cnn_directory)
+    return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
   
   # Gets training data directory
   def get_training_directory(self):
