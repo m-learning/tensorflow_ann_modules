@@ -32,6 +32,14 @@ class files_and_path_utils(object):
       self.path_to_training_photos = PATH_FOR_TRAINING_PHOTOS
     else:
       self.path_to_training_photos = path_to_training_photos
+      
+    # Creates file if not exists
+  def init_file_or_path(self, file_path):
+    
+    if not os.path.exists(file_path):
+      os.makedirs(file_path)
+    
+    return file_path
   
   # Joins path from method
   def join_path(self, path_inst, *other_path):
@@ -44,13 +52,19 @@ class files_and_path_utils(object):
     
     return result
   
+  # Joins and creates file or directory paths
+  def join_and_init_path(self, path_inst, *other_path):
+    
+    result = self.join_path(path_inst, *other_path)
+    self.init_file_or_path(result)
+    
+    return result
+  
   # Creates appropriated directory if such does not exists
   def init_dir(self, dir_path, *other_path):
     
     result_dir = self.join_path(dir_path, *other_path)
-    
-    if not os.path.exists(result_dir):
-      os.makedirs(result_dir)
+    self.init_file_or_path(result_dir)
     
     return result_dir 
   

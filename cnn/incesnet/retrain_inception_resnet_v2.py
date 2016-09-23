@@ -207,7 +207,7 @@ def _get_variables_to_train():
   return variables_to_train
 
 
-def main(_):
+def run_training(_):
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
 
@@ -401,7 +401,7 @@ def main(_):
 
 
 def train_net():
-  tf.app.run()
+  tf.app.run(run_training)
   
 if __name__ == '__main__':
   train_net()
