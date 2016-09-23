@@ -1,8 +1,9 @@
 # '''
-# Created on Sep 21, 2016
-#
+# Created on Sep 24, 2016
+# Downloads and converts enriched data set
 # @author: Levan Tsinadze
 # '''
+
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -38,12 +39,8 @@ import os
 import random
 import sys
 
-import tensorflow as tf
-
 from cnn.datasets import dataset_utils
-
-# The URL where the Flowers data can be downloaded.
-_DATA_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
+import tensorflow as tf
 
 # The number of images in the validation set.
 _NUM_VALIDATION = 350
@@ -162,7 +159,7 @@ def _clean_up_temporary_files(dataset_dir):
   Args:
     dataset_dir: The directory where the temporary files are stored.
   """
-  filename = _DATA_URL.split('/')[-1]
+  filename = 'flower_photos'
   filepath = os.path.join(dataset_dir, filename)
   tf.gfile.Remove(filepath)
 
@@ -193,7 +190,6 @@ def run(dataset_dir):
     print('Dataset files already exist. Exiting without re-creating them.')
     return
 
-  dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
   photo_filenames, class_names = _get_filenames_and_classes(dataset_dir)
   class_names_to_ids = dict(zip(class_names, range(len(class_names))))
 
@@ -214,4 +210,4 @@ def run(dataset_dir):
   dataset_utils.write_label_file(labels_to_class_names, dataset_dir)
 
   _clean_up_temporary_files(dataset_dir)
-  print('\nFinished converting the Flowers dataset!')
+  print('\nFinished converting the Flomen dataset!')

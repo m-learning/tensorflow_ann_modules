@@ -1,17 +1,18 @@
-#'''
-#Created on Sep 23, 2016
+# '''
+# Created on Sep 23, 2016
 #
-#Retraining of inception-resnet for flowers data set
+# Retraining of inception-resnet for flowers data set
 #
-#@author: Levan tsinadze
-#'''
+# @author: Levan tsinadze
+# '''
 
 import sys
 
 from cnn.flowers.cnn_files import training_file
-from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters
+from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters, FLAGS
 import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
 import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
+from cnn.datasets import download_and_convert_flowers
 
 
 dataset_name = 'flowers'
@@ -21,7 +22,8 @@ def init_training_parameters():
   
   file_mngr = training_file()
   file_mngr.get_or_init_training_set()
-  define_training_parameters(file_mngr, dataset_name)  
+  define_training_parameters(file_mngr, dataset_name)
+  download_and_convert_flowers.run(FLAGS.dataset_dir)  
 
 # Prepares evaluation parameters
 def init_eval_parameters():

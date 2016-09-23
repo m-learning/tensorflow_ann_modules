@@ -36,7 +36,7 @@ import cnn.incesnet.evaluation_parameters as FLAGS
 
 slim = tf.contrib.slim
 
-def main(_):
+def run_evaluation(_):
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
 
@@ -142,7 +142,7 @@ def main(_):
 
 
 def eval_net():
-  tf.app.run()
+  tf.app.run(run_evaluation)
 
 if __name__ == '__main__':
   tf.app.run()

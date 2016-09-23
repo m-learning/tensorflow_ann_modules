@@ -29,9 +29,10 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import tensorflow as tf
 
 from cnn.datasets import dataset_utils
+import tensorflow as tf
+
 
 slim = tf.contrib.slim
 
@@ -46,7 +47,7 @@ _ITEMS_TO_DESCRIPTIONS = {
     'label': 'A single integer between 0 and 4',
 }
 
-
+# Generates training and evaluation sets for flowers
 def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
   """Gets a dataset tuple with instructions for reading cifar10.
 
