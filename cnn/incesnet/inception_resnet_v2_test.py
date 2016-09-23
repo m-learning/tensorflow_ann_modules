@@ -28,7 +28,7 @@ from __future__ import print_function
 from cnn.incesnet import inception_resnet_v2 as inception
 import tensorflow as tf
 
-
+# Test for InceptionResNe modelt
 class InceptionTest(tf.test.TestCase):
 
   def testBuildLogits(self):

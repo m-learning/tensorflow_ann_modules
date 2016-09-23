@@ -36,7 +36,7 @@ networks_map = {'inception_resnet_v2': inception_resnet_v2}
 
 arg_scopes_map = {'inception_resnet_v2': inception_resnet_v2_arg_scope}
 
-
+# Factory module to initialize CNN model
 def get_network_fn(name, num_classes, weight_decay=0.0, is_training=False):
   """Returns a network_fn such as `logits, end_points = network_fn(images)`.
 
