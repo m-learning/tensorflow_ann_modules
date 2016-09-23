@@ -1,11 +1,11 @@
-'''
-Created on Sep 14, 2016
-
-Implementation of inception_resnet_v2 form TensorFlow-slim models
-
-@author: Levan Tsinadze
-'''
-
+# '''
+# Created on Sep 14, 2016
+#
+# Implementation of inception_resnet_v2 form TensorFlow-slim models
+#
+# @author: Levan Tsinadze
+# '''
+#
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +20,15 @@ Implementation of inception_resnet_v2 form TensorFlow-slim models
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Contains the definition of the Inception Resnet V2 architecture.
+# """Contains the definition of the Inception Resnet V2 architecture.
+#
+# As described in http://arxiv.org/abs/1602.07261.
+#
+#  Inception-v4, Inception-ResNet and the Impact of Residual Connections
+#    on Learning
+#  Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke, Alex Alemi
+# """
 
-As described in http://arxiv.org/abs/1602.07261.
-
-  Inception-v4, Inception-ResNet and the Impact of Residual Connections
-    on Learning
-  Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke, Alex Alemi
-"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

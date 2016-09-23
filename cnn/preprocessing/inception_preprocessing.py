@@ -1,9 +1,9 @@
-'''
-Created on Sep 21, 2016
-
-@author: Levan Tsinadze
-'''
-
+# '''
+# Created on Sep 21, 2016
+#
+# @author: Levan Tsinadze
+# '''
+#
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ Created on Sep 21, 2016
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Provides utilities to preprocess images for the Inception networks."""
+# """Provides utilities to preprocess images for the Inception networks."""
 
 from __future__ import absolute_import
 from __future__ import division

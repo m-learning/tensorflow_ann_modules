@@ -1,9 +1,9 @@
-'''
-Created on Sep 21, 2016
-
-@author: Levan Tsinadze
-'''
-
+#'''
+#Created on Sep 21, 2016
+#
+#@author: Levan Tsinadze
+#'''
+#
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,16 +18,16 @@ Created on Sep 21, 2016
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-r"""Downloads and converts Flowers data to TFRecords of TF-Example protos.
-
-This module downloads the Flowers data, uncompresses it, reads the files
-that make up the Flowers data and creates two TFRecord datasets: one for train
-and one for test. Each TFRecord dataset is comprised of a set of TF-Example
-protocol buffers, each of which contain a single image and label.
-
-The script should take about a minute to run.
-
-"""
+#r"""Downloads and converts Flowers data to TFRecords of TF-Example protos.
+#
+#This module downloads the Flowers data, uncompresses it, reads the files
+#that make up the Flowers data and creates two TFRecord datasets: one for train
+#and one for test. Each TFRecord dataset is comprised of a set of TF-Example
+#protocol buffers, each of which contain a single image and label.
+#
+#The script should take about a minute to run.
+#
+#"""
 
 from __future__ import absolute_import
 from __future__ import division

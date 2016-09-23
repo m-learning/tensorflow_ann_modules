@@ -1,11 +1,11 @@
-'''
-Created on Sep 14, 2016
-
-Implementation of inception_v3 from TensorFlow-slim models
-
-@author: Levan Tsinadze
-'''
-
+# '''
+# Created on Sep 14, 2016
+#
+# Implementation of inception_v3 from TensorFlow-slim models
+#
+# @author: Levan Tsinadze
+# '''
+#
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ Implementation of inception_v3 from TensorFlow-slim models
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Contains the definition for inception v3 classification network."""
+# """Contains the definition for inception v3 classification network."""
 
 from __future__ import absolute_import
 from __future__ import division
