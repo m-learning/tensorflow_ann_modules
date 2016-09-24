@@ -1,10 +1,10 @@
-#'''
-#Created on Sep 14, 2016
+# '''
+# Created on Sep 14, 2016
 #
-#Implementation of inception_resnet_v2 retraining and fine- tuning 
+# Implementation of inception_resnet_v2 retraining and fine- tuning 
 #
-#@author: Levan Tsinadze
-#'''
+# @author: Levan Tsinadze
+# '''
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -20,7 +20,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-#"""Generic training script that trains a model using a given dataset."""
+# """Generic training script that trains a model using a given dataset."""
 
 from __future__ import absolute_import
 from __future__ import division

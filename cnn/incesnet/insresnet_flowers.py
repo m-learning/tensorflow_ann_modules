@@ -8,11 +8,11 @@
 
 import sys
 
+from cnn.datasets import download_and_convert_flowers
 from cnn.flowers.cnn_files import training_file
 from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters, FLAGS
 import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
 import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
-from cnn.datasets import download_and_convert_flowers
 
 
 dataset_name = 'flowers'

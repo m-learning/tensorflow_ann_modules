@@ -36,12 +36,17 @@ def eval_net():
   init_eval_parameters()
   eval_inception.eval_net()
 
+# Runs train or evaluation
+def train_or_eval():
+  
+  if sys.argv[1] == 'eval':
+      eval_net()
+  else:
+      train_net()
+
 if __name__ == '__main__':
   
   if len(sys.argv) > 1:
-    if sys.argv[1] == 'eval':
-      eval_net()
-    else:
-      train_net()
+    train_or_eval()
   else:
     train_net()
