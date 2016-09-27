@@ -4,28 +4,56 @@
 # @author: Levan Tsinadze
 # '''
 
+import os
+import sys
+import tarfile
+
 import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
 import cnn.incesnet.evaluation_parameters as EVAL_FLAGS
 import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
 import cnn.incesnet.training_parameters as FLAGS
+from six.moves import urllib
 
 
+CHECKPOINT_URL = 'http://download.tensorflow.org/models/inception_resnet_v2_2016_08_30.tar.gz'
+CHECKPOINT_FILE_NAME = 'inception_resnet_v2_2016_08_30.ckpt'
+
+# Training parameters and data set
 class train_and_eval_config(object):
   
   def __init__(self, file_mngr, dataset_name, dataset_downloader):
     self.file_mngr = file_mngr
     self.dataset_name = dataset_name
     self.dataset_downloader = dataset_downloader
+    self.checkpoint_directory = self.file_mngr.init_files_directory()
+    self.checkpoint_file = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
+  
+  # Gets checkpoint file
+  def download_checkpoint(self):
+    
+    filename = CHECKPOINT_URL.split('/')[-1]
+    filepath = self.file_mngr.join_path(self.checkpoint_directory, filename)
+    if not os.path.exists(filepath):
+      def _progress(count, block_size, total_size):
+        sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
+        sys.stdout.flush()
+      filepath, _ = urllib.request.urlretrieve(CHECKPOINT_URL, filepath, _progress)
+    print()
+    statinfo = os.stat(filepath)
+    print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+    tarfile.open(filepath, 'r:gz').extractall(self.checkpoint_directory)
 
   # Prepares flowers for inception
   def define_training_parameters(self):
     
     self.file_mngr.get_or_init_training_set()
+    if not os.path.exists(self.checkpoint_file):
+      self.download_checkpoint()
     FLAGS.train_dir = self.file_mngr.init_files_directory()
     FLAGS.dataset_name = self.dataset_name
     FLAGS.dataset_split_name = 'train'
     FLAGS.dataset_dir = self.file_mngr.get_data_directory()
-    FLAGS.checkpoint_path = self.file_mngr.join_path(FLAGS.train_dir, 'inception_resnet_v2.ckpt')
+    FLAGS.checkpoint_path = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
     
     FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
     FLAGS.trainable_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'

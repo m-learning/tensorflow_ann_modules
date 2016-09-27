@@ -31,6 +31,7 @@ import tarfile
 from six.moves import urllib
 import tensorflow as tf
 
+
 LABELS_FILENAME = 'labels.txt'
 
 

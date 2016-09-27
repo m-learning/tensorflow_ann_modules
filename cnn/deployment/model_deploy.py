@@ -119,7 +119,7 @@ __all__ = ['create_clones',
            'optimize_clones',
            'DeployedModel',
            'DeploymentConfig',
-           'Clone',
+           'Clone'
           ]
 
 
@@ -127,7 +127,7 @@ __all__ = ['create_clones',
 Clone = collections.namedtuple('Clone',
                                ['outputs',  # Whatever model_fn() returned.
                                 'scope',  # The scope used to create it.
-                                'device',  # The device used to create.
+                                'device'  # The device used to create.
                                ])
 
 # Namedtuple used to represent a DeployedModel, returned by deploy().
@@ -135,7 +135,7 @@ DeployedModel = collections.namedtuple('DeployedModel',
                                        ['train_op',  # The `train_op`
                                         'summary_op',  # The `summary_op`
                                         'total_loss',  # The loss `Tensor`
-                                        'clones',  # A list of `Clones` tuples.
+                                        'clones'  # A list of `Clones` tuples.
                                        ])
 
 # Default parameters for DeploymentConfig

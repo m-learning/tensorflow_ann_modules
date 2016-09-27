@@ -42,6 +42,7 @@ import sys
 from cnn.datasets import dataset_utils
 import tensorflow as tf
 
+
 # The number of images in the validation set.
 _NUM_VALIDATION = 350
 

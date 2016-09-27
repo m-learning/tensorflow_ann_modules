@@ -38,9 +38,9 @@ import os
 import random
 import sys
 
+from cnn.datasets import dataset_utils
 import tensorflow as tf
 
-from cnn.datasets import dataset_utils
 
 # The URL where the Flowers data can be downloaded.
 _DATA_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'

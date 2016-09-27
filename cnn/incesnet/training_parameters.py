@@ -108,7 +108,7 @@ preprocessing_name = None  # 'The name of the preprocessing to use. If left '
 
 batch_size = 32  # 'The number of samples in each batch.'
 
-train_image_size = None  # 'Train image size'
+train_image_size = 299  # 'Train image size'
 
 max_number_of_steps = None  # 'The maximum number of training steps.'
 
