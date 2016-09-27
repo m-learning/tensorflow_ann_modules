@@ -12,9 +12,10 @@ import cnn.incesnet.training_parameters as FLAGS
 
 class train_and_eval_config(object):
   
-  def __init__(self, file_mngr, dataset_name):
+  def __init__(self, file_mngr, dataset_name, dataset_downloader):
     self.file_mngr = file_mngr
     self.dataset_name = dataset_name
+    self.dataset_downloader = dataset_downloader
 
   # Prepares flowers for inception
   def define_training_parameters(self):
@@ -38,8 +39,8 @@ class train_and_eval_config(object):
     FLAGS.log_every_n_steps = 100
     FLAGS.optimizer = 'rmsprop'
     FLAGS.weight_decay = 0.00004
+    self.dataset_downloader.run(FLAGS.dataset_dir)
     
-  
   # Prepares evaluation parameters
   def define_eval_parameters(self):
   

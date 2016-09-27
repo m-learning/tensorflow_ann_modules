@@ -8,6 +8,7 @@
 
 import sys
 
+from cnn.datasets import download_and_convert_flomen
 from cnn.flomen.cnn_files import training_file
 from cnn.incesnet.config_parameters import train_and_eval_config
 
@@ -17,7 +18,7 @@ dataset_name = 'flomen'
 class flomen_config(train_and_eval_config):
   
   def __init__(self):
-    super(flomen_config, self).__init__(training_file(), dataset_name)
+    super(flomen_config, self).__init__(training_file(), dataset_name, download_and_convert_flomen)
 
 if __name__ == '__main__':
   flomenn_cfg = flomen_config()

@@ -23,12 +23,13 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-import functools
 
-import tensorflow as tf
+import functools
 
 from cnn.incesnet import inception_resnet_v2
 from cnn.incesnet.inception_resnet_v2 import inception_resnet_v2_arg_scope
+import tensorflow as tf
+
 
 slim = tf.contrib.slim
 
@@ -54,11 +55,11 @@ def get_network_fn(name, num_classes, weight_decay=0.0, is_training=False):
   Raises:
     ValueError: If network `name` is not recognized.
   """
-  if name not in networks_map:
-    raise ValueError('Name of network unknown %s' % name)
-  arg_scope = arg_scopes_map[name](weight_decay=weight_decay)
-  func = networks_map[name]
-  @functools.wraps(func)
+  #if name not in networks_map:
+  #  raise ValueError('Name of network unknown %s' % name)
+  arg_scope = inception_resnet_v2_arg_scope(weight_decay=weight_decay)
+  func = inception_resnet_v2
+  @functools.wraps(func, assigned = ('__name__', '__doc__'))
   def network_fn(images):
     with slim.arg_scope(arg_scope):
       return func(images, num_classes, is_training=is_training)
