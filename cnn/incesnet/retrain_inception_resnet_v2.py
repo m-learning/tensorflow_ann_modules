@@ -30,9 +30,9 @@ from tensorflow.python.ops import control_flow_ops
 
 from cnn.datasets import dataset_factory
 from cnn.deployment import model_deploy
+import cnn.incesnet.training_parameters as FLAGS
 from cnn.nets import nets_factory
 from cnn.preprocessing import preprocessing_factory
-import cnn.incesnet.training_parameters as FLAGS
 import tensorflow as tf
 
 

@@ -6,14 +6,17 @@ Files for training data
 @author: Levan Tsinadze
 '''
 
+import glob
 import os
+import shutil
 import sys
 import tarfile
 import zipfile
-import shutil
-import glob
 
+from cnn.utils.file_utils import cnn_file_utils
 from six.moves import urllib
+
+
 try:
   from PIL import Image
 except ImportError:
@@ -21,7 +24,6 @@ except ImportError:
   import Image
 # import Image
 
-from cnn.utils.file_utils import cnn_file_utils
 
 # Files and directory constant parameters
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'

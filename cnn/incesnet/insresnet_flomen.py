@@ -6,11 +6,13 @@
 # @author: Levan Tsinadze
 # '''
 
+import sys
+
 from cnn.flomen.cnn_files import training_file
 from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters
-import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
 import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
-import sys
+import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
+
 
 dataset_name = 'flomen'
 

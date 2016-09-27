@@ -27,12 +27,13 @@ from __future__ import division
 from __future__ import print_function
 
 import math
-import tensorflow as tf
 
 from cnn.datasets import dataset_factory
+import cnn.incesnet.evaluation_parameters as FLAGS
 from cnn.nets import nets_factory
 from cnn.preprocessing import preprocessing_factory
-import cnn.incesnet.evaluation_parameters as FLAGS
+import tensorflow as tf
+
 
 slim = tf.contrib.slim
 
