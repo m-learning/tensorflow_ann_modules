@@ -9,46 +9,16 @@
 import sys
 
 from cnn.flomen.cnn_files import training_file
-from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters
-import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
-import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
+from cnn.incesnet.config_parameters import train_and_eval_config
 
 
 dataset_name = 'flomen'
 
-# Prepares flowers for inception
-def init_training_parameters():
+class flomen_config(train_and_eval_config):
   
-  file_mngr = training_file()
-  file_mngr.get_or_init_training_set()
-  define_training_parameters(file_mngr, dataset_name)  
-
-# Prepares evaluation parameters
-def init_eval_parameters():
-  file_mngr = training_file()
-  define_eval_parameters(file_mngr, dataset_name)
-
-# Trains network
-def train_net():
-  init_training_parameters()
-  train_inception.train_net()
-
-# Evaluates network
-def eval_net():
-  init_eval_parameters()
-  eval_inception.eval_net()
-
-# Runs train or evaluation
-def train_or_eval():
-  
-  if sys.argv[1] == 'eval':
-      eval_net()
-  else:
-      train_net()
+  def __init__(self):
+    super(flomen_config, self).__init__(training_file(), dataset_name)
 
 if __name__ == '__main__':
-  
-  if len(sys.argv) > 1:
-    train_or_eval()
-  else:
-    train_net()
+  flomenn_cfg = flomen_config()
+  flomenn_cfg.train_or_eval_net(sys.argv)

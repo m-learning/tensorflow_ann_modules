@@ -59,7 +59,7 @@ def block35(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
       net = activation_fn(net)
   return net
 
-
+# Block for 17X17 ResNet
 def block17(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
   """Builds the 17x17 resnet block."""
   with tf.variable_scope(scope, 'Block17', [net], reuse=reuse):
@@ -79,7 +79,7 @@ def block17(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
       net = activation_fn(net)
   return net
 
-
+# Block for 8X8 ResNet
 def block8(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
   """Builds the 8x8 resnet block."""
   with tf.variable_scope(scope, 'Block8', [net], reuse=reuse):
@@ -99,7 +99,7 @@ def block8(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
       net = activation_fn(net)
   return net
 
-
+# Interface for Inception-ResNet neuarl network
 def inception_resnet_v2(inputs, num_classes=1001, is_training=True,
                         dropout_keep_prob=0.8,
                         reuse=None,
@@ -257,6 +257,7 @@ def inception_resnet_v2(inputs, num_classes=1001, is_training=True,
           end_points['Predictions'] = tf.nn.softmax(logits, name='Predictions')
 
     return logits, end_points
+  
 inception_resnet_v2.default_image_size = 299
 
 

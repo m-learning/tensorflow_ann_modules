@@ -8,44 +8,17 @@
 
 import sys
 
-from cnn.datasets import download_and_convert_flowers
 from cnn.flowers.cnn_files import training_file
-from cnn.incesnet.config_parameters import define_training_parameters, define_eval_parameters, FLAGS
-import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
-import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
+from cnn.incesnet.config_parameters import train_and_eval_config
 
 
 dataset_name = 'flowers'
 
-# Prepares flowers for inception
-def init_training_parameters():
+class flower_config(train_and_eval_config):
   
-  file_mngr = training_file()
-  file_mngr.get_or_init_training_set()
-  define_training_parameters(file_mngr, dataset_name)
-  download_and_convert_flowers.run(FLAGS.dataset_dir)  
+  def __init__(self):
+    super(flower_config, self).__init__(training_file(), dataset_name)
 
-# Prepares evaluation parameters
-def init_eval_parameters():
-  file_mngr = training_file()
-  define_eval_parameters(file_mngr, dataset_name)
-  
-# Trains network
-def train_net():
-  init_training_parameters()
-  train_inception.train_net()
-
-# Evaluates network  
-def eval_net():
-  init_eval_parameters()
-  eval_inception.eval_net()
-  
 if __name__ == '__main__':
-  
-  if len(sys.argv) > 1:
-    if sys.argv[1] == 'eval':
-      eval_net()
-    else:
-      train_net()
-  else:
-    train_net()
+  flomenn_cfg = flower_config()
+  flomenn_cfg.train_or_eval_net(sys.argv)

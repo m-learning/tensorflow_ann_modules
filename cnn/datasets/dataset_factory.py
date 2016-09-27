@@ -1,8 +1,8 @@
-#'''
-#Created on Sep 21, 2016
+# '''
+# Created on Sep 21, 2016
 #
-#@author: Levan Tsinadze
-#'''
+# @author: Levan Tsinadze
+# '''
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +18,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-#"""A factory-pattern class which returns classification image/label pairs."""
+# """A factory-pattern class which returns classification image/label pairs."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -26,9 +26,10 @@ from __future__ import print_function
 
 from cnn.datasets import flowers
 
+
 datasets_map = {'flowers': flowers}
 
-
+# Gets appropriated data set for train - evaluate and test neural net
 def get_dataset(name, split_name, dataset_dir, file_pattern=None, reader=None):
   """Given a dataset name and a split_name returns a Dataset.
 
