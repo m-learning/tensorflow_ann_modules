@@ -33,7 +33,6 @@ PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip',
                 'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip',
                 'http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip']
-TRAINIG_ZIP_FOLDER = 'training_arch'
 CASSIFICATION_DIRS = ['persons', 'persons', 'bikes', 'cars', 'persons', 'persons']
 
 # Directories to move training data from
@@ -130,10 +129,7 @@ class training_file(cnn_file_utils):
   # Gets or generates training set
   def get_or_init_training_set(self):
     
-    dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
-    if not os.path.exists(dest_directory):
-      os.mkdir(dest_directory)  
-      
+    dest_directory = self.get_archives_directory()
     filename = TRAINIG_SET_URL.split('/')[-1]
     filepath = os.path.join(dest_directory, filename)
     if not os.path.exists(filepath):

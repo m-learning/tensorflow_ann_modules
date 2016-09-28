@@ -25,6 +25,7 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import shutil
 import sys
 import tarfile
 
@@ -90,6 +91,15 @@ def download_and_uncompress_tarball(tarball_url, dataset_dir):
   statinfo = os.stat(filepath)
   print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
   tarfile.open(filepath, 'r:gz').extractall(dataset_dir)
+  
+def copy_and_uncompress_tarball(archive_dir, dataset_dir, file_name):
+  
+  archive_path = os.path.join(archive_dir, file_name)
+  if os.path.exists(archive_path):
+    shutil.copy(archive_path, dataset_dir)
+    archive_data_path = os.path.join(dataset_dir, file_name)
+    print('Successfully copied', file_name, 'from', archive_dir)
+    tarfile.open(archive_data_path, 'r:gz').extractall(dataset_dir)
 
 
 def write_label_file(labels_to_class_names, dataset_dir,

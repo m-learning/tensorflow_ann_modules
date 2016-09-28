@@ -179,8 +179,8 @@ def _dataset_exists(dataset_dir):
         return False
   return True
 
-
-def run(dataset_dir):
+# Prepares training set and checkpoints
+def run(dataset_dir, archive_dir):
   """Runs the download and conversion operation.
 
   Args:
@@ -192,8 +192,13 @@ def run(dataset_dir):
   if _dataset_exists(dataset_dir):
     print('Dataset files already exist. Exiting without re-creating them.')
     return
-
-  dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
+  
+  archive_filename = _DATA_URL.split('/')[-1]
+  archive_path = os.path.join(archive_dir, archive_filename)
+  if os.path.exists(archive_path):
+    dataset_utils.copy_and_uncompress_tarball(archive_dir, dataset_dir, archive_path)
+  else:
+    dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
   photo_filenames, class_names = _get_filenames_and_classes(dataset_dir)
   class_names_to_ids = dict(zip(class_names, range(len(class_names))))
 

@@ -13,6 +13,9 @@ import types
 # General parent directory for files
 DATAS_DIR_NAME = 'datas'
 
+# Training set archives directory suffix
+TRAINIG_ZIP_FOLDER = 'training_arch'
+
 # Files and directory constant parameters
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
@@ -90,6 +93,14 @@ class cnn_file_utils(files_and_path_utils):
   # Gets or creates directories
   def get_data_general_directory(self):
     return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
+  
+  # Gets training set archives directory
+  def get_archives_directory(self):
+    
+    dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
+    if not os.path.exists(dest_directory):
+      os.mkdir(dest_directory) 
+    return dest_directory
   
   # Gets training data directory
   def get_training_directory(self):

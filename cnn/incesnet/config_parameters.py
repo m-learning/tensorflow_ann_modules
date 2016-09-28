@@ -67,7 +67,8 @@ class train_and_eval_config(object):
     FLAGS.log_every_n_steps = 100
     FLAGS.optimizer = 'rmsprop'
     FLAGS.weight_decay = 0.00004
-    self.dataset_downloader.run(FLAGS.dataset_dir)
+    archive_dir = self.file_mngr.get_archives_directory()
+    self.dataset_downloader.run(FLAGS.dataset_dir, archive_dir)
     
   # Prepares evaluation parameters
   def define_eval_parameters(self):
@@ -80,7 +81,7 @@ class train_and_eval_config(object):
     EVAL_FLAGS.model_name = 'inception_resnet_v2'
     
   
-    # Trains network
+  # Trains network
   def train_net(self):
     self.define_training_parameters()
     train_inception.train_net()

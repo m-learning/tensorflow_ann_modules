@@ -15,6 +15,7 @@ from cnn.incesnet.config_parameters import train_and_eval_config
 
 dataset_name = 'flomen'
 
+# Configuration for flomen data set
 class flomen_config(train_and_eval_config):
   
   def __init__(self):

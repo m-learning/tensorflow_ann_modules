@@ -15,6 +15,7 @@ from cnn.incesnet.config_parameters import train_and_eval_config
 
 dataset_name = 'flowers'
 
+# Configuration for flowers data set
 class flower_config(train_and_eval_config):
   
   def __init__(self):
