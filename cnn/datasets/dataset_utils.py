@@ -151,4 +151,5 @@ def read_label_file(dataset_dir, filename=LABELS_FILENAME):
   for line in lines:
     index = line.index(':')
     labels_to_class_names[int(line[:index])] = line[index + 1:]
+    
   return labels_to_class_names

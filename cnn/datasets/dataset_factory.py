@@ -26,7 +26,7 @@ from __future__ import print_function
 
 from cnn.datasets import flowers
 
-
+# Map of data set modules
 datasets_map = {'flowers': flowers, 'flomen': flowers}
 
 # Gets appropriated data set for train - evaluate and test neural net

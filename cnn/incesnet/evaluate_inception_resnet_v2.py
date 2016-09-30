@@ -105,12 +105,14 @@ def run_evaluation(_):
 
     predictions = tf.argmax(logits, 1)
     labels = tf.squeeze(labels)
+    labels_size = dataset.num_classes
 
     # Define the metrics:
+    recall_key = 'Recall@' + str(labels_size)
     names_to_values, names_to_updates = slim.metrics.aggregate_metric_map({
         'Accuracy': slim.metrics.streaming_accuracy(predictions, labels),
-        'Recall@5': slim.metrics.streaming_recall_at_k(
-            logits, labels, 5),
+        recall_key: slim.metrics.streaming_recall_at_k(
+            logits, labels, labels_size),
     })
 
     # Print the summaries to screen.

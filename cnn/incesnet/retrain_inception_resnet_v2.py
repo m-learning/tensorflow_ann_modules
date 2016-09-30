@@ -129,14 +129,17 @@ def _configure_optimizer(learning_rate):
     optimizer = tf.train.GradientDescentOptimizer(learning_rate)
   else:
     raise ValueError('Optimizer [%s] was not recognized', FLAGS.optimizer)
+  
   return optimizer
 
 
 def _add_variables_summaries(learning_rate):
+  
   summaries = []
   for variable in slim.get_model_variables():
     summaries.append(tf.histogram_summary(variable.op.name, variable))
   summaries.append(tf.scalar_summary('training/Learning Rate', learning_rate))
+  
   return summaries
 
 # Gets initialization function

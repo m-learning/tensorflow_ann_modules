@@ -17,7 +17,7 @@ checkpoint_path = '/tmp/tfmodel/'
     #'The directory where the model was written to or an absolute path to a '
     #'checkpoint file.'
 
-eval_dir = '/tmp/tfmodel/' #'Directory where the results are saved to.'
+eval_dir = '/tmp/eval/' #'Directory where the results are saved to.'
 
 num_preprocessing_threads = 4 #'The number of threads used to create the batches.'
 

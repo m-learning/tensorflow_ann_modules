@@ -14,6 +14,7 @@ import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
 import cnn.incesnet.training_parameters as FLAGS
 from six.moves import urllib
 
+
 # URL for checkpoint
 CHECKPOINT_URL = 'http://download.tensorflow.org/models/inception_resnet_v2_2016_08_30.tar.gz'
 CHECKPOINT_FILE_NAME = 'inception_resnet_v2_2016_08_30.ckpt'
@@ -74,10 +75,10 @@ class train_and_eval_config(object):
   def define_eval_parameters(self):
   
     EVAL_FLAGS.checkpoint_path = self.file_mngr.init_files_directory()
-    EVAL_FLAGS.eval_dir = self.file_mngr.init_files_directory()
+    EVAL_FLAGS.eval_dir = self.file_mngr.get_or_init_eval_path()
     EVAL_FLAGS.dataset_name = self.dataset_name
     EVAL_FLAGS.dataset_split_name = 'validation'
-    EVAL_FLAGS.dataset_dir = self.file_mngr.get_data_directory()
+    EVAL_FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
     EVAL_FLAGS.model_name = 'inception_resnet_v2'
     
   

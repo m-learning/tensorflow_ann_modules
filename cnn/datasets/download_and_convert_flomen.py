@@ -50,7 +50,7 @@ _NUM_VALIDATION = 350
 _RANDOM_SEED = 0
 
 # The number of shards per dataset split.
-_NUM_SHARDS = 5
+_NUM_SHARDS = 8
 
 DATASET_TMP_DIR_SUFFIX = 'flower_photos'
 

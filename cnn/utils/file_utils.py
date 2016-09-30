@@ -19,6 +19,7 @@ TRAINIG_ZIP_FOLDER = 'training_arch'
 # Files and directory constant parameters
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
+PATH_FOR_EVALUATION = 'eval_data'
 PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
@@ -141,3 +142,7 @@ class cnn_file_utils(files_and_path_utils):
   # Gets or initializes test image
   def get_or_init_test_path(self):
     return self.join_path(self.get_or_init_test_dir, TEST_IMAGE_NAME)
+  
+  # Gets / initializes evaluation directory
+  def get_or_init_eval_path(self):
+    return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_EVALUATION)

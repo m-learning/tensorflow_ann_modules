@@ -44,7 +44,7 @@ _NUM_CLASSES = 5
 
 _ITEMS_TO_DESCRIPTIONS = {
     'image': 'A color image of varying size.',
-    'label': 'A single integer between 0 and 4',
+    'label': 'A single integer between 0 and ',
 }
 
 # Generates training and evaluation sets for flowers and flomen
@@ -94,6 +94,10 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
   labels_to_names = None
   if dataset_utils.has_labels(dataset_dir):
     labels_to_names = dataset_utils.read_label_file(dataset_dir)
+    num_of_classes = len(labels_to_names)
+  else:
+    num_of_classes = _NUM_CLASSES
+  _ITEMS_TO_DESCRIPTIONS['label'] + str((num_of_classes - 1))
 
   return slim.dataset.Dataset(
       data_sources=file_pattern,
@@ -101,5 +105,5 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
       decoder=decoder,
       num_samples=SPLITS_TO_SIZES[split_name],
       items_to_descriptions=_ITEMS_TO_DESCRIPTIONS,
-      num_classes=_NUM_CLASSES,
+      num_classes=num_of_classes,
       labels_to_names=labels_to_names)
