@@ -1,8 +1,8 @@
-#'''
-#Created on Sep 21, 2016
+# '''
+# Created on Sep 21, 2016
 #
-#@author: Levan Tsinadze
-#'''
+# @author: Levan Tsinadze
+# '''
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +18,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-#"""Deploy Slim models across multiple clones and replicas.
+# """Deploy Slim models across multiple clones and replicas.
 #
 # TODO(sguada) docstring paragraph by (a) motivating the need for the file and
 # (b) defining clones.
@@ -27,11 +27,11 @@
 # E.g. "each model deployment is composed of several parts: a DeploymentConfig,
 # which captures A, B and C, an input_fn which loads data.. etc
 
-#To easily train a model on multiple GPUs or across multiple machines this
-#module provides a set of helper functions: `create_clones`,
-#`optimize_clones` and `deploy`.
+# To easily train a model on multiple GPUs or across multiple machines this
+# module provides a set of helper functions: `create_clones`,
+# `optimize_clones` and `deploy`.
 #
-#Usage:
+# Usage:
 #
 #  g = tf.Graph()
 #
@@ -64,14 +64,14 @@
 #  slim.learning.train(model_dp.train_op, my_log_dir,
 #                      summary_op=model_dp.summary_op)
 #
-#The Clone namedtuple holds together the values associated with each call to
-#model_fn:
+# The Clone namedtuple holds together the values associated with each call to
+# model_fn:
 #  * outputs: The return values of the calls to `model_fn()`.
 #  * scope: The scope used to create the clone.
 #  * device: The device used to create the clone.
 #
-#DeployedModel namedtuple, holds together the values needed to train multiple
-#clones:
+# DeployedModel namedtuple, holds together the values needed to train multiple
+# clones:
 #  * train_op: An operation that run the optimizer training op and include
 #    all the update ops created by `model_fn`. Present only if an optimizer
 #    was specified.
@@ -81,7 +81,7 @@
 #    `model_fn` plus the regularization losses.
 #  * clones: List of `Clone` tuples returned by `create_clones()`.
 #
-#DeploymentConfig parameters:
+# DeploymentConfig parameters:
 #  * num_clones: Number of model clones to deploy in each replica.
 #  * clone_on_cpu: True if clones should be placed on CPU.
 #  * replica_id: Integer.  Index of the replica for which the model is
@@ -91,7 +91,7 @@
 #  * worker_job_name: A name for the worker job.
 #  * ps_job_name: A name for the parameter server job.
 #
-#TODO(sguada):
+# TODO(sguada):
 #  - describe side effect to the graph.
 #  - what happens to summaries and update_ops.
 #  - which graph collections are altered.
@@ -99,7 +99,7 @@
 #  - analyze the possibility of calling deploy more than once.
 #
 #
-#"""
+# """
 
 from __future__ import absolute_import
 from __future__ import division

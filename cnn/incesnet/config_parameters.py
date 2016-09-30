@@ -52,7 +52,7 @@ class train_and_eval_config(object):
     FLAGS.train_dir = self.file_mngr.init_files_directory()
     FLAGS.dataset_name = self.dataset_name
     FLAGS.dataset_split_name = 'train'
-    FLAGS.dataset_dir = self.file_mngr.get_data_directory()
+    FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
     FLAGS.checkpoint_path = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
     
     FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'

@@ -52,6 +52,8 @@ _RANDOM_SEED = 0
 # The number of shards per dataset split.
 _NUM_SHARDS = 5
 
+DATASET_TMP_DIR_SUFFIX = 'flower_photos'
+
 
 class ImageReader(object):
   """Helper class that provides TensorFlow image coding utilities."""
@@ -84,7 +86,7 @@ def _get_filenames_and_classes(dataset_dir):
     A list of image file paths, relative to `dataset_dir` and the list of
     subdirectories, representing class names.
   """
-  flower_root = os.path.join(dataset_dir, 'flower_photos')
+  flower_root = os.path.join(dataset_dir, DATASET_TMP_DIR_SUFFIX)
   directories = []
   class_names = []
   for filename in os.listdir(flower_root):
@@ -153,22 +155,20 @@ def _convert_dataset(split_name, filenames, class_names_to_ids, dataset_dir):
   sys.stdout.write('\n')
   sys.stdout.flush()
 
-
+# Cleans temporary directories
 def _clean_up_temporary_files(dataset_dir):
   """Removes temporary files used to create the dataset.
 
   Args:
     dataset_dir: The directory where the temporary files are stored.
   """
-  filename = 'flower_photos'
-  filepath = os.path.join(dataset_dir, filename)
-  tf.gfile.Remove(filepath)
-
-  tmp_dir = os.path.join(dataset_dir, 'flower_photos')
-  tf.gfile.DeleteRecursively(tmp_dir)
+  tmp_dir = os.path.join(dataset_dir, DATASET_TMP_DIR_SUFFIX, DATASET_TMP_DIR_SUFFIX)
+  if os.path.exists(tmp_dir):
+    tf.gfile.DeleteRecursively(tmp_dir)
 
 # Validates if data set exists
 def _dataset_exists(dataset_dir):
+  
   for split_name in ['train', 'validation']:
     for shard_id in range(_NUM_SHARDS):
       output_filename = _get_dataset_filename(
@@ -178,7 +178,7 @@ def _dataset_exists(dataset_dir):
   return True
 
 # Download and convert flomen data set
-def run(dataset_dir):
+def run(dataset_dir, arch_dire=None):
   """Runs the download and conversion operation.
 
   Args:

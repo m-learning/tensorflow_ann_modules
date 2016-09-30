@@ -23,6 +23,10 @@ class training_file(cnn_file_utils):
   
   def __init__(self):
     super(training_file, self).__init__('flowers')
+    
+    # Method to get data set directory
+  def get_dataset_dir(self):
+    return super(training_file, self).get_data_directory()
       
   # Gets or generates training set
   def get_or_init_training_set(self):

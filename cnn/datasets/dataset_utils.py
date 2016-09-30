@@ -1,8 +1,8 @@
-#'''
-#Created on Sep 21, 2016
+# '''
+# Created on Sep 21, 2016
 #
-#@author: Levan Tsinadze
-#'''
+# @author: Levan Tsinadze
+# '''
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +18,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-#"""Contains utilities for downloading and converting datasets."""
+# """Contains utilities for downloading and converting datasets."""
 
 from __future__ import absolute_import
 from __future__ import division

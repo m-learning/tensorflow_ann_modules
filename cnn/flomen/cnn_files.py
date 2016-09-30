@@ -46,6 +46,10 @@ class training_file(cnn_file_utils):
   
   def __init__(self):
     super(training_file, self).__init__('flomen')
+  
+  # Method to get data set directory
+  def get_dataset_dir(self):
+    return super(training_file, self).get_training_directory()
     
   # Converts person images
   def convert_person_images(self, prfx, src_dir, persons_dir, img_type):

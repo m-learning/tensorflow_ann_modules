@@ -155,7 +155,7 @@ def _convert_dataset(split_name, filenames, class_names_to_ids, dataset_dir):
   sys.stdout.write('\n')
   sys.stdout.flush()
 
-
+# Cleans temporary directories
 def _clean_up_temporary_files(dataset_dir):
   """Removes temporary files used to create the dataset.
 
@@ -171,6 +171,7 @@ def _clean_up_temporary_files(dataset_dir):
 
 # Validates if data set exists
 def _dataset_exists(dataset_dir):
+  
   for split_name in ['train', 'validation']:
     for shard_id in range(_NUM_SHARDS):
       output_filename = _get_dataset_filename(

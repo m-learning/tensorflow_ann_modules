@@ -47,7 +47,7 @@ _ITEMS_TO_DESCRIPTIONS = {
     'label': 'A single integer between 0 and 4',
 }
 
-# Generates training and evaluation sets for flowers
+# Generates training and evaluation sets for flowers and flomen
 def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
   """Gets a dataset tuple with instructions for reading cifar10.
 
