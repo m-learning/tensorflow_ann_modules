@@ -39,7 +39,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 
-
+# Configures Inception-ResNet-v2 learning rate
 def _configure_learning_rate(num_samples_per_epoch, global_step):
   """Configures the learning rate.
 
@@ -79,7 +79,7 @@ def _configure_learning_rate(num_samples_per_epoch, global_step):
     raise ValueError('learning_rate_decay_type [%s] was not recognized',
                      FLAGS.learning_rate_decay_type)
 
-
+# Configures Inception-ResNet-v2 optimizer
 def _configure_optimizer(learning_rate):
   """Configures the optimizer used for training.
 
@@ -139,7 +139,7 @@ def _add_variables_summaries(learning_rate):
   summaries.append(tf.scalar_summary('training/Learning Rate', learning_rate))
   return summaries
 
-
+# Gets initialization function
 def _get_init_fn():
   """Returns a function run by the chief worker to warm-start the training.
 
@@ -188,7 +188,7 @@ def _get_init_fn():
       variables_to_restore,
       ignore_missing_vars=FLAGS.ignore_missing_vars)
 
-
+# Gets variables of net for training
 def _get_variables_to_train():
   """Returns a list of variables to train.
 
@@ -206,7 +206,7 @@ def _get_variables_to_train():
     variables_to_train.extend(variables)
   return variables_to_train
 
-
+# Runs training
 def run_training(_):
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
@@ -399,7 +399,7 @@ def run_training(_):
         save_interval_secs=FLAGS.save_interval_secs,
         sync_optimizer=optimizer if FLAGS.sync_replicas else None)
 
-
+# Runs training of model
 def train_net():
   tf.app.run(run_training)
   

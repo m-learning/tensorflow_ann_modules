@@ -37,6 +37,7 @@ import tensorflow as tf
 
 slim = tf.contrib.slim
 
+# Runs evaluation
 def run_evaluation(_):
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
@@ -141,7 +142,7 @@ def run_evaluation(_):
         eval_op=names_to_updates.values(),
         variables_to_restore=variables_to_restore)
 
-
+# Evaluates model
 def eval_net():
   tf.app.run(run_evaluation)
 

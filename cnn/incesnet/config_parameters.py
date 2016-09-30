@@ -14,7 +14,7 @@ import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
 import cnn.incesnet.training_parameters as FLAGS
 from six.moves import urllib
 
-
+# URL for checkpoint
 CHECKPOINT_URL = 'http://download.tensorflow.org/models/inception_resnet_v2_2016_08_30.tar.gz'
 CHECKPOINT_FILE_NAME = 'inception_resnet_v2_2016_08_30.ckpt'
 
@@ -103,6 +103,6 @@ class train_and_eval_config(object):
   def train_or_eval_net(self, args):
     
     if len(args) > 1:
-      self.train_or_eval()
+      self.train_or_eval(args)
     else:
       self.train_net()
