@@ -240,7 +240,6 @@ def run_training(_):
     # Select the network #
     ####################
     network_fn = nets_factory.get_network_fn(
-        FLAGS.model_name,
         num_classes=(dataset.num_classes - FLAGS.labels_offset),
         weight_decay=FLAGS.weight_decay,
         is_training=True)
@@ -248,9 +247,7 @@ def run_training(_):
     #####################################
     # Select the preprocessing function #
     #####################################
-    preprocessing_name = FLAGS.preprocessing_name or FLAGS.model_name
     image_preprocessing_fn = preprocessing_factory.get_preprocessing(
-        preprocessing_name,
         is_training=True)
 
     ##############################################################

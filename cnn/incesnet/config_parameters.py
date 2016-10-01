@@ -43,21 +43,16 @@ class train_and_eval_config(object):
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
     tarfile.open(filepath, 'r:gz').extractall(self.checkpoint_directory)
-
-  # Prepares flowers for inception
-  def define_training_parameters(self):
+  
+  # Define checkpoint
+  def _set_checkpoint(self):
     
-    self.file_mngr.get_or_init_training_set()
-    if not os.path.exists(self.checkpoint_file):
-      self.download_checkpoint()
-    FLAGS.train_dir = self.file_mngr.init_files_directory()
-    FLAGS.dataset_name = self.dataset_name
-    FLAGS.dataset_split_name = 'train'
-    FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
     FLAGS.checkpoint_path = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
-    
     FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
     FLAGS.trainable_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
+  
+  # Define hyper - parameters
+  def _set_hyper_parameters(self):
     
     FLAGS.max_number_of_steps = 1000
     FLAGS.batch_size = 32
@@ -68,6 +63,21 @@ class train_and_eval_config(object):
     FLAGS.log_every_n_steps = 100
     FLAGS.optimizer = 'rmsprop'
     FLAGS.weight_decay = 0.00004
+    
+  # Prepares flowers for inception
+  def define_training_parameters(self):
+    
+    self.file_mngr.get_or_init_training_set()
+    if not os.path.exists(self.checkpoint_file):
+      self.download_checkpoint()
+    FLAGS.train_dir = self.file_mngr.init_files_directory()
+    FLAGS.dataset_name = self.dataset_name
+    FLAGS.dataset_split_name = 'train'
+    FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
+    
+    self._set_checkpoint()
+    self._set_hyper_parameters()
+    
     archive_dir = self.file_mngr.get_archives_directory()
     self.dataset_downloader.run(FLAGS.dataset_dir, archive_dir)
     
@@ -100,7 +110,7 @@ class train_and_eval_config(object):
     else:
         self.train_net()
         
-  # Traain or eva;luate parameters
+  # Train or eva;luate parameters
   def train_or_eval_net(self, args):
     
     if len(args) > 1:
