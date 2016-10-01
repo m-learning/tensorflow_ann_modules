@@ -19,7 +19,8 @@ dataset_name = 'flowers'
 class flower_config(train_and_eval_config):
   
   def __init__(self):
-    super(flower_config, self).__init__(training_file(), dataset_name, download_and_convert_flowers)
+    super(flower_config, self).__init__(training_file(), dataset_name,
+                                        download_and_convert_flowers)
 
 if __name__ == '__main__':
   flomenn_cfg = flower_config()

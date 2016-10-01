@@ -31,7 +31,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 
-def get_preprocessing(name, is_training=False):
+def get_preprocessing(name='inception_resnet_v2', is_training=False):
   """Returns preprocessing_fn(image, height, width, **kwargs).
 
   Args:
@@ -59,7 +59,7 @@ def get_preprocessing(name, is_training=False):
     raise ValueError('Preprocessing name [%s] was not recognized' % name)
 
   def preprocessing_fn(image, output_height, output_width, **kwargs):
-    return preprocessing_fn_map[name].preprocess_image(
+    return inception_preprocessing.preprocess_image(
         image, output_height, output_width, is_training=is_training, **kwargs)
 
   return preprocessing_fn

@@ -32,6 +32,7 @@ import tensorflow as tf
 class InceptionTest(tf.test.TestCase):
 
   def testBuildLogits(self):
+    
     batch_size = 5
     height, width = 299, 299
     num_classes = 1000
@@ -43,6 +44,7 @@ class InceptionTest(tf.test.TestCase):
                            [batch_size, num_classes])
 
   def testBuildEndPoints(self):
+    
     batch_size = 5
     height, width = 299, 299
     num_classes = 1000
@@ -62,6 +64,7 @@ class InceptionTest(tf.test.TestCase):
                            [batch_size, 8, 8, 1536])
 
   def testVariablesSetDevice(self):
+    
     batch_size = 5
     height, width = 299, 299
     num_classes = 1000
@@ -78,6 +81,7 @@ class InceptionTest(tf.test.TestCase):
         self.assertDeviceEqual(v.device, '/gpu:0')
 
   def testHalfSizeImages(self):
+    
     batch_size = 5
     height, width = 150, 150
     num_classes = 1000
@@ -92,6 +96,7 @@ class InceptionTest(tf.test.TestCase):
                            [batch_size, 3, 3, 1536])
 
   def testUnknownBatchSize(self):
+    
     batch_size = 1
     height, width = 299, 299
     num_classes = 1000
@@ -107,6 +112,7 @@ class InceptionTest(tf.test.TestCase):
       self.assertEquals(output.shape, (batch_size, num_classes))
 
   def testEvaluation(self):
+    
     batch_size = 2
     height, width = 299, 299
     num_classes = 1000
@@ -121,6 +127,7 @@ class InceptionTest(tf.test.TestCase):
       self.assertEquals(output.shape, (batch_size,))
 
   def testTrainEvalWithReuse(self):
+    
     train_batch_size = 5
     eval_batch_size = 2
     height, width = 150, 150

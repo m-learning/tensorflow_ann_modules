@@ -19,7 +19,8 @@ dataset_name = 'flomen'
 class flomen_config(train_and_eval_config):
   
   def __init__(self):
-    super(flomen_config, self).__init__(training_file(), dataset_name, download_and_convert_flomen)
+    super(flomen_config, self).__init__(training_file(), dataset_name,
+                                        download_and_convert_flomen)
 
 if __name__ == '__main__':
   flomenn_cfg = flomen_config()
