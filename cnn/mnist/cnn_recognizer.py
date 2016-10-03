@@ -3,10 +3,11 @@ Created on Jun 25, 2016
 Recognizes for image
 @author: Levan Tsinadze
 '''
-import tensorflow as tf
 from cnn.mnist.cnn_input_reader import read_input_file
 from cnn_files import training_file
 from cnn_methods import cnn_functions
+import tensorflow as tf
+
 
 # Recognizer class
 class image_recognizer:

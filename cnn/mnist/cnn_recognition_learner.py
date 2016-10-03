@@ -4,11 +4,13 @@ Created on Jun 18, 2016
 @author: Levan Tsinadze
 '''
 
-import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+
+from cnn_files import training_file
 from cnn_methods import cnn_functions
 import cnn_parameters
-from cnn_files import training_file
+import tensorflow as tf
+
 
 # Parameters
 learning_rate = 0.001

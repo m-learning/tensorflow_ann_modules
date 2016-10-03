@@ -6,17 +6,24 @@ Files for training data
 @author: Levan Tsinadze
 '''
 
+import glob
 import os
+import shutil
 import sys
 import tarfile
 import zipfile
-import shutil
-import glob
-
-from six.moves import urllib
-import Image
 
 from cnn.utils.file_utils import cnn_file_utils
+from six.moves import urllib
+
+
+try:
+  from PIL import Image
+except ImportError:
+  print "Importing Image from PIL threw exception"
+  import Image
+# import Image
+
 
 # Files and directory constant parameters
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
@@ -26,7 +33,6 @@ PERSONS_SETS = ['http://www.emt.tugraz.at/~pinz/data/GRAZ_01/persons.zip',
                 'http://www.emt.tugraz.at/~pinz/data/GRAZ_02/cars.zip',
                 'https://www.cis.upenn.edu/~jshi/ped_html/PennFudanPed.zip',
                 'http://vision.stanford.edu/Datasets/Stanford40_JPEGImages.zip']
-TRAINIG_ZIP_FOLDER = 'training_arch'
 CASSIFICATION_DIRS = ['persons', 'persons', 'bikes', 'cars', 'persons', 'persons']
 
 # Directories to move training data from
@@ -40,6 +46,10 @@ class training_file(cnn_file_utils):
   
   def __init__(self):
     super(training_file, self).__init__('flomen')
+  
+  # Method to get data set directory
+  def get_dataset_dir(self):
+    return super(training_file, self).get_training_directory()
     
   # Converts person images
   def convert_person_images(self, prfx, src_dir, persons_dir, img_type):
@@ -84,6 +94,8 @@ class training_file(cnn_file_utils):
     if os.path.exists(pers_dir):
       shutil.rmtree(pers_dir, ignore_errors=True)
     zip_ref.extractall(dest_directory)
+    
+    return pers_dir
   
   # Gets persons dat aset
   def get_persons_set(self, dest_directory):
@@ -117,15 +129,11 @@ class training_file(cnn_file_utils):
         zip_ref.extractall(training_dir)
         pers_dir = persons_dir
       self.convert_person_images(prfx, pers_dir, persons_dir, img_type)      
-    
   
   # Gets or generates training set
   def get_or_init_training_set(self):
     
-    dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
-    if not os.path.exists(dest_directory):
-      os.mkdir(dest_directory)  
-      
+    dest_directory = self.get_archives_directory()
     filename = TRAINIG_SET_URL.split('/')[-1]
     filepath = os.path.join(dest_directory, filename)
     if not os.path.exists(filepath):

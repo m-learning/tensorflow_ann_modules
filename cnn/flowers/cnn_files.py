@@ -7,31 +7,31 @@ Files for training data
 '''
 
 import os
+import shutil
 import sys
 import tarfile
-import shutil
-
-from six.moves import urllib
 
 from cnn.utils.file_utils import cnn_file_utils
+from six.moves import urllib
+
 
 # Files and directory constant parameters
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
-TRAINIG_ZIP_FOLDER = 'training_arch'
 
 # Files and directories for parameters (trained), training, validation and test
 class training_file(cnn_file_utils):
   
   def __init__(self):
     super(training_file, self).__init__('flowers')
+    
+    # Method to get data set directory
+  def get_dataset_dir(self):
+    return super(training_file, self).get_data_directory()
       
   # Gets or generates training set
   def get_or_init_training_set(self):
     
-    dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
-    if not os.path.exists(dest_directory):
-      os.mkdir(dest_directory) 
-    
+    dest_directory = self.get_archives_directory()
     filename = TRAINIG_SET_URL.split('/')[-1]
     filepath = os.path.join(dest_directory, filename)
     if not os.path.exists(filepath):

@@ -13,6 +13,7 @@ import  cnn.transfer.graph_config as graph_config
 import  cnn.transfer.bottleneck_config as bottleneck
 import cnn.transfer.training_flags_mod as training_flags_mod
 
+# Find if should images
 def should_distort_images(flip_left_right, random_crop, random_scale,
                           random_brightness):
   """Whether any distortions are enabled, from the input flags.

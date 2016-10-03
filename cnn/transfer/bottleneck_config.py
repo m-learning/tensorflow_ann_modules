@@ -14,6 +14,7 @@ from tensorflow.python.platform import gfile
 
 import cnn.transfer.config_image_net as config
 
+# Generates bottleneck on instant image
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             bottleneck_tensor):
   """Runs inference on an image to extract the 'bottleneck' summary layer.
@@ -68,8 +69,8 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
                                         bottleneck_dir, category)
   if not os.path.exists(bottleneck_path):
     print('Creating bottleneck at ' + bottleneck_path)
-    image_path = config.get_image_path(image_lists, label_name, index, image_dir,
-                                category)
+    image_path = config.get_image_path(image_lists, label_name, index,
+                                       image_dir, category)
     if not gfile.Exists(image_path):
       tf.logging.fatal('File does not exist %s', image_path)
     image_data = gfile.FastGFile(image_path, 'rb').read()
@@ -87,8 +88,8 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   return bottleneck_values
 
 
-def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
-                      jpeg_data_tensor, bottleneck_tensor):
+def cache_bottlenecks(sess, image_lists, image_dir,
+                      bottleneck_dir, jpeg_data_tensor, bottleneck_tensor):
   """Ensures all the training, testing, and validation bottlenecks are cached.
 
   Because we're likely to read the same image multiple times (if there are no
@@ -124,9 +125,9 @@ def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
           print(str(how_many_bottlenecks) + ' bottleneck files created.')
 
 
-def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
-                                  bottleneck_dir, image_dir, jpeg_data_tensor,
-                                  bottleneck_tensor):
+def get_random_cached_bottlenecks(sess, image_lists, how_many,
+                                  category, bottleneck_dir, image_dir,
+                                  jpeg_data_tensor, bottleneck_tensor):
   """Retrieves bottleneck values for cached images.
 
   If no distortions are being applied, this function can retrieve the cached
@@ -202,8 +203,8 @@ def get_random_distorted_bottlenecks(
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
     image_index = random.randrange(65536)
-    image_path = config.get_image_path(image_lists, label_name, image_index, image_dir,
-                                category)
+    image_path = config.get_image_path(image_lists, label_name, image_index,
+                                       image_dir, category)
     if not gfile.Exists(image_path):
       tf.logging.fatal('File does not exist %s', image_path)
     jpeg_data = gfile.FastGFile(image_path, 'rb').read()

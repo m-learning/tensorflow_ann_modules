@@ -1,7 +1,7 @@
 '''
 Created on Jul 6, 2016
 
-Utility class for training test and validation data
+Utility class for training test and validation data files
 
 @author: Levan Tsinadze
 '''
@@ -9,12 +9,17 @@ Utility class for training test and validation data
 import os
 import types
 
+
 # General parent directory for files
 DATAS_DIR_NAME = 'datas'
+
+# Training set archives directory suffix
+TRAINIG_ZIP_FOLDER = 'training_arch'
 
 # Files and directory constant parameters
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
+PATH_FOR_EVALUATION = 'eval_data'
 PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
@@ -32,6 +37,14 @@ class files_and_path_utils(object):
       self.path_to_training_photos = PATH_FOR_TRAINING_PHOTOS
     else:
       self.path_to_training_photos = path_to_training_photos
+      
+    # Creates file if not exists
+  def init_file_or_path(self, file_path):
+    
+    if not os.path.exists(file_path):
+      os.makedirs(file_path)
+    
+    return file_path
   
   # Joins path from method
   def join_path(self, path_inst, *other_path):
@@ -44,13 +57,19 @@ class files_and_path_utils(object):
     
     return result
   
+  # Joins and creates file or directory paths
+  def join_and_init_path(self, path_inst, *other_path):
+    
+    result = self.join_path(path_inst, *other_path)
+    self.init_file_or_path(result)
+    
+    return result
+  
   # Creates appropriated directory if such does not exists
   def init_dir(self, dir_path, *other_path):
     
     result_dir = self.join_path(dir_path, *other_path)
-    
-    if not os.path.exists(result_dir):
-      os.makedirs(result_dir)
+    self.init_file_or_path(result_dir)
     
     return result_dir 
   
@@ -74,7 +93,15 @@ class cnn_file_utils(files_and_path_utils):
   
   # Gets or creates directories
   def get_data_general_directory(self):
-    return self.join_path(self.get_current, self.path_to_cnn_directory)
+    return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
+  
+  # Gets training set archives directory
+  def get_archives_directory(self):
+    
+    dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
+    if not os.path.exists(dest_directory):
+      os.mkdir(dest_directory) 
+    return dest_directory
   
   # Gets training data directory
   def get_training_directory(self):
@@ -115,3 +142,7 @@ class cnn_file_utils(files_and_path_utils):
   # Gets or initializes test image
   def get_or_init_test_path(self):
     return self.join_path(self.get_or_init_test_dir, TEST_IMAGE_NAME)
+  
+  # Gets / initializes evaluation directory
+  def get_or_init_eval_path(self):
+    return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_EVALUATION)

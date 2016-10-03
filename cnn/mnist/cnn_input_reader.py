@@ -3,11 +3,12 @@ Created on Jun 17, 2016
 
 @author: Levan Tsinadze
 '''
-import cv2
 import math
 from scipy import ndimage
 
+import cv2
 import numpy as np
+
 
 # Image sizes
 IMAGE_SIZE = 28
@@ -17,6 +18,7 @@ n_input = 784  # MNIST data input (img shape: 28*28)
 
 # Image reader for recognition
 def getBestShift(img):
+    
     cy, cx = ndimage.measurements.center_of_mass(img)
 
     rows, cols = img.shape

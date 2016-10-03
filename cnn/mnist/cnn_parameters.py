@@ -8,6 +8,7 @@ Weights and biases for network
 
 import tensorflow as tf
 
+
 # Network Parameters
 N_INPUT = 784  # MNIST data input (img shape: 28*28)
 N_CLASSES = 10  # MNIST total classes (0-9 digits)
