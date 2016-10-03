@@ -278,7 +278,7 @@ def inception_resnet_v2_arg_scope(weight_decay=0.00004,
   with slim.arg_scope([slim.conv2d, slim.fully_connected],
                       weights_regularizer=slim.l2_regularizer(weight_decay),
                       biases_regularizer=slim.l2_regularizer(weight_decay)):
-
+    # Normalization parameters
     batch_norm_params = {
         'decay': batch_norm_decay,
         'epsilon': batch_norm_epsilon
