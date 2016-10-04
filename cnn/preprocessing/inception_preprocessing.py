@@ -278,6 +278,7 @@ def preprocess_for_eval(image, height, width,
       image = tf.squeeze(image, [0])
     image = tf.sub(image, 0.5)
     image = tf.mul(image, 2.0)
+    
     return image
 
 

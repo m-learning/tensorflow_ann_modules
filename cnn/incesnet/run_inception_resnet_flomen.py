@@ -14,8 +14,8 @@ import tensorflow as tf
 
 slim = tf.contrib.slim
 
-batch_size = 3
-image_size = 299
+batch_size = 1
+height, width = 299, 299
 
 # Runs Inception-ResNet-v2 Module
 class inception_resnet_v2_interface(object):
@@ -29,11 +29,14 @@ class inception_resnet_v2_interface(object):
     with tf.Graph().as_default():
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
-          logits, _ = inception_resnet_v2.inception_resnet_v2([1, 299, 299, 3], num_classes=8, is_training=False)
+          inputs = tf.random_uniform((batch_size, height, width, 3))
+          logits, _ = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=8, is_training=False)
           probabilities = tf.nn.softmax(logits)
+          print logits
+          print probabilities
       
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
-          slim.get_model_variables('InceptionResnetV2'))
+                                                   slim.get_model_variables('InceptionResnetV2'))
       
           with tf.Session() as sess:
               
@@ -42,16 +45,17 @@ class inception_resnet_v2_interface(object):
               test_image_string = tf.gfile.FastGFile(image_path, 'rb').read()
               test_image = tf.image.decode_jpeg(test_image_string, channels=3)
       
-              _, probabilities = sess.run([test_image, probabilities])
+              np_image, probabilities = sess.run([test_image, probabilities])
               print probabilities
               probabilities = probabilities[0, 0:]
               sorted_inds = [i[0] for i in sorted(enumerate(-probabilities), key=lambda x:x[1])]
       
               print sorted_inds
+              print np_image
               # names = flowers.create_readable_names_for_imagenet_labels()
-              # for i in range(8):
-              #    index = sorted_inds[i]
-              #    print((probabilities[index], names[index]))
+              for i in range(8):
+                  index = sorted_inds[i]
+                  print probabilities[index]#), names[index]))
               
 if __name__ == '__main__':
   

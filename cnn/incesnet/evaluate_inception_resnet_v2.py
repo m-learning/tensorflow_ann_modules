@@ -39,6 +39,7 @@ slim = tf.contrib.slim
 
 # Runs evaluation
 def run_evaluation(_):
+  
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
 

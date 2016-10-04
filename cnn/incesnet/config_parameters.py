@@ -15,7 +15,7 @@ import cnn.incesnet.training_parameters as FLAGS
 from six.moves import urllib
 
 
-# URL for checkpoint
+# URL to checkpoint file
 CHECKPOINT_URL = 'http://download.tensorflow.org/models/inception_resnet_v2_2016_08_30.tar.gz'
 CHECKPOINT_FILE_NAME = 'inception_resnet_v2_2016_08_30.ckpt'
 

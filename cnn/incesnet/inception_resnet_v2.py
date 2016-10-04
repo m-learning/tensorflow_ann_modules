@@ -57,6 +57,7 @@ def block35(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
     net += scale * up
     if activation_fn:
       net = activation_fn(net)
+      
   return net
 
 # Block for 17X17 ResNet
@@ -77,6 +78,7 @@ def block17(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
     net += scale * up
     if activation_fn:
       net = activation_fn(net)
+      
   return net
 
 # Block for 8X8 ResNet
@@ -97,6 +99,7 @@ def block8(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
     net += scale * up
     if activation_fn:
       net = activation_fn(net)
+      
   return net
 
 # Interface for Inception-ResNet neuarl network
