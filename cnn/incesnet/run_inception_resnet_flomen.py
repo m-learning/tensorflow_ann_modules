@@ -4,11 +4,16 @@
 # @author: levan-lev
 # '''
 
+from __future__ import absolute_import
+from __future__ import division
+
 import sys
 
 from cnn.flomen.cnn_files import training_file as flomen_files
 from cnn.flowers.cnn_files import training_file as flower_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
+from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
+import numpy as np
 import tensorflow as tf
 
 
@@ -21,7 +26,18 @@ height, width = 299, 299
 class inception_resnet_v2_interface(object):
   
   def __init__(self, cnn_file, checkpoint_file):
+    self.cnn_file = cnn_file
     self.checkpoint_dir = cnn_file.join_path(cnn_file.init_files_directory(), checkpoint_file)
+  
+  #Generates labels file
+  def generate_labels(self):
+    
+    labels_path = self.cnn_file.join_path(self.cnn_file.get_training_directory, 'labels.txt')
+    f = open(labels_path, 'rb')
+    lines = f.readlines()
+    labels = [str(w).replace("\n", "") for w in lines]
+    
+    return labels
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -30,11 +46,18 @@ class inception_resnet_v2_interface(object):
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          logits, _ = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=8, is_training=False)
-          probabilities = tf.nn.softmax(logits)
-          print logits
-          print probabilities
-      
+          _, endpoints = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=8, is_training=False)
+          end_interface = endpoints[inception_resnet_v2.END_POINT_KEY]
+          print endpoints
+          print end_interface
+          
+          print '=================Endpoints=============='
+          
+          for name, value in endpoints.items():
+            print name, value
+          
+          print '========================================'
+          
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables('InceptionResnetV2'))
       
@@ -42,20 +65,22 @@ class inception_resnet_v2_interface(object):
               
               init_fn(sess)
       
-              test_image_string = tf.gfile.FastGFile(image_path, 'rb').read()
-              test_image = tf.image.decode_jpeg(test_image_string, channels=3)
+              test_image_file = tf.gfile.FastGFile(image_path, 'rb').read()
+              test_image = tf.image.decode_jpeg(test_image_file, channels=3)
+              test_image = preprocess_for_eval(test_image, height, width)
       
-              np_image, probabilities = sess.run([test_image, probabilities])
-              print probabilities
-              probabilities = probabilities[0, 0:]
-              sorted_inds = [i[0] for i in sorted(enumerate(-probabilities), key=lambda x:x[1])]
-      
-              print sorted_inds
-              print np_image
-              # names = flowers.create_readable_names_for_imagenet_labels()
-              for i in range(8):
-                  index = sorted_inds[i]
-                  print probabilities[index]#), names[index]))
+              _, predictions = sess.run([test_image, end_interface])
+              predictions = np.squeeze(predictions)
+              top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
+              labels = self.generate_labels()
+              print predictions
+              print labels
+              print top_k
+              for node_id in top_k:
+                print node_id
+                human_string = labels[node_id]
+                score = predictions[node_id]
+                print('%s (score = %.5f)' % (human_string, score))
               
 if __name__ == '__main__':
   

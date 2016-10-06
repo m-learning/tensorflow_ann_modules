@@ -32,7 +32,9 @@ class retrained_recognizer(object):
         _ = tf.import_graph_def(graph_def, name='')
   
   # Prints suggested answers
-  def print_answers(self, top_k):
+  def print_answers(self, prediction_patrameters):
+    
+    (top_k, labels, predictions) = prediction_patrameters
     
     for node_id in top_k:
         human_string = labels[node_id]
@@ -42,7 +44,7 @@ class retrained_recognizer(object):
   # Runs predictions on image
   def predict_answer(self, sess, image_parameter):
     
-    (image_data, labels_path) = image_parameter
+    (image_data, _) = image_parameter
     softmax_tensor = sess.graph.get_tensor_by_name(RESULT_KEY)
     # Runs recognition thru net
     imege_tensor = {DECODE_KEY: image_data}
@@ -55,13 +57,15 @@ class retrained_recognizer(object):
   def recognize_image(self, sess, image_parameter):
     
     # Decorates predictions
-    predictions = predict_answer(sess, image_parameter)
+    predictions = self.predict_answer(sess, image_parameter)
     # Gets top prediction (top matchs)s
     top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
+    (_, labels_path) = image_parameter
     f = open(labels_path, 'rb')
     lines = f.readlines()
     labels = [str(w).replace("\n", "") for w in lines]
-    print_answers(top_k)
+    prediction_parameters = (top_k, labels, predictions)
+    self.print_answers(prediction_parameters)
     answer = labels[top_k[0]]
   
     return answer

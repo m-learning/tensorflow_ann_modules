@@ -38,6 +38,9 @@ import tensorflow as tf
 
 slim = tf.contrib.slim
 
+# Endpoint function name
+END_POINT_KEY = 'Predictions'
+
 # InceptionResNet model implementation
 def block35(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
   """Builds the 35x35 resnet block."""
@@ -257,7 +260,7 @@ def inception_resnet_v2(inputs, num_classes=1001, is_training=True,
           logits = slim.fully_connected(net, num_classes, activation_fn=None,
                                         scope='Logits')
           end_points['Logits'] = logits
-          end_points['Predictions'] = tf.nn.softmax(logits, name='Predictions')
+          end_points[END_POINT_KEY] = tf.nn.softmax(logits, name=END_POINT_KEY)
 
     return logits, end_points
   

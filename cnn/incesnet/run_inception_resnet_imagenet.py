@@ -4,11 +4,15 @@
 # @author: levan-lev
 # '''
 
-from cnn.flomen.cnn_files import training_file as flomen_files
+from __future__ import absolute_import
+from __future__ import division
+
+from PIL import Image
+
 from cnn.datasets import imagenet
+from cnn.flomen.cnn_files import training_file as flomen_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
-from PIL import Image
 import numpy as np
 import tensorflow as tf
 
@@ -24,11 +28,11 @@ class inception_resnet_magenet_interface(object):
   def __init__(self, cnn_file, checkpoint_file):
     self.checkpoint_dir = cnn_file.join_path(cnn_file.init_files_directory(), checkpoint_file)
   
-  #Run model in an other way
+  # Run model in an other way
   def run_interface_other(self, image_path):
     
     sample_images = [image_path]
-    #Load the model
+    # Load the model
     sess = tf.Session()
     arg_scope = inception_resnet_v2.inception_resnet_v2_arg_scope()
     with slim.arg_scope(arg_scope):
@@ -36,14 +40,20 @@ class inception_resnet_magenet_interface(object):
       logits, end_points = inception_resnet_v2.inception_resnet_v2(inputs, is_training=False)
     saver = tf.train.Saver()
     saver.restore(sess, self.checkpoint_dir)
+    end_interface = end_points[inception_resnet_v2.END_POINT_KEY]
     for image in sample_images:
-      im = Image.open(image).resize((299,299))
+      im = Image.open(image).resize((299, 299))
       im = np.array(im)
-      im = im.reshape(-1,299,299,3)
-      image_to_test = preprocess_for_eval(im, height, width)
-      predict_values, logit_values = sess.run([end_points['Predictions'], logits], feed_dict={inputs: image_to_test})
-      print (np.max(predict_values), np.max(logit_values))
-      print (np.argmax(predict_values), np.argmax(logit_values))
+      im = im.reshape(-1, 299, 299, 3)
+      im = 2 * (im / 255.0) - 1.0
+      # image_to_test = preprocess_for_eval(im, height, width)
+      predict_values, _ = sess.run([end_interface, logits], feed_dict={inputs: im})
+      names = imagenet.create_readable_names_for_imagenet_labels()
+      predictions = np.squeeze(predict_values)
+      top_k = predictions.argsort()[-5:][::-1]
+      for node_id in top_k:
+        print node_id
+        print((str(node_id), predictions[node_id], names[node_id]))
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -52,13 +62,12 @@ class inception_resnet_magenet_interface(object):
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          logits, _ = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=1001, is_training=False)
-          probabilities = tf.nn.softmax(logits)
-          print logits
-          print probabilities
+          _, endpoints = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=1001, is_training=False)
           print image_path
           print self.checkpoint_dir
-      
+          
+          end_interface = endpoints[inception_resnet_v2.END_POINT_KEY]
+          print end_interface
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables('InceptionResnetV2'))
       
@@ -66,21 +75,23 @@ class inception_resnet_magenet_interface(object):
               
               init_fn(sess)
       
-              test_image_string = tf.gfile.FastGFile(image_path, 'rb').read()
-              test_image = tf.image.decode_jpeg(test_image_string, channels=3)
-              image_to_test = preprocess_for_eval(test_image, height, width)
-              _, probabilities = sess.run([image_to_test, probabilities])
-              probabilities = probabilities[0, 0:]
-              sorted_inds = [i[0] for i in sorted(enumerate(-probabilities), key=lambda x:x[1])]
+              test_image_file = tf.gfile.FastGFile(image_path, 'rb').read()
+              test_image = tf.image.decode_jpeg(test_image_file, channels=3)
+              test_image = preprocess_for_eval(test_image, height, width)
+      
+              _, predictions = sess.run([test_image, end_interface])
+              predictions = np.squeeze(predictions)
+              top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
       
               names = imagenet.create_readable_names_for_imagenet_labels()
-              for i in range(15):
-                index = sorted_inds[i]
-                print((str(index), probabilities[index], names[index]))
+              print top_k
+              for node_id in top_k:
+                print node_id
+                print((str(node_id), predictions[node_id], names[node_id]))
               
 if __name__ == '__main__':
   
   cnn_file = flomen_files()
   resnet_interface = inception_resnet_magenet_interface(cnn_file, 'inception_resnet_v2_2016_08_30.ckpt')
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
-  resnet_interface.run_interface(test_file_path)
+  resnet_interface.run_interface_other(test_file_path)
