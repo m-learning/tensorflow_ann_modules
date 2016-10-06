@@ -263,7 +263,8 @@ def inception_resnet_v2(inputs, num_classes=1001, is_training=True,
           end_points[END_POINT_KEY] = tf.nn.softmax(logits, name=END_POINT_KEY)
 
     return logits, end_points
-  
+
+# Default image size
 inception_resnet_v2.default_image_size = 299
 
 # Inception-ResNet-v2 argument scopes

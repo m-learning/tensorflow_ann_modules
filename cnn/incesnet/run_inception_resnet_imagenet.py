@@ -27,6 +27,18 @@ class inception_resnet_magenet_interface(object):
   
   def __init__(self, cnn_file, checkpoint_file):
     self.checkpoint_dir = cnn_file.join_path(cnn_file.init_files_directory(), checkpoint_file)
+    
+  # Prints predicted answer
+  def print_answer(self, predict_values):
+    
+    predictions = np.squeeze(predict_values)
+    top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
+
+    names = imagenet.create_readable_names_for_imagenet_labels()
+    print top_k
+    for node_id in top_k:
+      print node_id
+      print((str(node_id), predictions[node_id], names[node_id]))
   
   # Run model in an other way
   def run_interface_other(self, image_path):
@@ -48,12 +60,7 @@ class inception_resnet_magenet_interface(object):
       im = 2 * (im / 255.0) - 1.0
       # image_to_test = preprocess_for_eval(im, height, width)
       predict_values, _ = sess.run([end_interface, logits], feed_dict={inputs: im})
-      names = imagenet.create_readable_names_for_imagenet_labels()
-      predictions = np.squeeze(predict_values)
-      top_k = predictions.argsort()[-5:][::-1]
-      for node_id in top_k:
-        print node_id
-        print((str(node_id), predictions[node_id], names[node_id]))
+      self.print_answer(predict_values)
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -80,14 +87,7 @@ class inception_resnet_magenet_interface(object):
               test_image = preprocess_for_eval(test_image, height, width)
       
               _, predictions = sess.run([test_image, end_interface])
-              predictions = np.squeeze(predictions)
-              top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
-      
-              names = imagenet.create_readable_names_for_imagenet_labels()
-              print top_k
-              for node_id in top_k:
-                print node_id
-                print((str(node_id), predictions[node_id], names[node_id]))
+              self.print_answer(predictions)
               
 if __name__ == '__main__':
   

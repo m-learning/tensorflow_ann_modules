@@ -7,10 +7,10 @@
 from __future__ import absolute_import
 from __future__ import division
 
+from cnn.incesnet.run_inception_resnet_general import inception_resnet_v2_general_interface
 from cnn.flowers.cnn_files import training_file as flower_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
-import numpy as np
 import tensorflow as tf
 
 
@@ -20,10 +20,10 @@ batch_size = 1
 height, width = 299, 299
 
 # Runs Inception-ResNet-v2 Module
-class inception_resnet_flowers_interface(object):
+class inception_resnet_flowers_interface(inception_resnet_v2_general_interface):
   
   def __init__(self, cnn_file, checkpoint_file):
-    self.checkpoint_dir = cnn_file.join_path(cnn_file.init_files_directory(), checkpoint_file)
+    super(inception_resnet_flowers_interface, self).__init__(cnn_file, checkpoint_file)
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -32,7 +32,7 @@ class inception_resnet_flowers_interface(object):
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          _, endpoints = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=8, is_training=False)
+          _, endpoints = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=5, is_training=False)
           end_interface = endpoints[inception_resnet_v2.END_POINT_KEY]
       
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
@@ -47,17 +47,7 @@ class inception_resnet_flowers_interface(object):
               test_image = preprocess_for_eval(test_image, height, width)
       
               _, predictions = sess.run([test_image, end_interface])
-              predictions = np.squeeze(predictions)
-              top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
-              labels = self.generate_labels()
-              print predictions
-              print labels
-              print top_k
-              for node_id in top_k:
-                print node_id
-                human_string = labels[node_id]
-                score = predictions[node_id]
-                print('%s (score = %.5f)' % (human_string, score))
+              self.print_answer(predictions)
               
 if __name__ == '__main__':
   
