@@ -267,6 +267,23 @@ def inception_resnet_v2(inputs, num_classes=1001, is_training=True,
 # Default image size
 inception_resnet_v2.default_image_size = 299
 
+# Gets end interface to run Inception-ResNet-v2 model
+def inception_resnet_v2_interface(inputs, num_classes=1001, is_training=False):
+  """Gets end interface to run Inception-ResNet-v2 model
+  
+  Args:
+    inputs: a 4-D tensor of size [batch_size, height, width, 3].
+    num_classes: number of predicted classes.
+    is_training: whether is training or not.
+  Returns:
+    end_interface interface to run Inception-ResNet-v2 model.
+  """
+  
+  _, endpoints = inception_resnet_v2(inputs, num_classes=8, is_training=False)
+  end_interface = endpoints[END_POINT_KEY]
+  
+  return end_interface
+
 # Inception-ResNet-v2 argument scopes
 def inception_resnet_v2_arg_scope(weight_decay=0.00004,
                                   batch_norm_decay=0.9997,

@@ -69,11 +69,12 @@ class inception_resnet_magenet_interface(object):
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          _, endpoints = inception_resnet_v2.inception_resnet_v2(inputs, num_classes=1001, is_training=False)
+          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, 
+                                                                            num_classes=1001, 
+                                                                            is_training=False)
           print image_path
           print self.checkpoint_dir
           
-          end_interface = endpoints[inception_resnet_v2.END_POINT_KEY]
           print end_interface
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables('InceptionResnetV2'))
