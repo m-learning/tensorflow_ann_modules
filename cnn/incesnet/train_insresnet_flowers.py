@@ -25,7 +25,12 @@ class flower_config(train_and_eval_config):
   def __init__(self):
     super(flower_config, self).__init__(training_file(), dataset_name,
                                         download_and_convert_flowers)
+  
+  #Addts configuration parameters and trains model
+  def config_and_train(self, sys_args):
+    self.set_max_number_of_steps(4000)
+    self.train_or_eval_net(sys_args)
 
 if __name__ == '__main__':
-  flomenn_cfg = flower_config()
-  flomenn_cfg.train_or_eval_net(sys.argv)
+  model_cfg = flower_config()
+  model_cfg.config_and_train(sys.argv)

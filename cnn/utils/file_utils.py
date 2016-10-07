@@ -28,6 +28,15 @@ LABELS_FILE = 'output_labels.txt'
 TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
+# Counts files in directory
+def count_files(dir_name):
+  
+  file_count = 0
+  for _, _, files in os.walk(dir_name):
+    file_count += len(files)
+  
+  return file_count
+
 # Utility class for files and directories
 class files_and_path_utils(object):
   
@@ -37,7 +46,7 @@ class files_and_path_utils(object):
       self.path_to_training_photos = PATH_FOR_TRAINING_PHOTOS
     else:
       self.path_to_training_photos = path_to_training_photos
-      
+  
     # Creates file if not exists
   def init_file_or_path(self, file_path):
     

@@ -66,7 +66,12 @@ class train_and_eval_config(object):
     FLAGS.log_every_n_steps = 100
     FLAGS.optimizer = 'rmsprop'
     FLAGS.weight_decay = 0.00004
+  
+  # Sets maximum number of steps
+  def set_max_number_of_steps(self, max_number_of_steps):
+    FLAGS.max_number_of_steps = max_number_of_steps
     
+  
   # Prepares flowers for inception
   def define_training_parameters(self):
     
@@ -77,10 +82,10 @@ class train_and_eval_config(object):
     FLAGS.dataset_name = self.dataset_name
     FLAGS.dataset_split_name = 'train'
     FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
-    
+    # Adds hyperparameters
     self._set_checkpoint()
     self._set_hyper_parameters()
-    
+    # Archive directories
     archive_dir = self.file_mngr.get_archives_directory()
     self.dataset_downloader.run(FLAGS.dataset_dir, archive_dir)
     

@@ -26,6 +26,11 @@ class flomen_config(train_and_eval_config):
     super(flomen_config, self).__init__(training_file(), dataset_name,
                                         download_and_convert_flomen)
 
+  # Addts configuration parameters and trains model
+  def config_and_train(self, sys_args):
+    self.set_max_number_of_steps(6000)
+    self.train_or_eval_net(sys_args)
+
 if __name__ == '__main__':
-  flomenn_cfg = flomen_config()
-  flomenn_cfg.train_or_eval_net(sys.argv)
+  model_cfg = flomen_config()
+  model_cfg.config_and_train(sys.argv)

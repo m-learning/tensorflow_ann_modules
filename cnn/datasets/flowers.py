@@ -33,7 +33,6 @@ import os
 from cnn.datasets import dataset_utils
 import tensorflow as tf
 
-
 slim = tf.contrib.slim
 
 _FILE_PATTERN = 'flowers_%s_*.tfrecord'
