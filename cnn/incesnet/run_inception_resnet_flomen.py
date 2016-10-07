@@ -25,8 +25,8 @@ height, width = 299, 299
 # Runs Inception-ResNet-v2 Module
 class inception_resnet_v2_interface(inception_resnet_v2_general_interface):
   
-  def __init__(self, cnn_file, checkpoint_file):
-    super(inception_resnet_v2_interface, self).__init__(cnn_file, checkpoint_file)
+  def __init__(self, cnn_file):
+    super(inception_resnet_v2_interface, self).__init__(cnn_file)
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -35,7 +35,7 @@ class inception_resnet_v2_interface(inception_resnet_v2_general_interface):
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, num_classes=8, 
+          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, num_classes=8,
                                                                             is_training=False)
           
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
@@ -57,6 +57,6 @@ if __name__ == '__main__':
     cnn_file = flower_files()
   else:
     cnn_file = flomen_files()
-  resnet_interface = inception_resnet_v2_interface(cnn_file, 'model.ckpt-2000')
+  resnet_interface = inception_resnet_v2_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   resnet_interface.run_interface(test_file_path)

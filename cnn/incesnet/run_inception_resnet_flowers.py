@@ -7,9 +7,9 @@
 from __future__ import absolute_import
 from __future__ import division
 
-from cnn.incesnet.run_inception_resnet_general import inception_resnet_v2_general_interface
 from cnn.flowers.cnn_files import training_file as flower_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
+from cnn.incesnet.run_inception_resnet_general import inception_resnet_v2_general_interface
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import tensorflow as tf
 
@@ -22,8 +22,8 @@ height, width = 299, 299
 # Runs Inception-ResNet-v2 Module
 class inception_resnet_flowers_interface(inception_resnet_v2_general_interface):
   
-  def __init__(self, cnn_file, checkpoint_file):
-    super(inception_resnet_flowers_interface, self).__init__(cnn_file, checkpoint_file)
+  def __init__(self, cnn_file):
+    super(inception_resnet_flowers_interface, self).__init__(cnn_file)
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -32,7 +32,7 @@ class inception_resnet_flowers_interface(inception_resnet_v2_general_interface):
 
       with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, num_classes=5, 
+          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, num_classes=5,
                                                                             is_training=False)
       
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
@@ -52,6 +52,6 @@ class inception_resnet_flowers_interface(inception_resnet_v2_general_interface):
 if __name__ == '__main__':
   
   cnn_file = flower_files()
-  resnet_interface = inception_resnet_flowers_interface(cnn_file, 'model.ckpt-1002')
+  resnet_interface = inception_resnet_flowers_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   resnet_interface.run_interface(test_file_path)

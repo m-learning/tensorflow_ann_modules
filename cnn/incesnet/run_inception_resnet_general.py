@@ -1,19 +1,26 @@
-#'''
-#Created on Oct 6, 2016
-#General interface module for Inception-ResNet-v2 implementation
-#@author: Levan Tsinadze
-#'''
+# '''
+# Created on Oct 6, 2016
+# General interface module for Inception-ResNet-v2 implementation
+# @author: Levan Tsinadze
+# '''
 
 import numpy as np
+import tensorflow as tf
+
 
 # Runs Inception-ResNet-v2 Module
 class inception_resnet_v2_general_interface(object):
   
-  def __init__(self, cnn_file, checkpoint_file):
+  def __init__(self, cnn_file, checkpoint_file=None):
+    
     self.cnn_file = cnn_file
-    self.checkpoint_dir = cnn_file.join_path(cnn_file.init_files_directory(), checkpoint_file)
+    self.checkpoint_path = cnn_file.init_files_directory()
+    if checkpoint_file is None:
+      self.checkpoint_dir = tf.train.latest_checkpoint(self.checkpoint_path)
+    else:
+      self.checkpoint_dir = self.cnn_file.join_path(self.checkpoint_path, checkpoint_file)
   
-  #Generates labels file
+  # Generates labels file
   def generate_labels(self):
     
     labels_path = self.cnn_file.join_path(self.cnn_file.get_dataset_dir, 'labels.txt')

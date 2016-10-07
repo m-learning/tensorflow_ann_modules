@@ -58,8 +58,8 @@ class train_and_eval_config(object):
   def _set_hyper_parameters(self):
     
     FLAGS.max_number_of_steps = 4000
-    FLAGS.batch_size = 32
-    FLAGS.learning_rate = 0.001
+    FLAGS.batch_size = 64
+    FLAGS.learning_rate = 0.01
     FLAGS.learning_rate_decay_type = 'fixed'
     FLAGS.save_interval_secs = 60
     FLAGS.save_summaries_secs = 60
