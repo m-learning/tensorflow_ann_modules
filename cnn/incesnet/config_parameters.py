@@ -51,8 +51,8 @@ class train_and_eval_config(object):
   def _set_checkpoint(self):
     
     FLAGS.checkpoint_path = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
-    FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
-    FLAGS.trainable_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits/Logits'
+    FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits'
+    FLAGS.trainable_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits'
   
   # Define hyper - parameters
   def _set_hyper_parameters(self):
@@ -60,7 +60,7 @@ class train_and_eval_config(object):
     FLAGS.max_number_of_steps = 4000
     FLAGS.batch_size = 64
     FLAGS.learning_rate = 0.01
-    FLAGS.learning_rate_decay_type = 'fixed'
+    FLAGS.learning_rate_decay_type = 'exponential'
     FLAGS.save_interval_secs = 60
     FLAGS.save_summaries_secs = 60
     FLAGS.log_every_n_steps = 100

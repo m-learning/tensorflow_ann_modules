@@ -388,7 +388,7 @@ def run_training(_):
     ###########################
     # Kicks off the training. #
     ###########################
-    slim.learning.train(
+    final_loss = slim.learning.train(
         train_tensor,
         logdir=FLAGS.train_dir,
         master=FLAGS.master,
@@ -400,6 +400,8 @@ def run_training(_):
         save_summaries_secs=FLAGS.save_summaries_secs,
         save_interval_secs=FLAGS.save_interval_secs,
         sync_optimizer=optimizer if FLAGS.sync_replicas else None)
+    
+    print('Training is finished. Last batch loss %f' % final_loss)
 
 # Runs training of model
 def train_net():

@@ -7,13 +7,13 @@
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
+from PIL import Image
 
 from cnn.flomen.cnn_files import training_file as flomen_files
-from cnn.flowers.cnn_files import training_file as flower_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
 from cnn.incesnet.run_inception_resnet_general import inception_resnet_v2_general_interface
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
+import numpy as np
 import tensorflow as tf
 
 
@@ -51,12 +51,35 @@ class inception_resnet_v2_interface(inception_resnet_v2_general_interface):
               _, predictions = sess.run([test_image, end_interface])
               self.print_answer(predictions)
               
+  # Runs image classifier
+  def run_scaled(self, image_path):
+    
+    sample_images = [image_path]
+    
+    input_tensor = tf.placeholder(tf.float32, shape=(None, height, width, 3), name='input_image')
+    scaled_input_tensor = tf.scalar_mul((1.0 / 255), input_tensor)
+    scaled_input_tensor = tf.sub(scaled_input_tensor, 0.5)
+    scaled_input_tensor = tf.mul(scaled_input_tensor, 2.0)
+    
+    sess = tf.Session()
+    arg_scope = inception_resnet_v2.inception_resnet_v2_arg_scope()
+    with slim.arg_scope(arg_scope):
+      logits, end_points = inception_resnet_v2.inception_resnet_v2(scaled_input_tensor, is_training=False)
+    saver = tf.train.Saver()
+    saver.restore(sess, self.checkpoint_dir)
+    
+    for image in sample_images:
+      im = Image.open(image).resize((height, width))
+      im = np.array(im)
+      im = im.reshape(-1, height, width, 3)
+      predict_values, logit_values = sess.run([end_points['Predictions'], logits], feed_dict={input_tensor: im})
+      print (np.max(predict_values), np.max(logit_values))
+      print (np.argmax(predict_values), np.argmax(logit_values))
+      self.print_answer(predict_values)
+              
 if __name__ == '__main__':
   
-  if len(sys.argv) > 1 and sys.argv[1] == 'flowers' :
-    cnn_file = flower_files()
-  else:
-    cnn_file = flomen_files()
+  cnn_file = flomen_files()
   resnet_interface = inception_resnet_v2_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   resnet_interface.run_interface(test_file_path)
