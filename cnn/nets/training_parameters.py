@@ -127,3 +127,5 @@ trainable_scopes = None
     # 'By default, None would train all the variables.'
 
 ignore_missing_vars = False  # 'When restoring a checkpoint would ignore missing variables.'
+
+network_name = 'vgg_16' # Name of network

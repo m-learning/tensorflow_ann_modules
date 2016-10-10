@@ -34,8 +34,8 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 # Factory module to initialize CNN model
-def get_network_fn(num_classes,
-                   weight_decay=0.0, is_training=False, name=None):
+def get_network_fn(num_classes, name=None,
+                   weight_decay=0.0, is_training=False):
   """Returns a network_fn such as `logits, end_points = network_fn(images)`.
 
   Args:

@@ -31,7 +31,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 
-def get_preprocessing(is_training=False, name=None):
+def get_preprocessing(name=None, is_training=False):
   """Returns preprocessing_fn(image, height, width, **kwargs).
 
   Args:

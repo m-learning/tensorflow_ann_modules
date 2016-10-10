@@ -56,7 +56,7 @@ def run_evaluation(_):
     ####################
     # Select the model #
     ####################
-    network_fn = nets_factory.get_network_fn(
+    network_fn = nets_factory.get_network_fn(FLAGS.network_name,
         num_classes=(dataset.num_classes - FLAGS.labels_offset),
         is_training=False)
 
@@ -75,6 +75,7 @@ def run_evaluation(_):
     # Select the preprocessing function #
     #####################################
     image_preprocessing_fn = preprocessing_factory.get_preprocessing(
+        FLAGS.network_name,
         is_training=False)
 
     eval_image_size = FLAGS.eval_image_size or network_fn.default_image_size
