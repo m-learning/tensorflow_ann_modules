@@ -1,5 +1,6 @@
 # '''
 # Created on Sep 21, 2016
+# Preprocessing module for Inception-RenNet-v2 network
 #
 # @author: Levan Tsinadze
 # '''

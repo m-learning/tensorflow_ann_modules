@@ -24,14 +24,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cnn.preprocessing import inception_preprocessing
+from cnn.preprocessing import inception_preprocessing, vgg_preprocessing
 import tensorflow as tf
 
 
 slim = tf.contrib.slim
 
 
-def get_preprocessing(is_training=False):
+def get_preprocessing(is_training=False, name=None):
   """Returns preprocessing_fn(image, height, width, **kwargs).
 
   Args:
@@ -43,9 +43,13 @@ def get_preprocessing(is_training=False):
       It has the following signature:
         image = preprocessing_fn(image, output_height, output_width, ...).
   """
+  if name in ('vgg', 'vgg_a', 'vgg_d', 'vgg_e', 'vgg_16', 'vgg_19'):
+    pr_func = inception_preprocessing
+  else:
+    pr_func = vgg_preprocessing
 
   def preprocessing_fn(image, output_height, output_width, **kwargs):
-    return inception_preprocessing.preprocess_image(
+    return pr_func.preprocess_image(
         image, output_height, output_width, is_training=is_training, **kwargs)
 
   return preprocessing_fn

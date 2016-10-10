@@ -26,8 +26,8 @@ from __future__ import print_function
 
 import functools
 
-from cnn.incesnet.inception_resnet_v2 import inception_resnet_v2
-from cnn.incesnet.inception_resnet_v2 import inception_resnet_v2_arg_scope
+from cnn.incesnet.inception_resnet_v2 import inception_resnet_v2, inception_resnet_v2_arg_scope
+from cnn.vgg.vgg import vgg_a, vgg_16, vgg_19, vgg_arg_scope
 import tensorflow as tf
 
 
@@ -35,7 +35,7 @@ slim = tf.contrib.slim
 
 # Factory module to initialize CNN model
 def get_network_fn(num_classes,
-                   weight_decay=0.0, is_training=False):
+                   weight_decay=0.0, is_training=False, name=None):
   """Returns a network_fn such as `logits, end_points = network_fn(images)`.
 
   Args:
@@ -54,8 +54,17 @@ def get_network_fn(num_classes,
   """
   # if name not in networks_map:
   #  raise ValueError('Name of network unknown %s' % name)
-  arg_scope = inception_resnet_v2_arg_scope(weight_decay=weight_decay)
-  func = inception_resnet_v2
+  if name in ('vgg', 'vgg_a', 'vgg_d', 'vgg_e', 'vgg_16', 'vgg_19'):
+    arg_scope = vgg_arg_scope(weight_decay=weight_decay)
+    if name == 'vgg_a':
+        func = vgg_a
+    elif name in ('vgg_16', 'vgg_d'):
+      func = vgg_16
+    else:
+      func = vgg_19
+  else:
+    arg_scope = inception_resnet_v2_arg_scope(weight_decay=weight_decay)
+    func = inception_resnet_v2
   @functools.wraps(func)
   def network_fn(images):
     with slim.arg_scope(arg_scope):

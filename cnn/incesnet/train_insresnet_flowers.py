@@ -14,7 +14,8 @@ import sys
 
 from cnn.datasets import download_and_convert_flowers
 from cnn.flowers.cnn_files import training_file
-from cnn.incesnet.config_parameters import train_and_eval_config
+from cnn.nets.config_parameters import train_and_eval_config
+
 
 # Data set name
 dataset_name = 'flowers'

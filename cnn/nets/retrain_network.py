@@ -1,7 +1,7 @@
 # '''
 # Created on Sep 14, 2016
 #
-# Implementation of inception_resnet_v2 retraining and fine- tuning 
+# Implementation of inception_resnet_v2 or VGG retraining and fine- tuning 
 #
 # @author: Levan Tsinadze
 # '''
@@ -30,8 +30,8 @@ from tensorflow.python.ops import control_flow_ops
 
 from cnn.datasets import dataset_factory
 from cnn.deployment import model_deploy
-import cnn.nets.training_parameters as FLAGS
 from cnn.nets import nets_factory
+import cnn.nets.training_parameters as FLAGS
 from cnn.preprocessing import preprocessing_factory
 import tensorflow as tf
 
