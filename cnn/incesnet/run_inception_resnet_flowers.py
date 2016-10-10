@@ -11,7 +11,7 @@ from PIL import Image
 
 from cnn.flowers.cnn_files import training_file as flower_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
-from cnn.incesnet.run_inception_resnet_general import inception_resnet_v2_general_interface
+from cnn.nets.run_network_general import network_interface
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import numpy as np
 import tensorflow as tf
@@ -23,7 +23,7 @@ batch_size = 1
 height, width = 299, 299
 
 # Runs Inception-ResNet-v2 Module
-class inception_resnet_flowers_interface(inception_resnet_v2_general_interface):
+class inception_resnet_flowers_interface(network_interface):
   
   def __init__(self, cnn_file):
     super(inception_resnet_flowers_interface, self).__init__(cnn_file)

@@ -23,10 +23,10 @@ batch_size = 1
 height, width = 299, 299
 
 # Runs Inception-ResNet-v2 Module
-class inception_resnet_v2_interface(network_interface):
+class vgg_interface(network_interface):
   
   def __init__(self, cnn_file):
-    super(inception_resnet_v2_interface, self).__init__(cnn_file)
+    super(vgg_interface, self).__init__(cnn_file)
   
   # Runs recognition on passed image path
   def run_interface(self, image_path):
@@ -80,6 +80,6 @@ class inception_resnet_v2_interface(network_interface):
 if __name__ == '__main__':
   
   cnn_file = flomen_files()
-  resnet_interface = inception_resnet_v2_interface(cnn_file)
+  resnet_interface = vgg_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   resnet_interface.run_interface(test_file_path)

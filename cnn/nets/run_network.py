@@ -9,7 +9,7 @@ import tensorflow as tf
 
 
 # Runs Inception-ResNet-v2 Module
-class inception_resnet_v2_general_interface(object):
+class network_interface(object):
   
   def __init__(self, cnn_file, checkpoint_file=None):
     
