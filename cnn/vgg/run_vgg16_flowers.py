@@ -37,10 +37,8 @@ class vgg_interface(network_interface):
       with slim.arg_scope(vgg.vgg_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
           end_interface = general_network.interface_function(inputs, num_classes=5, is_training=False)
-      
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables(general_network.network_name))
-      
           with tf.Session() as sess:
               
               init_fn(sess)
@@ -73,7 +71,7 @@ class vgg_interface(network_interface):
       im = Image.open(image).resize((height, width))
       im = np.array(im)
       im = im.reshape(-1, height, width, 3)
-      predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits], 
+      predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits],
                                               feed_dict={input_tensor: im})
       print (np.max(predict_values), np.max(logit_values))
       print (np.argmax(predict_values), np.argmax(logit_values))

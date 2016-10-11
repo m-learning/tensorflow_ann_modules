@@ -56,9 +56,9 @@ class vgg_interface(object):
     saver.restore(sess, self.checkpoint_dir)
     end_interface = end_points[general_network.layer_key]
     for image in sample_images:
-      im = Image.open(image).resize((299, 299))
+      im = Image.open(image).resize((height, width))
       im = np.array(im)
-      im = im.reshape(-1, 299, 299, 3)
+      im = im.reshape(-1, height, width, 3)
       im = 2 * (im / 255.0) - 1.0
       # image_to_test = preprocess_for_eval(im, height, width)
       predict_values, _ = sess.run([end_interface, logits], feed_dict={inputs: im})
@@ -72,7 +72,7 @@ class vgg_interface(object):
       with slim.arg_scope(vgg.vgg_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
           end_interface = general_network.interface_function(inputs,
-                                                             num_classes=1001,
+                                                             num_classes=1000,
                                                              is_training=False)
           print image_path
           print self.checkpoint_dir
@@ -113,7 +113,7 @@ class vgg_interface(object):
       im = Image.open(image).resize((height, width))
       im = np.array(im)
       im = im.reshape(-1, height, width, 3)
-      predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits], 
+      predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits],
                                               feed_dict={input_tensor: im})
       print (np.max(predict_values), np.max(logit_values))
       print (np.argmax(predict_values), np.argmax(logit_values))

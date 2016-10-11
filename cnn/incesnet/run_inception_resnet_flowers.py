@@ -37,10 +37,8 @@ class inception_resnet_flowers_interface(network_interface):
           inputs = tf.random_uniform((batch_size, height, width, 3))
           end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, num_classes=5,
                                                                             is_training=False)
-      
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables('InceptionResnetV2'))
-      
           with tf.Session() as sess:
               
               init_fn(sess)
