@@ -25,8 +25,8 @@ class flomen_config(train_and_eval_config):
   
   def __init__(self):
     super(flomen_config, self).__init__(training_file(), dataset_name,
-                                        download_and_convert_flomen,
-                                        'inception_resnet_v2_2016_08_30')
+                                        download_and_convert_flomen, 
+                                        'vgg_16_2016_08_28')
 
   # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):

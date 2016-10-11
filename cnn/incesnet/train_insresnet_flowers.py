@@ -25,9 +25,10 @@ class flower_config(train_and_eval_config):
   
   def __init__(self):
     super(flower_config, self).__init__(training_file(), dataset_name,
-                                        download_and_convert_flowers)
+                                        download_and_convert_flowers,
+                                        'inception_resnet_v2_2016_08_30')
   
-  #Addts configuration parameters and trains model
+  # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):
     self.set_max_number_of_steps(4000)
     self.train_or_eval_net(sys_args)

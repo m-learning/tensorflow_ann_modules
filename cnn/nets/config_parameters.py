@@ -20,22 +20,26 @@ from six.moves import urllib
 
 # URL to checkpoint file
 CHECKPOINT_URL = 'http://download.tensorflow.org/models/inception_resnet_v2_2016_08_30.tar.gz'
-CHECKPOINT_FILE_NAME = 'inception_resnet_v2_2016_08_30.ckpt'
+CHECKPOINT_FILE_NAME = 'vgg_16_2016_08_28'
 
 # Training parameters and data set
 class train_and_eval_config(object):
   
-  def __init__(self, file_mngr, dataset_name, dataset_downloader):
+  def __init__(self, file_mngr, dataset_name, dataset_downloader, checkpoint_file):
     self.file_mngr = file_mngr
     self.dataset_name = dataset_name
     self.dataset_downloader = dataset_downloader
     self.checkpoint_directory = self.file_mngr.init_files_directory()
-    self.checkpoint_file = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
+    if checkpoint_file is None:
+      self.checkpoint_file_name = CHECKPOINT_FILE_NAME
+    full_checkpoint_file = self.checkpoint_file_name + '.ckpt'
+    self.checkpoint_file = self.file_mngr.join_path(self.checkpoint_directory, full_checkpoint_file)
   
   # Gets checkpoint file
   def download_checkpoint(self):
     
-    filename = CHECKPOINT_URL.split('/')[-1]
+    full_checkpoint_url = 'http://download.tensorflow.org/models/' + self.checkpoint_file_name + '.tar.gz'
+    filename = full_checkpoint_url.split('/')[-1]
     filepath = self.file_mngr.join_path(self.checkpoint_directory, filename)
     if not os.path.exists(filepath):
       def _progress(count, block_size, total_size):
