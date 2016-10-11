@@ -10,7 +10,8 @@ from __future__ import division
 from PIL import Image
 
 from cnn.flowers.cnn_files import training_file as flower_files
-import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
+import cnn.vgg.vgg as vgg
+import cnn.nets.run_network_general as general_network
 from cnn.nets.run_network_general import network_interface
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import numpy as np
@@ -33,10 +34,9 @@ class vgg_interface(network_interface):
     
     with tf.Graph().as_default():
 
-      with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
+      with slim.arg_scope(vgg.vgg_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs, num_classes=5,
-                                                                            is_training=False)
+          end_interface = general_network.interface_function(inputs, num_classes=5, is_training=False)
       
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables('InceptionResnetV2'))

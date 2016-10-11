@@ -66,6 +66,10 @@ class train_and_eval_config(object):
     FLAGS.log_every_n_steps = 100
     FLAGS.optimizer = 'rmsprop'
     FLAGS.weight_decay = 0.00004
+    
+  # Sets network name
+  def set_network_name(self, network_name):
+      FLAGS.network_name = network_name
   
   # Sets maximum number of steps
   def set_max_number_of_steps(self, max_number_of_steps):

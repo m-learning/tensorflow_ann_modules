@@ -11,7 +11,7 @@ from PIL import Image
 
 from cnn.datasets import imagenet
 from cnn.flomen.cnn_files import training_file as flomen_files
-import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
+import cnn.vgg.vgg as vgg
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import numpy as np
 import tensorflow as tf
@@ -21,6 +21,7 @@ slim = tf.contrib.slim
 
 batch_size = 1
 height, width = 299, 299
+network_interface = vgg.vgg_16
 
 # Runs Inception-ResNet-v2 Module
 class vgg_interface(object):
@@ -46,10 +47,10 @@ class vgg_interface(object):
     sample_images = [image_path]
     # Load the model
     sess = tf.Session()
-    arg_scope = inception_resnet_v2.inception_resnet_v2_arg_scope()
+    arg_scope = vgg.vgg_arg_scope()
     with slim.arg_scope(arg_scope):
       inputs = tf.random_uniform((batch_size, height, width, 3))
-      logits, end_points = inception_resnet_v2.inception_resnet_v2(inputs, is_training=False)
+      logits, end_points = network_interface(inputs, is_training=False)
     saver = tf.train.Saver()
     saver.restore(sess, self.checkpoint_dir)
     end_interface = end_points[inception_resnet_v2.END_POINT_KEY]

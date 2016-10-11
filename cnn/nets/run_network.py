@@ -7,6 +7,7 @@
 import numpy as np
 import tensorflow as tf
 
+interface_function = vgg.vgg_16
 
 # Runs Inception-ResNet-v2 Module
 class network_interface(object):
