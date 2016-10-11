@@ -12,6 +12,7 @@ from PIL import Image
 from cnn.datasets import imagenet
 from cnn.flomen.cnn_files import training_file as flomen_files
 import cnn.vgg.vgg as vgg
+import cnn.nets.run_network as general_network
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import numpy as np
 import tensorflow as tf
@@ -20,7 +21,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 batch_size = 1
-height, width = 299, 299
+height, width = 224, 224
 network_interface = vgg.vgg_16
 
 # Runs Inception-ResNet-v2 Module
@@ -53,7 +54,7 @@ class vgg_interface(object):
       logits, end_points = network_interface(inputs, is_training=False)
     saver = tf.train.Saver()
     saver.restore(sess, self.checkpoint_dir)
-    end_interface = end_points[inception_resnet_v2.END_POINT_KEY]
+    end_interface = end_points[general_network.layer_key]
     for image in sample_images:
       im = Image.open(image).resize((299, 299))
       im = np.array(im)
@@ -68,11 +69,11 @@ class vgg_interface(object):
     
     with tf.Graph().as_default():
 
-      with slim.arg_scope(inception_resnet_v2.inception_resnet_v2_arg_scope()):
+      with slim.arg_scope(vgg.vgg_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          end_interface = inception_resnet_v2.inception_resnet_v2_interface(inputs,
-                                                                            num_classes=1001,
-                                                                            is_training=False)
+          end_interface = general_network.interface_function(inputs,
+                                                             num_classes=1001,
+                                                             is_training=False)
           print image_path
           print self.checkpoint_dir
           
@@ -102,9 +103,9 @@ class vgg_interface(object):
     scaled_input_tensor = tf.mul(scaled_input_tensor, 2.0)
     
     sess = tf.Session()
-    arg_scope = inception_resnet_v2.inception_resnet_v2_arg_scope()
+    arg_scope = vgg.vgg_arg_scope()
     with slim.arg_scope(arg_scope):
-      logits, end_points = inception_resnet_v2.inception_resnet_v2(scaled_input_tensor, is_training=False)
+      logits, end_points = general_network.interface_function(scaled_input_tensor, is_training=False)
     saver = tf.train.Saver()
     saver.restore(sess, self.checkpoint_dir)
     

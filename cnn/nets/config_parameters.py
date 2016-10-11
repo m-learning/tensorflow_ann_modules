@@ -12,8 +12,8 @@ import sys
 import tarfile
 
 import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
-import cnn.nets.evaluation_parameters as EVAL_FLAGS
 import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
+import cnn.nets.evaluation_parameters as EVAL_FLAGS
 import cnn.nets.training_parameters as FLAGS
 from six.moves import urllib
 

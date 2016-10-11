@@ -11,8 +11,8 @@ from PIL import Image
 
 from cnn.flomen.cnn_files import training_file as flomen_files
 import cnn.vgg.vgg as vgg
-import cnn.nets.run_network_general as general_network
-from cnn.nets.run_network_general import network_interface
+import cnn.nets.run_network as general_network
+from cnn.nets.run_network import network_interface
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import numpy as np
 import tensorflow as tf
@@ -62,9 +62,9 @@ class vgg_interface(network_interface):
     scaled_input_tensor = tf.mul(scaled_input_tensor, 2.0)
     
     sess = tf.Session()
-    arg_scope = inception_resnet_v2.inception_resnet_v2_arg_scope()
+    arg_scope = vgg.vgg_arg_scope()
     with slim.arg_scope(arg_scope):
-      logits, end_points = inception_resnet_v2.inception_resnet_v2(scaled_input_tensor, is_training=False)
+      logits, end_points = general_network.interface_function(scaled_input_tensor, is_training=False)
     saver = tf.train.Saver()
     saver.restore(sess, self.checkpoint_dir)
     
