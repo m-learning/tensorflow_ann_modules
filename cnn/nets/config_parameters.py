@@ -123,29 +123,18 @@ class train_and_eval_config(object):
     EVAL_FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
     EVAL_FLAGS.model_name = 'inception_resnet_v2'
     
-  
-  # Trains network
-  def train_net(self):
-    self.define_training_parameters()
-    self.train_function()
-  
-  # Evaluates network
-  def eval_net(self):
-    self.define_eval_parameters()
-    self.eval_function()
-  
-  # Runs train or evaluation
-  def train_or_eval(self, args):
+  # Gets configuration function for training and evaluation
+  def run_config_function(self, args):
     
-    if args[1] == 'eval':
-        self.eval_net()
+    if len(args) > 1 and args[1] == 'eval':
+      self.define_eval_parameters()
     else:
-        self.train_net()
-        
+      self.define_training_parameters()
+  
   # Train or eva;luate parameters
   def train_or_eval_net(self, args):
     
-    if len(args) > 1:
-      self.train_or_eval(args)
+    if len(args) > 1 and len(args) > 1:
+      self.eval_function()
     else:
-      self.train_net()
+      self.train_function()
