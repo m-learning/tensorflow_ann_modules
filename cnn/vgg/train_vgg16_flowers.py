@@ -19,7 +19,6 @@ from cnn.nets.config_parameters import train_and_eval_config
 
 # Data set name
 dataset_name = 'flowers'
-checkpoint_parameters = ('vgg_16', 'vgg_16_2016_08_28')
 
 training_parameters = (training_file(), dataset_name,
                        download_and_convert_flowers,
@@ -35,6 +34,7 @@ class flower_config(train_and_eval_config):
   
   # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):
+    
     self.set_trainable_and_exclude_scopes('vgg16/fc7,vgg16/fc8',
                                           'vgg16/fc7,vgg16/fc8')
     self.set_max_number_of_steps(4000)
