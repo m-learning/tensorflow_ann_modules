@@ -43,4 +43,6 @@ moving_average_decay = None
 
 eval_image_size = None  # 'Eval image size'
 
-network_name = 'vgg_16' # Name of network
+network_name = 'vgg_16'  # Name of network
+
+layer_key = 'vgg_16/fc8'  # Layer to call for prediction

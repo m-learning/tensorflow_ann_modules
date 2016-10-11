@@ -32,6 +32,8 @@ class train_and_eval_config(object):
     self.checkpoint_directory = self.file_mngr.init_files_directory()
     if checkpoint_file is None:
       self.checkpoint_file_name = CHECKPOINT_FILE_NAME
+    else:
+      self.checkpoint_file_name = checkpoint_file
     full_checkpoint_file = self.checkpoint_file_name + '.ckpt'
     self.checkpoint_file = self.file_mngr.join_path(self.checkpoint_directory, full_checkpoint_file)
   
@@ -45,18 +47,24 @@ class train_and_eval_config(object):
       def _progress(count, block_size, total_size):
         sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
         sys.stdout.flush()
-      filepath, _ = urllib.request.urlretrieve(CHECKPOINT_URL, filepath, _progress)
+      filepath, _ = urllib.request.urlretrieve(full_checkpoint_url, filepath, _progress)
     print()
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
     tarfile.open(filepath, 'r:gz').extractall(self.checkpoint_directory)
   
+  # Sets and trainable and exclusion scopes
+  def set_trainable_and_exclude_scopes(self, checkpoint_exclude_scopes, trainable_scopes):
+    
+    if checkpoint_exclude_scopes is not None:
+      FLAGS.checkpoint_exclude_scopes = checkpoint_exclude_scopes
+    if trainable_scopes is not None:
+      FLAGS.trainable_scopes = trainable_scopes
+    
+  
   # Define checkpoint
   def _set_checkpoint(self):
-    
-    FLAGS.checkpoint_path = self.file_mngr.join_path(self.checkpoint_directory, CHECKPOINT_FILE_NAME)
-    FLAGS.checkpoint_exclude_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits'
-    FLAGS.trainable_scopes = 'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits'
+    FLAGS.checkpoint_path = self.checkpoint_file
   
   # Define hyper - parameters
   def _set_hyper_parameters(self):

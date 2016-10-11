@@ -118,14 +118,16 @@ max_number_of_steps = None  # 'The maximum number of training steps.'
 
 checkpoint_path = None  # 'The path to a checkpoint from which to fine-tune.'
 
-checkpoint_exclude_scopes = None
+checkpoint_exclude_scopes = 'vgg16/fc7,vgg16/fc8'
     # 'Comma-separated list of scopes of variables to exclude when restoring '
     # 'from a checkpoint.'
 
-trainable_scopes = None
+trainable_scopes = 'vgg16/fc7,vgg16/fc8'
     # 'Comma-separated list of scopes to filter the set of variables to train.'
     # 'By default, None would train all the variables.'
 
 ignore_missing_vars = False  # 'When restoring a checkpoint would ignore missing variables.'
 
-network_name = 'vgg_16' # Name of network
+network_name = 'vgg_16'  # Name of network
+
+layer_to_train = ('fc7', 'fc8')

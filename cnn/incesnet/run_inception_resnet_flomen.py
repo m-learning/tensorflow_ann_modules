@@ -11,7 +11,7 @@ from PIL import Image
 
 from cnn.flomen.cnn_files import training_file as flomen_files
 import cnn.incesnet.inception_resnet_v2 as inception_resnet_v2
-from cnn.nets.run_network_general import network_interface
+from cnn.nets.run_network import network_interface
 from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
 import numpy as np
 import tensorflow as tf

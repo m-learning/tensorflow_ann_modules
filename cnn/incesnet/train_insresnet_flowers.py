@@ -30,6 +30,8 @@ class flower_config(train_and_eval_config):
   
   # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):
+    self.set_trainable_and_exclude_scopes('InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits', 
+                                          'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits')
     self.set_max_number_of_steps(4000)
     self.train_or_eval_net(sys_args)
 
