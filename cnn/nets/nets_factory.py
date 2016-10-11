@@ -32,6 +32,19 @@ import tensorflow as tf
 
 
 slim = tf.contrib.slim
+    
+#Gens network configurations
+def get_network_configs(name = None):
+  """Returns a network configuration as tuple`.
+  Args:
+    name: The name of the network.
+  Returns:
+    network configuration tuple
+  """
+  if name == 'vgg_16':
+    return ('vgg_16_2016_08_28', 'vgg_16')
+  else:
+    return ()
 
 # Factory module to initialize CNN model
 def get_network_fn(num_classes, name=None,

@@ -1,5 +1,5 @@
 # '''
-# Created on Oct 4, 2016
+# Created on Oct 3, 2016
 # Runs inception-ResNet-v2 module with checkpoint
 # @author: levan-lev
 # '''
@@ -9,7 +9,7 @@ from __future__ import division
 
 from PIL import Image
 
-from cnn.flowers.cnn_files import training_file as flower_files
+from cnn.flomen.cnn_files import training_file as flomen_files
 import cnn.vgg.vgg as vgg
 import cnn.nets.run_network as general_network
 from cnn.nets.run_network import network_interface
@@ -36,11 +36,10 @@ class vgg_interface(network_interface):
 
       with slim.arg_scope(vgg.vgg_arg_scope()):
           inputs = tf.random_uniform((batch_size, height, width, 3))
-          end_interface = general_network.interface_function(inputs, num_classes=5, is_training=False)
-      
+          end_interface = general_network.interface_function(inputs, num_classes=8, is_training=False)
+          
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
-                                                   slim.get_model_variables('InceptionResnetV2'))
-      
+                                                   slim.get_model_variables(general_network.network_name))
           with tf.Session() as sess:
               
               init_fn(sess)
@@ -51,7 +50,7 @@ class vgg_interface(network_interface):
       
               _, predictions = sess.run([test_image, end_interface])
               self.print_answer(predictions)
-  
+              
   # Runs image classifier
   def run_scaled(self, image_path):
     
@@ -73,14 +72,15 @@ class vgg_interface(network_interface):
       im = Image.open(image).resize((height, width))
       im = np.array(im)
       im = im.reshape(-1, height, width, 3)
-      predict_values, logit_values = sess.run([end_points['Predictions'], logits], feed_dict={input_tensor: im})
+      predict_values, logit_values = sess.run([end_points[general_network.endpoint_layer], logits], 
+                                              feed_dict={input_tensor: im})
       print (np.max(predict_values), np.max(logit_values))
       print (np.argmax(predict_values), np.argmax(logit_values))
       self.print_answer(predict_values)
               
 if __name__ == '__main__':
   
-  cnn_file = flower_files()
+  cnn_file = flomen_files()
   resnet_interface = vgg_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   resnet_interface.run_interface(test_file_path)

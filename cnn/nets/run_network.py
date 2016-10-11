@@ -10,7 +10,9 @@ import tensorflow as tf
 
 
 interface_function = vgg.vgg_16
+network_name = 'vgg16'
 layer_key = 'vgg_16/fc8'
+endpoint_layer = 'fc8'
 
 # Runs Inception-ResNet-v2 Module
 class network_interface(object):

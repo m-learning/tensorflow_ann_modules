@@ -25,22 +25,24 @@ CHECKPOINT_FILE_NAME = 'vgg_16_2016_08_28'
 # Training parameters and data set
 class train_and_eval_config(object):
   
-  def __init__(self, file_mngr, dataset_name, dataset_downloader, checkpoint_file):
+  def __init__(self, file_mngr, dataset_name, dataset_downloader, checkpoint_parameters):
     self.file_mngr = file_mngr
     self.dataset_name = dataset_name
     self.dataset_downloader = dataset_downloader
     self.checkpoint_directory = self.file_mngr.init_files_directory()
-    if checkpoint_file is None:
-      self.checkpoint_file_name = CHECKPOINT_FILE_NAME
+    if checkpoint_parameters is None:
+      checkpoint_file = CHECKPOINT_FILE_NAME
+      self.checkpoint_url = CHECKPOINT_URL
     else:
-      self.checkpoint_file_name = checkpoint_file
-    full_checkpoint_file = self.checkpoint_file_name + '.ckpt'
+      (checkpoint_file, checkpoint_url) = checkpoint_parameters
+      self.checkpoint_url = checkpoint_url
+    full_checkpoint_file = checkpoint_file + '.ckpt'
     self.checkpoint_file = self.file_mngr.join_path(self.checkpoint_directory, full_checkpoint_file)
   
   # Gets checkpoint file
   def download_checkpoint(self):
     
-    full_checkpoint_url = 'http://download.tensorflow.org/models/' + self.checkpoint_file_name + '.tar.gz'
+    full_checkpoint_url = 'http://download.tensorflow.org/models/' + self.checkpoint_url + '.tar.gz'
     filename = full_checkpoint_url.split('/')[-1]
     filepath = self.file_mngr.join_path(self.checkpoint_directory, filename)
     if not os.path.exists(filepath):

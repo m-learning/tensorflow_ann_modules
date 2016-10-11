@@ -19,6 +19,8 @@ from cnn.nets.config_parameters import train_and_eval_config
 
 # Data set name
 dataset_name = 'flomen'
+checkpoint_parameters = ('inception_resnet_v2_2016_08_30',
+                         'inception_resnet_v2_2016_08_30')
 
 # Configuration for flomen data set
 class flomen_config(train_and_eval_config):
@@ -26,11 +28,11 @@ class flomen_config(train_and_eval_config):
   def __init__(self):
     super(flomen_config, self).__init__(training_file(), dataset_name,
                                         download_and_convert_flomen,
-                                        'inception_resnet_v2_2016_08_30')
+                                        checkpoint_parameters)
 
   # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):
-    self.set_trainable_and_exclude_scopes('InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits', 
+    self.set_trainable_and_exclude_scopes('InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits',
                                           'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits')
     self.set_max_number_of_steps(6000)
     self.train_or_eval_net(sys_args)
