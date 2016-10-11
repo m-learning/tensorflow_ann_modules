@@ -18,9 +18,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-#"""Contains model definitions for versions of the Oxford VGG network.
+# """Contains model definitions for versions of the Oxford VGG network.
 #
-#These model definitions were introduced in the following technical report:
+# These model definitions were introduced in the following technical report:
 #
 #  Very Deep Convolutional Networks For Large-Scale Image Recognition
 #  Karen Simonyan and Andrew Zisserman
@@ -29,20 +29,20 @@
 #  ILSVRC 2014 Slides: http://www.robots.ox.ac.uk/~karen/pdf/ILSVRC_2014.pdf
 #  CC-BY-4.0
 #
-#More information can be obtained from the VGG website:
-#www.robots.ox.ac.uk/~vgg/research/very_deep/
+# More information can be obtained from the VGG website:
+# www.robots.ox.ac.uk/~vgg/research/very_deep/
 #
-#Usage:
+# Usage:
 #  with slim.arg_scope(vgg.vgg_arg_scope()):
 #    outputs, end_points = vgg.vgg_a(inputs)
 #
 #  with slim.arg_scope(vgg.vgg_arg_scope()):
 #    outputs, end_points = vgg.vgg_16(inputs)
 #
-#@@vgg_a
-#@@vgg_16
-#@@vgg_19
-#"""
+# @@vgg_a
+# @@vgg_16
+# @@vgg_19
+# """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -68,6 +68,10 @@ def vgg_arg_scope(weight_decay=0.0005):
                       biases_initializer=tf.zeros_initializer):
     with slim.arg_scope([slim.conv2d], padding='SAME') as arg_sc:
       return arg_sc
+
+# Gets endpoints
+def get_endpoints(end_points_collection):
+  return dict((v.name, v) for v in tf.get_collection(end_points_collection))
 
 
 def vgg_a(inputs,
@@ -121,7 +125,7 @@ def vgg_a(inputs,
                         normalizer_fn=None,
                         scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = dict(tf.get_collection(end_points_collection))
+      end_points = get_endpoints(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
@@ -180,7 +184,7 @@ def vgg_16(inputs,
                         normalizer_fn=None,
                         scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = dict(tf.get_collection(end_points_collection))
+      end_points = get_endpoints(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
@@ -239,7 +243,7 @@ def vgg_19(inputs,
                         normalizer_fn=None,
                         scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = dict(tf.get_collection(end_points_collection))
+      end_points = get_endpoints(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net

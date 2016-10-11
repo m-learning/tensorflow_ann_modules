@@ -14,6 +14,8 @@ import sys
 
 from cnn.datasets import download_and_convert_flomen
 from cnn.flomen.cnn_files import training_file
+import cnn.incesnet.evaluate_inception_resnet_v2.run_evaluation as eval_inception
+import cnn.incesnet.retrain_inception_resnet_v2.run_training as train_inception
 from cnn.nets.config_parameters import train_and_eval_config
 
 
@@ -22,13 +24,17 @@ dataset_name = 'flomen'
 checkpoint_parameters = ('inception_resnet_v2_2016_08_30',
                          'inception_resnet_v2_2016_08_30')
 
+training_parameters = (training_file(), dataset_name,
+                       download_and_convert_flomen,
+                       train_inception, eval_inception,
+                       'inception_resnet_v2_2016_08_30',
+                       'inception_resnet_v2_2016_08_30')
+
 # Configuration for flomen data set
 class flomen_config(train_and_eval_config):
   
   def __init__(self):
-    super(flomen_config, self).__init__(training_file(), dataset_name,
-                                        download_and_convert_flomen,
-                                        checkpoint_parameters)
+    super(flomen_config, self).__init__(training_parameters)
 
   # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):

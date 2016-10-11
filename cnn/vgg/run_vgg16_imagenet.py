@@ -113,7 +113,7 @@ class vgg_interface(object):
       im = Image.open(image).resize((height, width))
       im = np.array(im)
       im = im.reshape(-1, height, width, 3)
-      predict_values, logit_values = sess.run([end_points[general_network.endpoint_layer], logits], 
+      predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits], 
                                               feed_dict={input_tensor: im})
       print (np.max(predict_values), np.max(logit_values))
       print (np.argmax(predict_values), np.argmax(logit_values))
@@ -122,6 +122,6 @@ class vgg_interface(object):
 if __name__ == '__main__':
   
   cnn_file = flomen_files()
-  resnet_interface = vgg_interface(cnn_file, 'inception_resnet_v2_2016_08_30.ckpt')
+  resnet_interface = vgg_interface(cnn_file, 'vgg_16.ckpt')
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   resnet_interface.run_scaled(test_file_path)

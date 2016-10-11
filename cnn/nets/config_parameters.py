@@ -11,10 +11,10 @@ import os
 import sys
 import tarfile
 
-import cnn.incesnet.evaluate_inception_resnet_v2 as eval_inception
-import cnn.incesnet.retrain_inception_resnet_v2 as train_inception
 import cnn.nets.evaluation_parameters as EVAL_FLAGS
 import cnn.nets.training_parameters as FLAGS
+import cnn.nets.evaluate_network as eval_network
+import cnn.nets.retrain_network as train_network
 from six.moves import urllib
 
 
@@ -25,19 +25,25 @@ CHECKPOINT_FILE_NAME = 'vgg_16_2016_08_28'
 # Training parameters and data set
 class train_and_eval_config(object):
   
-  def __init__(self, file_mngr, dataset_name, dataset_downloader, checkpoint_parameters):
+  def __init__(self, training_parameters):
+    (file_mngr, dataset_name, dataset_downloader,
+     train_function, eval_funcion,
+     checkpoint_file, checkpoint_url) = training_parameters
     self.file_mngr = file_mngr
     self.dataset_name = dataset_name
     self.dataset_downloader = dataset_downloader
     self.checkpoint_directory = self.file_mngr.init_files_directory()
-    if checkpoint_parameters is None:
-      checkpoint_file = CHECKPOINT_FILE_NAME
-      self.checkpoint_url = CHECKPOINT_URL
-    else:
-      (checkpoint_file, checkpoint_url) = checkpoint_parameters
-      self.checkpoint_url = checkpoint_url
+    self.checkpoint_url = checkpoint_url
     full_checkpoint_file = checkpoint_file + '.ckpt'
     self.checkpoint_file = self.file_mngr.join_path(self.checkpoint_directory, full_checkpoint_file)
+    if train_function is None:
+      self.train_function = train_network.train_net
+    else:
+      self.train_function = train_function
+    if eval_funcion is None:
+      self.eval_function = eval_network.eval_net
+    else:
+      self.eval_function = eval_funcion
   
   # Gets checkpoint file
   def download_checkpoint(self):
@@ -121,12 +127,12 @@ class train_and_eval_config(object):
   # Trains network
   def train_net(self):
     self.define_training_parameters()
-    train_inception.train_net()
+    self.train_function()
   
   # Evaluates network
   def eval_net(self):
     self.define_eval_parameters()
-    eval_inception.eval_net()
+    self.eval_function()
   
   # Runs train or evaluation
   def train_or_eval(self, args):

@@ -57,7 +57,12 @@ class files_and_path_utils(object):
   
   # Joins path from method
   def join_path(self, path_inst, *other_path):
-    
+    """Joins passed file paths and function generating path
+      Args:
+       path_inst file path or function
+      Returns:
+       generated file path 
+    """
     if isinstance(path_inst, types.StringType):
       init_path = path_inst
     else:
