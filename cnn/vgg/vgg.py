@@ -69,7 +69,7 @@ def vgg_arg_scope(weight_decay=0.0005):
     with slim.arg_scope([slim.conv2d], padding='SAME') as arg_sc:
       return arg_sc
 
-# Gets endpoints
+# Gets end points
 def get_endpoints(end_points_collection):
   return dict((v.name, v) for v in tf.get_collection(end_points_collection))
 

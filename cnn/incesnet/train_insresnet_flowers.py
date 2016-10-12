@@ -36,6 +36,11 @@ class flower_config(train_and_eval_config):
   
   # Addts configuration parameters and trains model
   def config_and_train(self, sys_args):
+    """Configures and trains or evaluates
+    Args:
+    system arguments to decide between train and evaluate.
+    global_step: The global_step tensor.
+    """
     
     self.run_config_function(sys_args)
     self.set_model_name('inception_resnet_v2')
