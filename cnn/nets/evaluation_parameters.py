@@ -41,7 +41,7 @@ moving_average_decay = None
     # 'The decay to use for the moving average.'
     # 'If left as None, then moving averages are not used.'
 
-eval_image_size = None  # 'Eval image size'
+eval_image_size = None  # 'Evaluation image size'
 
 network_name = 'vgg_16'  # Name of network
 

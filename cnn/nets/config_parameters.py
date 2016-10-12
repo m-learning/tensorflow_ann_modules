@@ -132,6 +132,11 @@ class train_and_eval_config(object):
     
   # Gets configuration function for training and evaluation
   def run_config_function(self, args):
+    """
+      Runs appropriate configuration function
+      Args: system argumenst to decide between 
+            training and evaluation configuration
+    """
     
     if len(args) > 1 and args[1] == 'eval':
       self.define_eval_parameters()

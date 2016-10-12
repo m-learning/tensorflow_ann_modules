@@ -159,7 +159,9 @@ def vgg_a(inputs,
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
+        
       return net, end_points
+    
 vgg_a.default_image_size = 224
 
 def vgg_16(inputs,
