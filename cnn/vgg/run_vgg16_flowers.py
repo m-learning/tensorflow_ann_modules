@@ -13,7 +13,7 @@ from cnn.flowers.cnn_files import training_file as flower_files
 import cnn.vgg.vgg as vgg
 import cnn.nets.run_network as general_network
 from cnn.nets.run_network import network_interface
-from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
+from cnn.preprocessing.vgg_preprocessing import preprocess_image
 import numpy as np
 import tensorflow as tf
 
@@ -21,7 +21,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 batch_size = 1
-height, width = 299, 299
+height, width = 224, 224
 
 # Runs Inception-ResNet-v2 Module
 class vgg_interface(network_interface):
@@ -45,7 +45,7 @@ class vgg_interface(network_interface):
       
               test_image_file = tf.gfile.FastGFile(image_path, 'rb').read()
               test_image = tf.image.decode_jpeg(test_image_file, channels=3)
-              test_image = preprocess_for_eval(test_image, height, width)
+              test_image = preprocess_image(test_image, height, width)
       
               _, predictions = sess.run([test_image, end_interface])
               self.print_answer(predictions)

@@ -347,7 +347,7 @@ def preprocess_for_eval(image, output_height, output_width, resize_side):
   image = tf.to_float(image)
   return _mean_image_subtraction(image, [_R_MEAN, _G_MEAN, _B_MEAN])
 
-
+# Preprocesses image for VGG network
 def preprocess_image(image, output_height, output_width, is_training=False,
                      resize_side_min=_RESIZE_SIDE_MIN,
                      resize_side_max=_RESIZE_SIDE_MAX):

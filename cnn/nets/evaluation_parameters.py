@@ -32,7 +32,7 @@ labels_offset = 0
     # 'evaluate the VGG and ResNet architectures which do not use a background '
     # 'class for the ImageNet dataset.'
 
-model_name = 'inception_resnet_v2'  # 'The name of the architecture to evaluate.'
+model_name = 'vgg_16'  # 'The name of the architecture to evaluate.'
 
 preprocessing_name = None  # 'The name of the preprocessing to use. If left '
     # 'as `None`, then the model_name flag is used.'

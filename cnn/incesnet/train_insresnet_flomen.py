@@ -38,6 +38,7 @@ class flomen_config(train_and_eval_config):
   def config_and_train(self, sys_args):
     
     self.run_config_function(sys_args)
+    self.set_model_name('inception_resnet_v2')
     self.set_trainable_and_exclude_scopes('InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits',
                                           'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits')
     self.set_max_number_of_steps(6000)

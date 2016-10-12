@@ -36,8 +36,9 @@ class flower_config(train_and_eval_config):
   def config_and_train(self, sys_args):
     
     self.run_config_function(sys_args)
-    self.set_trainable_and_exclude_scopes('vgg16/fc7,vgg16/fc8',
-                                          'vgg16/fc7,vgg16/fc8')
+    self.set_model_name('vgg_16')
+    self.set_trainable_and_exclude_scopes('vgg16/fc6,vgg16/fc7,vgg16/fc8',
+                                          'vgg16/fc6,vgg16/fc7,vgg16/fc8')
     self.set_max_number_of_steps(4000)
     self.train_or_eval_net(sys_args)
 

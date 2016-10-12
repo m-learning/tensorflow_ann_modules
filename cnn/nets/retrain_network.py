@@ -212,6 +212,8 @@ def _get_variables_to_train():
 
 # Runs training
 def run_training(_):
+  """ Runs training for modules 
+  """
   
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')

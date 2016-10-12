@@ -11,9 +11,10 @@ from PIL import Image
 
 from cnn.datasets import imagenet
 from cnn.flomen.cnn_files import training_file as flomen_files
-import cnn.vgg.vgg as vgg
 import cnn.nets.run_network as general_network
-from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
+from cnn.preprocessing.vgg_preprocessing import preprocess_image
+import cnn.vgg.vgg as vgg
+import cv2
 import numpy as np
 import tensorflow as tf
 
@@ -22,7 +23,7 @@ slim = tf.contrib.slim
 
 batch_size = 1
 height, width = 224, 224
-network_interface = vgg.vgg_16
+network_interface = vgg.vgg_16_fc
 
 # Runs Inception-ResNet-v2 Module
 class vgg_interface(object):
@@ -79,15 +80,14 @@ class vgg_interface(object):
           
           print end_interface
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
-                                                   slim.get_model_variables('InceptionResnetV2'))
-      
+                                                   slim.get_model_variables(general_network.network_name))
           with tf.Session() as sess:
               
               init_fn(sess)
       
               test_image_file = tf.gfile.FastGFile(image_path, 'rb').read()
               test_image = tf.image.decode_jpeg(test_image_file, channels=3)
-              test_image = preprocess_for_eval(test_image, height, width)
+              test_image = preprocess_image(test_image, height, width)
       
               _, predictions = sess.run([test_image, end_interface])
               self.print_answer(predictions)
@@ -105,16 +105,21 @@ class vgg_interface(object):
     sess = tf.Session()
     arg_scope = vgg.vgg_arg_scope()
     with slim.arg_scope(arg_scope):
-      logits, end_points = general_network.interface_function(scaled_input_tensor, is_training=False)
+      logits, end_points = general_network.interface_function(scaled_input_tensor, is_training=False,
+                                                              spatial_squeeze=True)
     saver = tf.train.Saver()
     saver.restore(sess, self.checkpoint_dir)
     
     for image in sample_images:
-      im = Image.open(image).resize((height, width))
-      im = np.array(im)
-      im = im.reshape(-1, height, width, 3)
+      im = cv2.resize(cv2.imread(image), (height, width)).astype(np.float32)
+      im[:, :, 0] -= 103.939
+      im[:, :, 1] -= 116.779
+      im[:, :, 2] -= 123.68
+      im = im.transpose((2, 0, 1))
+      im = np.expand_dims(im, axis=0)
       predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits],
                                               feed_dict={input_tensor: im})
+      # soft_max_values = tf.nn.softmax(logit_values, 'Endpoint')
       print (np.max(predict_values), np.max(logit_values))
       print (np.argmax(predict_values), np.argmax(logit_values))
       self.print_answer(predict_values)
@@ -124,4 +129,4 @@ if __name__ == '__main__':
   cnn_file = flomen_files()
   resnet_interface = vgg_interface(cnn_file, 'vgg_16.ckpt')
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
-  resnet_interface.run_scaled(test_file_path)
+  resnet_interface.run_interface(test_file_path)

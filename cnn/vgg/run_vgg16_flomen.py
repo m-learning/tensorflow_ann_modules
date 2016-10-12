@@ -10,10 +10,10 @@ from __future__ import division
 from PIL import Image
 
 from cnn.flomen.cnn_files import training_file as flomen_files
-import cnn.vgg.vgg as vgg
-import cnn.nets.run_network as general_network
 from cnn.nets.run_network import network_interface
-from cnn.preprocessing.inception_preprocessing import preprocess_for_eval
+import cnn.nets.run_network as general_network
+from cnn.preprocessing.vgg_preprocessing import preprocess_image
+import cnn.vgg.vgg as vgg
 import numpy as np
 import tensorflow as tf
 
@@ -21,7 +21,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 batch_size = 1
-height, width = 299, 299
+height, width = 224, 224
 
 # Runs Inception-ResNet-v2 Module
 class vgg_interface(network_interface):
@@ -45,11 +45,32 @@ class vgg_interface(network_interface):
       
               test_image_file = tf.gfile.FastGFile(image_path, 'rb').read()
               test_image = tf.image.decode_jpeg(test_image_file, channels=3)
-              test_image = preprocess_for_eval(test_image, height, width)
+              test_image = preprocess_image(test_image, height, width)
       
               _, predictions = sess.run([test_image, end_interface])
               self.print_answer(predictions)
+  
+  # Runs network interface with local resize utilities
+  def run_intarfeace_resize(self, image_path):
+
+    with tf.Graph().as_default():
+
+      with slim.arg_scope(vgg.vgg_arg_scope()):
+          inputs = tf.random_uniform((batch_size, height, width, 3))
+          end_interface = general_network.interface_function(inputs, num_classes=8, is_training=False)
+          init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
+                                                   slim.get_model_variables(general_network.network_name))
+          with tf.Session() as sess:
               
+              init_fn(sess)
+      
+              test_image_file = tf.gfile.FastGFile(image_path, 'rb').read()
+              test_image = tf.image.decode_jpeg(test_image_file, channels=3)
+              test_image = preprocess_image(test_image, height, width)
+      
+              _, predictions = sess.run([test_image, end_interface])
+              self.print_answer(predictions)
+  
   # Runs image classifier
   def run_scaled(self, image_path):
     

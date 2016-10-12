@@ -18,10 +18,6 @@ import cnn.nets.retrain_network as train_network
 from six.moves import urllib
 
 
-# URL to checkpoint file
-CHECKPOINT_URL = 'http://download.tensorflow.org/models/inception_resnet_v2_2016_08_30.tar.gz'
-CHECKPOINT_FILE_NAME = 'vgg_16_2016_08_28'
-
 # Training parameters and data set
 class train_and_eval_config(object):
   
@@ -94,6 +90,10 @@ class train_and_eval_config(object):
   # Sets maximum number of steps
   def set_max_number_of_steps(self, max_number_of_steps):
     FLAGS.max_number_of_steps = max_number_of_steps
+  
+  # Sets network model name
+  def set_model_name(self, model_name):
+    FLAGS.model_name = model_name
     
   
   # Prepares flowers for inception
@@ -121,7 +121,7 @@ class train_and_eval_config(object):
     EVAL_FLAGS.dataset_name = self.dataset_name
     EVAL_FLAGS.dataset_split_name = 'validation'
     EVAL_FLAGS.dataset_dir = self.file_mngr.get_dataset_dir()
-    EVAL_FLAGS.model_name = 'inception_resnet_v2'
+    EVAL_FLAGS.model_name = 'vgg_16'
     
   # Gets configuration function for training and evaluation
   def run_config_function(self, args):
