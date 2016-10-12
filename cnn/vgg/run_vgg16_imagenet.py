@@ -1,6 +1,6 @@
 # '''
 # Created on Oct 4, 2016
-# Runs inception-ResNet-v2 module with checkpoint
+# Runs VGG module with checkpoint
 # @author: levan-lev
 # '''
 
@@ -25,7 +25,7 @@ batch_size = 1
 height, width = 224, 224
 network_interface = vgg.vgg_16_fc
 
-# Runs Inception-ResNet-v2 Module
+# Runs VGG Module
 class vgg_interface(object):
   
   def __init__(self, cnn_file, checkpoint_file):
@@ -127,6 +127,6 @@ class vgg_interface(object):
 if __name__ == '__main__':
   
   cnn_file = flomen_files()
-  resnet_interface = vgg_interface(cnn_file, 'vgg_16.ckpt')
+  app_interface = vgg_interface(cnn_file, 'vgg_16.ckpt')
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
-  resnet_interface.run_interface(test_file_path)
+  app_interface.run_interface(test_file_path)

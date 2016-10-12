@@ -94,7 +94,14 @@ class train_and_eval_config(object):
   # Sets network model name
   def set_model_name(self, model_name):
     FLAGS.model_name = model_name
-    
+  
+  # Sets optimizer function name
+  def set_optimizer(self, optimizer):
+    FLAGS.optimizer = optimizer
+  
+  # Sets learning rate decay type
+  def set_learning_rate_decay_type(self, learning_rate_decay_type):
+    FLAGS.learning_rate_decay_type = learning_rate_decay_type
   
   # Prepares flowers for inception
   def define_training_parameters(self):

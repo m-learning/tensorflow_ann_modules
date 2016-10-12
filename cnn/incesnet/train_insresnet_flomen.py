@@ -42,6 +42,7 @@ class flomen_config(train_and_eval_config):
     self.set_trainable_and_exclude_scopes('InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits',
                                           'InceptionResnetV2/Logits,InceptionResnetV2/AuxLogits')
     self.set_max_number_of_steps(6000)
+    self.set_learning_rate_decay_type('exponential')
     self.train_or_eval_net(sys_args)
 
 if __name__ == '__main__':

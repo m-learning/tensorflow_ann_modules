@@ -39,7 +39,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 
-# Configures Inception-ResNet-v2 learning rate
+# Configures network learning rate
 def _configure_learning_rate(num_samples_per_epoch, global_step):
   """Configures the learning rate.
 
@@ -79,7 +79,7 @@ def _configure_learning_rate(num_samples_per_epoch, global_step):
     raise ValueError('learning_rate_decay_type [%s] was not recognized',
                      FLAGS.learning_rate_decay_type)
 
-# Configures Inception-ResNet-v2 optimizer
+# Configures network optimizer
 def _configure_optimizer(learning_rate):
   """Configures the optimizer used for training.
 

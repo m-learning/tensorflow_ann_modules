@@ -44,9 +44,9 @@ def get_preprocessing(name=None, is_training=False):
         image = preprocessing_fn(image, output_height, output_width, ...).
   """
   if name in ('vgg', 'vgg_a', 'vgg_d', 'vgg_e', 'vgg_16', 'vgg_19'):
-    pr_func = inception_preprocessing
-  else:
     pr_func = vgg_preprocessing
+  else:
+    pr_func = inception_preprocessing
 
   def preprocessing_fn(image, output_height, output_width, **kwargs):
     return pr_func.preprocess_image(

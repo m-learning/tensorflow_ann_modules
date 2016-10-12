@@ -15,6 +15,7 @@ import sys
 from cnn.datasets import download_and_convert_flomen
 from cnn.flomen.cnn_files import training_file
 from cnn.nets.config_parameters import train_and_eval_config
+import cnn.vgg.vgg_constants as constants
 
 
 # Data set name
@@ -23,8 +24,8 @@ dataset_name = 'flomen'
 training_parameters = (training_file(), dataset_name,
                        download_and_convert_flomen,
                        None, None,
-                       'vgg_16',
-                       'vgg_16_2016_08_28')
+                       constants.checkpoint_file,
+                       constants.checkpoint_url)
 
 # Configuration for flomen data set
 class flomen_config(train_and_eval_config):
@@ -37,8 +38,9 @@ class flomen_config(train_and_eval_config):
     
     self.run_config_function(sys_args)
     self.set_model_name('vgg_16')
-    self.set_trainable_and_exclude_scopes('vgg16/fc6,vgg16/fc7,vgg16/fc8',
-                                          'vgg16/fc6,vgg16/fc7,vgg16/fc8')
+    self.set_trainable_and_exclude_scopes(constants.checkpoint_exclude_scopes,
+                                          constants.trainable_scopes)
+    self.set_optimizer('sgd')
     self.set_max_number_of_steps(6000)
     self.train_or_eval_net(sys_args)
 

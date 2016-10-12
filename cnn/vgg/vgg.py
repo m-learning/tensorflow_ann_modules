@@ -211,12 +211,14 @@ def vgg_16(inputs,
         end_points[sc.name + '/fc8'] = net
         
       return net, end_points
+
+vgg_16.default_image_size = 224
     
 def vgg_16_fc(inputs,
            num_classes=1000,
            is_training=True,
            dropout_keep_prob=0.5,
-           spatial_squeeze=True,
+           spatial_squeeze=False,
            scope='vgg_16'):
   """Oxford Net VGG 16-Layers version D Example.
 
@@ -242,25 +244,25 @@ def vgg_16_fc(inputs,
     with slim.arg_scope([slim.conv2d, slim.fully_connected, slim.max_pool2d],
                         outputs_collections=end_points_collection):
       net = init_vgg(inputs, num_classes, is_training, dropout_keep_prob,
-                        spatial_squeeze, scope)
-      net = slim.flatten(net, scope='flatten5')
+                        spatial_squeeze, 3, scope)
+      net = slim.flatten(net)
       net = slim.fully_connected(net, 4096, scope='fc6')
       net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
                          scope='dropout6')
       net = slim.fully_connected(net, 4096, scope='fc7')
       net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
                          scope='dropout7')
-      net = slim.fully_connected(net, num_classes,
-                                 activation_fn=tf.nn.softmax, scope='fc8')
+      logits = slim.fully_connected(net, num_classes,
+                                 activation_fn=None, scope='fc8')
       # Convert end_points_collection into a end_point dict.
       end_points = get_endpoints(end_points_collection)
       if spatial_squeeze:
-        net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
+        logits = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
       
-      return net, end_points
+      return logits, end_points
     
-vgg_16.default_image_size = 224
+vgg_16_fc.default_image_size = 224
 
 
 def vgg_19(inputs,
@@ -310,8 +312,60 @@ def vgg_19(inputs,
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
+      
       return net, end_points
+
 vgg_19.default_image_size = 224
+
+def vgg_19_fc(inputs,
+           num_classes=1000,
+           is_training=True,
+           dropout_keep_prob=0.5,
+           spatial_squeeze=True,
+           scope='vgg_19'):
+  """Oxford Net VGG 19-Layers version E Example.
+
+  Note: All the fully_connected layers have been transformed to conv2d layers.
+        To use in classification mode, resize input to 224x224.
+
+  Args:
+    inputs: a tensor of size [batch_size, height, width, channels].
+    num_classes: number of predicted classes.
+    is_training: whether or not the model is being trained.
+    dropout_keep_prob: the probability that activations are kept in the dropout
+      layers during training.
+    spatial_squeeze: whether or not should squeeze the spatial dimensions of the
+      outputs. Useful to remove unnecessary dimensions for classification.
+    scope: Optional scope for the variables.
+
+  Returns:
+    the last op containing the log predictions and end_points dict.
+  """
+  with tf.variable_scope(scope, 'vgg_19', [inputs]) as sc:
+    end_points_collection = sc.name + '_end_points'
+    # Collect outputs for conv2d, fully_connected and max_pool2d.
+    with slim.arg_scope([slim.conv2d, slim.fully_connected, slim.max_pool2d],
+                        outputs_collections=end_points_collection):
+      net = init_vgg(inputs, num_classes, is_training, dropout_keep_prob,
+                        spatial_squeeze, 4, scope)
+      net = slim.flatten(net, scope='flatten5')
+      net = slim.fully_connected(net, 4096, scope='fc6')
+      net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
+                         scope='dropout6')
+      net = slim.fully_connected(net, 4096, scope='fc7')
+      net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
+                         scope='dropout7')
+      net = slim.fully_connected(net, num_classes,
+                                 activation_fn=tf.nn.softmax, scope='fc8')
+      # Convert end_points_collection into a end_point dict.
+      end_points = get_endpoints(end_points_collection)
+      if spatial_squeeze:
+        net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
+        end_points[sc.name + '/fc8'] = net
+      
+      return net, end_points
+
+vgg_19_fc.default_image_size = 224
 
 # Alias
 vgg_d = vgg_16

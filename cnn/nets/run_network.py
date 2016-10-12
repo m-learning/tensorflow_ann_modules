@@ -1,6 +1,6 @@
 # '''
 # Created on Oct 6, 2016
-# General interface module for Inception-ResNet-v2 implementation
+# General interface module for network implementation
 # @author: Levan Tsinadze
 # '''
 

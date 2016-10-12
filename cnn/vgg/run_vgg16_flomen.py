@@ -1,6 +1,6 @@
 # '''
 # Created on Oct 3, 2016
-# Runs inception-ResNet-v2 module with checkpoint
+# Runs VGG module with checkpoint
 # @author: levan-lev
 # '''
 
@@ -101,6 +101,6 @@ class vgg_interface(network_interface):
 if __name__ == '__main__':
   
   cnn_file = flomen_files()
-  resnet_interface = vgg_interface(cnn_file)
+  app_interface = vgg_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
-  resnet_interface.run_interface(test_file_path)
+  app_interface.run_interface(test_file_path)

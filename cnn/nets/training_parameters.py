@@ -65,7 +65,7 @@ rmsprop_decay = 0.9  # Decay term for RMSProp.'
 # Learning Rate Flags #
 #######################
 
-learning_rate_decay_type = 'exponential'  # 'Specifies how the learning rate is decayed. One of "fixed", "exponential",'
+learning_rate_decay_type = 'fixed'  # 'Specifies how the learning rate is decayed. One of "fixed", "exponential",'
                                             # ' or "polynomial"'
 
 learning_rate = 0.01  # 'Initial learning rate.'
