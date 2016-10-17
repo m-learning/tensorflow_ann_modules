@@ -9,6 +9,12 @@ Utility class for training test and validation data files
 import os
 import types
 
+try:
+  from PIL import Image
+except ImportError:
+  print "Importing Image from PIL threw exception"
+  import Image
+
 
 # General parent directory for files
 DATAS_DIR_NAME = 'datas'
@@ -102,8 +108,27 @@ class files_and_path_utils(object):
 # Utility class for training and testing files and directories
 class cnn_file_utils(files_and_path_utils):
   
-  def __init__(self, parent_cnn_dir):
+  def __init__(self, parent_cnn_dir, image_resizer=None):
     super(cnn_file_utils, self).__init__(parent_cnn_dir)
+    self.image_resizer = image_resizer
+    
+    # Reads image with or without resizing
+  def read_image(self, pr):
+    
+    if self.image_resizer is None:
+      im = Image.open(pr)
+    else:
+      im = self.image_resizer.read_and_resize(pr)
+      
+    return im
+  
+  # Writes image with or without resizing
+  def write_image(self, im, n_im):
+    
+    if self.image_resizer is None:
+      im.save(n_im)
+    else:
+      self.image_resizer.save_resized(im, n_im)
   
   # Gets or creates directories
   def get_data_general_directory(self):

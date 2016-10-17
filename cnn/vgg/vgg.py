@@ -357,9 +357,9 @@ def vgg_19_fc(inputs,
       net = slim.fully_connected(net, 4096, scope='fc7')
       net = slim.dropout(net, dropout_keep_prob, is_training=is_training,
                          scope='dropout7')
-      net = slim.fully_connected(net, num_classes,
-                                 activation_fn=tf.nn.softmax, scope='fc8')
-      # Convert end_points_collection into a end_point dict.
+      net = slim.fully_connected(net, num_classeactivation_fn=tf.nn.softmax,
+                                 scope='fc8')
+      # Convert_points_collection into a end_point dict.
       end_points = get_endpoints(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')

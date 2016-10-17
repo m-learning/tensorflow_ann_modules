@@ -13,6 +13,7 @@ from __future__ import print_function
 import sys
 
 from cnn.datasets import download_and_convert_flowers
+from cnn.vgg.image_resizing import vgg_image_resizer
 from cnn.flowers.cnn_files import training_file
 from cnn.nets.config_parameters import train_and_eval_config
 import cnn.vgg.vgg_constants as constants
@@ -21,7 +22,7 @@ import cnn.vgg.vgg_constants as constants
 # Data set name
 dataset_name = 'flowers'
 
-training_parameters = (training_file(), dataset_name,
+training_parameters = (training_file(vgg_image_resizer()), dataset_name,
                        download_and_convert_flowers,
                        None, None,
                        constants.checkpoint_file,

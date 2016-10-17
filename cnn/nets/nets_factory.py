@@ -27,7 +27,7 @@ from __future__ import print_function
 import functools
 
 from cnn.incesnet.inception_resnet_v2 import inception_resnet_v2, inception_resnet_v2_arg_scope
-from cnn.vgg.vgg import vgg_a, vgg_16_fc, vgg_19, vgg_arg_scope
+from cnn.vgg.vgg import vgg_a, vgg_16_fc, vgg_19_fc, vgg_arg_scope
 import tensorflow as tf
 
 
@@ -57,11 +57,11 @@ def get_network_fn(num_classes, name=None,
   if name in ('vgg', 'vgg_a', 'vgg_d', 'vgg_e', 'vgg_16', 'vgg_19'):
     arg_scope = vgg_arg_scope(weight_decay=weight_decay)
     if name == 'vgg_a':
-        func = vgg_a
+      func = vgg_a
     elif name in ('vgg_16', 'vgg_d'):
       func = vgg_16_fc
     else:
-      func = vgg_19
+      func = vgg_19_fc
   else:
     arg_scope = inception_resnet_v2_arg_scope(weight_decay=weight_decay)
     func = inception_resnet_v2
