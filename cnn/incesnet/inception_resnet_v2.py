@@ -38,6 +38,9 @@ import tensorflow as tf
 
 slim = tf.contrib.slim
 
+# Endpoint function name
+END_POINT_KEY = 'Predictions'
+
 # InceptionResNet model implementation
 def block35(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
   """Builds the 35x35 resnet block."""
@@ -57,6 +60,7 @@ def block35(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
     net += scale * up
     if activation_fn:
       net = activation_fn(net)
+      
   return net
 
 # Block for 17X17 ResNet
@@ -77,6 +81,7 @@ def block17(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
     net += scale * up
     if activation_fn:
       net = activation_fn(net)
+      
   return net
 
 # Block for 8X8 ResNet
@@ -97,6 +102,7 @@ def block8(net, scale=1.0, activation_fn=tf.nn.relu, scope=None, reuse=None):
     net += scale * up
     if activation_fn:
       net = activation_fn(net)
+      
   return net
 
 # Interface for Inception-ResNet neuarl network
@@ -254,11 +260,29 @@ def inception_resnet_v2(inputs, num_classes=1001, is_training=True,
           logits = slim.fully_connected(net, num_classes, activation_fn=None,
                                         scope='Logits')
           end_points['Logits'] = logits
-          end_points['Predictions'] = tf.nn.softmax(logits, name='Predictions')
+          end_points[END_POINT_KEY] = tf.nn.softmax(logits, name=END_POINT_KEY)
 
     return logits, end_points
-  
+
+# Default image size
 inception_resnet_v2.default_image_size = 299
+
+# Gets end interface to run Inception-ResNet-v2 model
+def inception_resnet_v2_interface(inputs, num_classes=1001, is_training=False):
+  """Gets end interface to run Inception-ResNet-v2 model
+  
+  Args:
+    inputs: a 4-D tensor of size [batch_size, height, width, 3].
+    num_classes: number of predicted classes.
+    is_training: whether is training or not.
+  Returns:
+    end_interface interface to run Inception-ResNet-v2 model.
+  """
+  
+  _, endpoints = inception_resnet_v2(inputs, num_classes=8, is_training=False)
+  end_interface = endpoints[END_POINT_KEY]
+  
+  return end_interface
 
 # Inception-ResNet-v2 argument scopes
 def inception_resnet_v2_arg_scope(weight_decay=0.00004,
@@ -278,7 +302,7 @@ def inception_resnet_v2_arg_scope(weight_decay=0.00004,
   with slim.arg_scope([slim.conv2d, slim.fully_connected],
                       weights_regularizer=slim.l2_regularizer(weight_decay),
                       biases_regularizer=slim.l2_regularizer(weight_decay)):
-
+    # Normalization parameters
     batch_norm_params = {
         'decay': batch_norm_decay,
         'epsilon': batch_norm_epsilon

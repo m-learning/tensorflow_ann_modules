@@ -1,7 +1,7 @@
 # '''
 # Created on Sep 14, 2016
 #
-# Evaluation fof inception ResNet v2 implementation
+# Evaluation for inception ResNet v2 or VGG implementation
 #
 # @author: Levan Tsinadze
 # '''
@@ -39,11 +39,13 @@ slim = tf.contrib.slim
 
 # Runs evaluation
 def run_evaluation(_):
+  """
+    Runs evaluation OP on data set
+  """
   
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
 
-  FLAGS.model_name = 'inception_resnet_v2'
   tf.logging.set_verbosity(tf.logging.INFO)
   with tf.Graph().as_default():
     tf_global_step = slim.get_or_create_global_step()
@@ -57,7 +59,7 @@ def run_evaluation(_):
     ####################
     # Select the model #
     ####################
-    network_fn = nets_factory.get_network_fn(
+    network_fn = nets_factory.get_network_fn(FLAGS.network_name,
         num_classes=(dataset.num_classes - FLAGS.labels_offset),
         is_training=False)
 
@@ -76,6 +78,7 @@ def run_evaluation(_):
     # Select the preprocessing function #
     #####################################
     image_preprocessing_fn = preprocessing_factory.get_preprocessing(
+        FLAGS.network_name,
         is_training=False)
 
     eval_image_size = FLAGS.eval_image_size or network_fn.default_image_size

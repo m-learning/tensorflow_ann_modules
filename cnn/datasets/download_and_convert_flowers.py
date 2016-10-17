@@ -38,7 +38,7 @@ import os
 import random
 import sys
 
-from cnn.datasets import dataset_utils
+from cnn.datasets import dataset_utils, flowers
 import tensorflow as tf
 
 
@@ -200,14 +200,22 @@ def run(dataset_dir, archive_dir):
     dataset_utils.copy_and_uncompress_tarball(archive_dir, dataset_dir, archive_path)
   else:
     dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
+  
   photo_filenames, class_names = _get_filenames_and_classes(dataset_dir)
   class_names_to_ids = dict(zip(class_names, range(len(class_names))))
+  files_count = len(photo_filenames)
+  
+  # Calculates number of validation datas
+  _NUM_VALIDATION = files_count // 10
 
   # Divide into train and test:
   random.seed(_RANDOM_SEED)
   random.shuffle(photo_filenames)
   training_filenames = photo_filenames[_NUM_VALIDATION:]
   validation_filenames = photo_filenames[:_NUM_VALIDATION]
+  
+  flowers.SPLITS_TO_SIZES['train'] = len(training_filenames) 
+  flowers.SPLITS_TO_SIZES['validation'] = len(validation_filenames)
 
   # First, convert the training and validation sets.
   _convert_dataset('train', training_filenames, class_names_to_ids,

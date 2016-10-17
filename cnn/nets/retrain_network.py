@@ -1,7 +1,7 @@
 # '''
 # Created on Sep 14, 2016
 #
-# Implementation of inception_resnet_v2 retraining and fine- tuning 
+# Implementation of inception_resnet_v2 or VGG retraining and fine- tuning 
 #
 # @author: Levan Tsinadze
 # '''
@@ -30,8 +30,8 @@ from tensorflow.python.ops import control_flow_ops
 
 from cnn.datasets import dataset_factory
 from cnn.deployment import model_deploy
-import cnn.nets.training_parameters as FLAGS
 from cnn.nets import nets_factory
+import cnn.nets.training_parameters as FLAGS
 from cnn.preprocessing import preprocessing_factory
 import tensorflow as tf
 
@@ -39,7 +39,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 
-# Configures Inception-ResNet-v2 learning rate
+# Configures network learning rate
 def _configure_learning_rate(num_samples_per_epoch, global_step):
   """Configures the learning rate.
 
@@ -79,7 +79,7 @@ def _configure_learning_rate(num_samples_per_epoch, global_step):
     raise ValueError('learning_rate_decay_type [%s] was not recognized',
                      FLAGS.learning_rate_decay_type)
 
-# Configures Inception-ResNet-v2 optimizer
+# Configures network optimizer
 def _configure_optimizer(learning_rate):
   """Configures the optimizer used for training.
 
@@ -212,6 +212,8 @@ def _get_variables_to_train():
 
 # Runs training
 def run_training(_):
+  """ Runs training for modules 
+  """
   
   if not FLAGS.dataset_dir:
     raise ValueError('You must supply the dataset directory with --dataset_dir')
@@ -241,7 +243,7 @@ def run_training(_):
     ####################
     # Select the network #
     ####################
-    network_fn = nets_factory.get_network_fn(
+    network_fn = nets_factory.get_network_fn(name=FLAGS.network_name,
         num_classes=(dataset.num_classes - FLAGS.labels_offset),
         weight_decay=FLAGS.weight_decay,
         is_training=True)
@@ -250,6 +252,7 @@ def run_training(_):
     # Select the preprocessing function #
     #####################################
     image_preprocessing_fn = preprocessing_factory.get_preprocessing(
+        FLAGS.network_name,
         is_training=True)
 
     ##############################################################

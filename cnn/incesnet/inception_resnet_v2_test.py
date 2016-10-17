@@ -1,11 +1,11 @@
-'''
-Created on Sep 14, 2016
-
-Test class for Incption-res-net TensorFlow-slim model
-
-@author: Levan Tsinadze
-'''
-
+# '''
+# Created on Sep 14, 2016
+#
+# Test class for Incption-res-net TensorFlow-slim model
+#
+# @author: Levan Tsinadze
+# '''
+#
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,8 @@ Test class for Incption-res-net TensorFlow-slim model
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Tests for slim.inception_resnet_v2."""
+# """Tests for slim.inception_resnet_v2."""
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -28,7 +29,8 @@ from __future__ import print_function
 from cnn.incesnet import inception_resnet_v2 as inception
 import tensorflow as tf
 
-# Test for InceptionResNe modelt
+
+# Test of Inception-ResNet-v2 model
 class InceptionTest(tf.test.TestCase):
 
   def testBuildLogits(self):
