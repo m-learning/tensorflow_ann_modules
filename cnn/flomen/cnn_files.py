@@ -51,16 +51,6 @@ class training_file(cnn_file_utils):
   def get_dataset_dir(self):
     return super(training_file, self).get_training_directory()
     
-  # Reads and saves (resized or not) image from one path to other
-  def read_and_write(self, pr, n_im):
-    
-    if self.image_resizer is None:
-      im = Image.open(pr)
-      im.save(n_im)
-    else:
-      self.image_resizer.read_resize_write(pr, n_im)
-    
-  
   # Converts person images
   def convert_person_images(self, prfx, src_dir, persons_dir, img_type):
     

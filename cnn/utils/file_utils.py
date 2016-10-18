@@ -129,6 +129,15 @@ class cnn_file_utils(files_and_path_utils):
       im.save(n_im)
     else:
       self.image_resizer.save_resized(im, n_im)
+      
+  # Reads and saves (resized or not) image from one path to other
+  def read_and_write(self, pr, n_im):
+    
+    if self.image_resizer is None:
+      im = Image.open(pr)
+      im.save(n_im)
+    else:
+      self.image_resizer.read_resize_write(pr, n_im)
   
   # Gets or creates directories
   def get_data_general_directory(self):
