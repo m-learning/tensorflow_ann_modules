@@ -14,9 +14,9 @@ import sys
 
 from cnn.datasets import download_and_convert_flomen
 from cnn.flomen.cnn_files import training_file
-from cnn.vgg.image_resizing import vgg_image_resizer
 from cnn.nets.config_parameters import train_and_eval_config
 import cnn.vgg.vgg_constants as constants
+from cnn.vgg.vgg_resizer import vgg_image_resizer
 
 
 # Data set name

@@ -5,13 +5,15 @@ Image resizing for VGG network
 '''
 import cv2
 
-vgg_dim = 224
-vgg_size = (vgg_dim, vgg_dim)
-
-class vgg_image_resizer(object):
+class image_resizer(object):
   """
     Reizes images for VGG network
   """
+  
+  def __init__(self, image_height, image_width):
+    self.image_height = image_height
+    self.image_width = image_width
+    self.image_size = (image_width, image_height)
   
   def resize_image(self, im):
     """
@@ -23,10 +25,10 @@ class vgg_image_resizer(object):
     """
     
     im_h, im_w = im.shape[:2]
-    if im_h < vgg_dim or im_w < vgg_dim:
-      res_im = cv2.resize(im, vgg_size, interpolation=cv2.INTER_CUBIC)
-    elif im_h > vgg_dim or im_w > vgg_dim:
-      res_im = cv2.resize(im, vgg_size, interpolation=cv2.INTER_AREA)
+    if im_h < self.image_height or im_w < self.image_width:
+      res_im = cv2.resize(im, self.image_size, interpolation=cv2.INTER_CUBIC)
+    elif im_h > self.image_height or im_w > self.image_width:
+      res_im = cv2.resize(im, self.image_size, interpolation=cv2.INTER_AREA)
     else:
       res_im = im
       

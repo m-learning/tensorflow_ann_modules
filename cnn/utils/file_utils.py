@@ -9,6 +9,7 @@ Utility class for training test and validation data files
 import os
 import types
 
+
 try:
   from PIL import Image
 except ImportError:
