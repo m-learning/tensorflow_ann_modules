@@ -198,6 +198,11 @@ def ensure_dir_exists(dir_name):
 
 # Initializing training flags
 def init_flags_only(tr_file):
+  """
+    Configures trained checkpoints
+    Args:
+      tr_file - utility for files management
+  """
   
   global tr_flags
   

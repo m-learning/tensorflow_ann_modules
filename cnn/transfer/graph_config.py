@@ -32,7 +32,8 @@ def init_model_file_name(tr_flags):
 # Generates neural network model graph
 def create_inception_graph(tr_flags):
   """"Creates a graph from saved GraphDef file and returns a Graph object.
-
+  Args:
+    tr_flags - configuration flags
   Returns:
     Graph holding the trained Inception network, and various tensors we'll be
     manipulating.

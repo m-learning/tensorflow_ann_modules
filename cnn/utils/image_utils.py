@@ -5,8 +5,17 @@ Utility class for images
 '''
 
 import glob
+import imghdr
 import os
 import sys
+
+
+try:
+  from PIL import Image
+except ImportError:
+  print "Importing Image from PIL threw exception"
+  import Image
+
 
 class image_converter(object):
   """
@@ -17,7 +26,39 @@ class image_converter(object):
     self.from_parent = from_parent
     self.to_dir = to_dir
     self.prefx = prefx
-    self.image_resizer
+  
+  def write_file(self, pr, i):
+    """
+      Converts and writes file
+      Args:
+        pr - path for source file
+        i - index for file name suffix
+    """
+    fl_name = self.prefx + '_' + 'cnvrt_data_' + str(i) + '.jpg'
+    n_im = os.path.join(self.to_dir, fl_name)
+    if os.path.exists(n_im):
+      os.remove(n_im)
+    im = Image.open(pr)
+    print im
+    im.save(n_im)
+    
+  def write_file_quietly(self, pr, i):
+    """
+      Converts and writes file and logs errors
+      Args:
+        pr - path for source file
+        i - index for file name suffix    
+    """
+    try:
+      file_type = imghdr.what(pr)
+      # print file_type
+      if file_type in ('jpg:', 'jpeg'):
+        self.write_file(pr, i)
+      else:
+        print('incorrect file type - ', file_type)
+    except IOError:
+      print('Error for - ', pr)
+      os.remove(pr)   
     
   def migrate_images(self):
     """
@@ -27,23 +68,24 @@ class image_converter(object):
     
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:
-      scan_dir = os.path.join(from_dir, 'jpg')
+      scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')
+      print scan_dir
       for pr in glob.glob(scan_dir):
-        fl_name = self.prefx + 'cnvrt_data_' + str(i) + '.jpg'
-        n_im = os.path.join(self.to_dir, fl_name)
-        if os.path.exists(n_im):
-          os.remove(n_im)
-        self.image_resizer.read_resize_write(pr, n_im)
+        self.write_file_quietly(pr, i)
         i += 1
         
 if __name__ == '__main__':
   
   call_args = sys.argv
-  from_dirs_txt = call_args[1]
+  from_dirs = call_args[1]
   to_dir = call_args[2]
   prefx = call_args[3]
   
-  from_dirs = from_dirs_txt.split(',')
+  from_dirs_list = os.listdir(from_dirs)
+  print from_dirs
+  print from_dirs_list
+  print to_dir
+  print prefx
   
   converter = image_converter(from_dirs, to_dir, prefx)
   converter.migrate_images()

@@ -42,6 +42,9 @@ final_tensor_name = 'final_result'  # The name of the output classification laye
 
 # Training and testing flags
 class training_flags(object):
+  """
+    Class to define and configure training flags and hyper parameters
+  """
   
   # Initializes flags for training
   def __init__(self, tr_files):

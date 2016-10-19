@@ -125,6 +125,13 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
 
 # Saves trained weights and biases
 def save_trained_parameters(sess, graph, keys):
+  """
+    Saves trained checkpoint
+    Args:
+     sess - TensorFlow session
+     graph - Inception-V3 graph
+     keys - keys to save checkpoint
+  """
   
   output_graph_def = graph_util.convert_variables_to_constants(
       sess, graph.as_graph_def(), [training_flags_mod.final_tensor_name])
@@ -285,6 +292,11 @@ def retrain_valid_net(prepared_parameters):
 
 # Runs training and testing
 def retrain_net(tr_file):
+  """
+    Retrains Inception on different data set
+    Args:
+      tr_file - utility object to manage files
+  """
   
   # Prepares training parameters
   prepared_parameters = prepare_parameters(tr_file)

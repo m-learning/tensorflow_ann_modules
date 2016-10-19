@@ -11,7 +11,6 @@ import os
 import shutil
 
 from cnn.utils.file_utils import cnn_file_utils
-from six.moves import urllib
 
 
 DATASET_DIR = '/home/levan-lev/Documents/ann/gunbag'
@@ -54,4 +53,6 @@ class training_file(cnn_file_utils):
   
   # Gets or generates training set
   def get_or_init_training_set(self):
+    self.get_or_init_files_path()
+    self.get_or_init_data_directory()
     print 'Training set is prepared'
