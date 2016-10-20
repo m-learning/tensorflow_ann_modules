@@ -51,7 +51,6 @@ class image_converter(object):
     """
     try:
       file_type = imghdr.what(pr)
-      # print file_type
       if file_type in ('jpg:', 'jpeg'):
         self.write_file(pr, i)
       else:
@@ -65,7 +64,6 @@ class image_converter(object):
       Converts and migrates images from one directory to other
     """
     i = 0
-    
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:
       scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')

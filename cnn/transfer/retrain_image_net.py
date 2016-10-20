@@ -280,6 +280,11 @@ def validate_test_and_save(sess, graph, validation_parameters):
 
 # Retrains neural network after validation
 def retrain_valid_net(prepared_parameters):
+  """
+    Retrains Inception after validation over parameters
+    Args:
+      prepared_parameters - tuple of training parameters
+  """
   
   # Prepares training evaluation and test parameters
   (sess, graph, iteration_parameters) = prepare_iteration_parameters(prepared_parameters)

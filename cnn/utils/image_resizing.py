@@ -7,7 +7,7 @@ import cv2
 
 class image_resizer(object):
   """
-    Reizes images for VGG network
+    Resizes images for VGG network
   """
   
   def __init__(self, image_height, image_width):

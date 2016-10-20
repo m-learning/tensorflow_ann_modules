@@ -213,6 +213,13 @@ def init_flags_only(tr_file):
 
 # Initializes training flags and files
 def init_flags_and_files(tr_file):
+  """
+    Initializes training flags
+    Args:
+      tr_file - file utility manager
+    Returns:
+      tr_flags - object containing configuration parameters
+  """
   
   # Training flags
   tr_flags = init_flags_only(tr_file)
