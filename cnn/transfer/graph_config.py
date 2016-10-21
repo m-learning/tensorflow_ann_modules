@@ -6,11 +6,19 @@ Configuration for neural network graph
 @author: Levan Tsinadze
 '''
 
+import os.path
+import traceback
+
+import tensorflow as tf
+from tensorflow.python.platform import gfile
+
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
 # sizes. If you want to adapt this script to work with another model, you will
 # need to update these to reflect the values in the network you're using.
 # pylint: disable=line-too-long
+DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+# pylint: enable=line-too-long
 BOTTLENECK_TENSOR_NAME = 'pool_3/_reshape:0'
 BOTTLENECK_TENSOR_SIZE = 2048
 MODEL_INPUT_WIDTH = 299
@@ -18,12 +26,6 @@ MODEL_INPUT_HEIGHT = 299
 MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
-
-import os.path
-import traceback
-
-import tensorflow as tf
-from tensorflow.python.platform import gfile
 
 # Gets graph file
 def init_model_file_name(tr_flags):
@@ -103,3 +105,4 @@ def get_layer(tr_flags, layer_name):
       except Exception:
         print 'Error occured'
         traceback.print_exc()
+        

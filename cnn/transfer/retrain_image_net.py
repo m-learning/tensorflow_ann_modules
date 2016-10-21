@@ -66,6 +66,34 @@ import cnn.transfer.config_image_net as config
 import  cnn.transfer.bottleneck_config as bottleneck
 import  cnn.transfer.distort_config as distort
 
+# These are all parameters that are tied to the particular model architecture
+# we're using for Inception v3. These include things like tensor names and their
+# sizes. If you want to adapt this script to work with another model, you will
+# need to update these to reflect the values in the network you're using.
+# pylint: disable=line-too-long
+DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+# pylint: enable=line-too-long
+BOTTLENECK_TENSOR_NAME = 'pool_3/_reshape:0'
+BOTTLENECK_TENSOR_SIZE = 2048
+MODEL_INPUT_WIDTH = 299
+MODEL_INPUT_HEIGHT = 299
+MODEL_INPUT_DEPTH = 3
+JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
+RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
+MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
+
+def variable_summaries(var, name):
+  """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
+  with tf.name_scope('summaries'):
+    mean = tf.reduce_mean(var)
+    tf.scalar_summary('mean/' + name, mean)
+    with tf.name_scope('stddev'):
+      stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
+    tf.scalar_summary('stddev/' + name, stddev)
+    tf.scalar_summary('max/' + name, tf.reduce_max(var))
+    tf.scalar_summary('min/' + name, tf.reduce_min(var))
+    tf.histogram_summary(name, var)
+
 # Add final training operations
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   """Adds a new softmax and fully-connected layer for training.
@@ -87,25 +115,45 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
     The tensors for the training and cross entropy results, and tensors for the
     bottleneck input and ground truth input.
   """
-  bottleneck_input = tf.placeholder_with_default(
-      bottleneck_tensor, shape=[None, graph_config.BOTTLENECK_TENSOR_SIZE],
-      name='BottleneckInputPlaceholder')
-  layer_weights = tf.Variable(
-      tf.truncated_normal([graph_config.BOTTLENECK_TENSOR_SIZE, class_count], stddev=0.001),
-      name='final_weights')
-  layer_biases = tf.Variable(tf.zeros([class_count]), name='final_biases')
-  logits = tf.matmul(bottleneck_input, layer_weights,
-                     name='final_matmul') + layer_biases
-  final_tensor = tf.nn.softmax(logits, name=final_tensor_name)
-  ground_truth_input = tf.placeholder(tf.float32,
-                                      [None, class_count],
-                                      name='GroundTruthInput')
-  cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, ground_truth_input)
-  cross_entropy_mean = tf.reduce_mean(cross_entropy)
-  train_step = tf.train.GradientDescentOptimizer(training_flags_mod.learning_rate).minimize(cross_entropy_mean)
-  
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
+  with tf.name_scope('input'):
+    bottleneck_input = tf.placeholder_with_default(
+        bottleneck_tensor, shape=[None, BOTTLENECK_TENSOR_SIZE],
+        name='BottleneckInputPlaceholder')
 
+    ground_truth_input = tf.placeholder(tf.float32,
+                                        [None, class_count],
+                                        name='GroundTruthInput')
+
+  # Organizing the following ops as `final_training_ops` so they're easier
+  # to see in TensorBoard
+  layer_name = 'final_training_ops'
+  with tf.name_scope(layer_name):
+    with tf.name_scope('weights'):
+      layer_weights = tf.Variable(tf.truncated_normal([BOTTLENECK_TENSOR_SIZE, class_count], stddev=0.001), name='final_weights')
+      variable_summaries(layer_weights, layer_name + '/weights')
+    with tf.name_scope('biases'):
+      layer_biases = tf.Variable(tf.zeros([class_count]), name='final_biases')
+      variable_summaries(layer_biases, layer_name + '/biases')
+    with tf.name_scope('Wx_plus_b'):
+      logits = tf.matmul(bottleneck_input, layer_weights) + layer_biases
+      tf.histogram_summary(layer_name + '/pre_activations', logits)
+
+  final_tensor = tf.nn.softmax(logits, name=final_tensor_name)
+  tf.histogram_summary(final_tensor_name + '/activations', final_tensor)
+
+  with tf.name_scope('cross_entropy'):
+    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
+      logits, ground_truth_input)
+    with tf.name_scope('total'):
+      cross_entropy_mean = tf.reduce_mean(cross_entropy)
+    tf.scalar_summary('cross entropy', cross_entropy_mean)
+
+  with tf.name_scope('train'):
+    train_step = tf.train.GradientDescentOptimizer(
+      training_flags_mod.learning_rate).minimize(cross_entropy_mean)
+
+  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
+          final_tensor)
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
   """Inserts the operations we need to evaluate the accuracy of our results.
@@ -118,9 +166,13 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
   Returns:
     Nothing.
   """
-  correct_prediction = tf.equal(tf.argmax(result_tensor, 1), tf.argmax(ground_truth_tensor, 1))
-  evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, 'float'))
-  
+  with tf.name_scope('accuracy'):
+    with tf.name_scope('correct_prediction'):
+      correct_prediction = tf.equal(tf.argmax(result_tensor, 1), \
+        tf.argmax(ground_truth_tensor, 1))
+    with tf.name_scope('accuracy'):
+      evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    tf.scalar_summary('accuracy', evaluation_step)
   return evaluation_step
 
 # Saves trained weights and biases
@@ -170,6 +222,13 @@ def iterate_and_train(sess, iteration_parameters):
   
   # Run the training for as many cycles as requested on the command line.
   for i in range(training_flags_mod.how_many_training_steps):
+    
+    # Merge all the summaries and write them out to /tmp/retrain_logs (by default)
+    merged = tf.merge_all_summaries()
+    train_writer = tf.train.SummaryWriter(tr_flags.summaries_dir + '/train',
+                                        sess.graph)
+    validation_writer = tf.train.SummaryWriter(tr_flags.summaries_dir + '/validation')
+    
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.
     if do_distort_images:
@@ -183,10 +242,12 @@ def iterate_and_train(sess, iteration_parameters):
           tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
           bottleneck_tensor)
     # Feed the bottlenecks and ground truth into the graph, and run a training
-    # step.
-    sess.run(train_step,
+    # step. Capture training summaries for TensorBoard with the `merged` op.
+    train_summary, _ = sess.run([merged, train_step],
              feed_dict={bottleneck_input: train_bottlenecks,
                         ground_truth_input: train_ground_truth})
+    train_writer.add_summary(train_summary, i)
+    
     # Every so often, print out how well the graph is training.
     is_last_step = (i + 1 == training_flags_mod.how_many_training_steps)
     if (i % training_flags_mod.eval_step_interval) == 0 or is_last_step:
@@ -203,10 +264,13 @@ def iterate_and_train(sess, iteration_parameters):
               sess, image_lists, training_flags_mod.validation_batch_size, 'validation',
               tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
               bottleneck_tensor))
-      validation_accuracy = sess.run(
-          evaluation_step,
+      # Run a validation step and capture training summaries for TensorBoard
+      # with the `merged` op.
+      validation_summary, validation_accuracy = sess.run(
+          [merged, evaluation_step],
           feed_dict={bottleneck_input: validation_bottlenecks,
                      ground_truth_input: validation_ground_truth})
+      validation_writer.add_summary(validation_summary, i)
       print('%s: Step %d: Validation accuracy = %.1f%%' % 
             (datetime.now(), i, validation_accuracy * 100))
 

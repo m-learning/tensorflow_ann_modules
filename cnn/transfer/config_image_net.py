@@ -26,6 +26,7 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 # need to update these to reflect the values in the network you're using.
 # pylint: disable=line-too-long
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
 # Creates images list
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
@@ -89,7 +90,9 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
       # itself, so we do a hash of that and then use that to generate a
       # probability value that we use to assign it.
       hash_name_hashed = hashlib.sha1(hash_name.encode('utf-8')).hexdigest()
-      percentage_hash = (int(hash_name_hashed, 16) % (65536)) * (100 / 65535.0)
+      percentage_hash = ((int(hash_name_hashed, 16) % 
+                         (MAX_NUM_IMAGES_PER_CLASS + 1)) * 
+                         (100.0 / MAX_NUM_IMAGES_PER_CLASS))
       if percentage_hash < validation_percentage:
         validation_images.append(base_name)
       elif percentage_hash < (testing_percentage + validation_percentage):

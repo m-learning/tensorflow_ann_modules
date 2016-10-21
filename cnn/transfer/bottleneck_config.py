@@ -7,12 +7,13 @@ Configures bottleneck cache for training
 '''
 import os
 import random
-
-import numpy as np
-import tensorflow as tf
 from tensorflow.python.platform import gfile
 
+from cnn.transfer.config_image_net import MAX_NUM_IMAGES_PER_CLASS
 import cnn.transfer.config_image_net as config
+import numpy as np
+import tensorflow as tf
+
 
 # Generates bottleneck on instant image
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
@@ -155,7 +156,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many,
   for unused_i in range(how_many):
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
-    image_index = random.randrange(65536)
+    image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
     bottleneck = get_or_create_bottleneck(sess, image_lists, label_name,
                                           image_index, image_dir, category,
                                           bottleneck_dir, jpeg_data_tensor,
@@ -202,7 +203,7 @@ def get_random_distorted_bottlenecks(
   for unused_i in range(how_many):
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
-    image_index = random.randrange(65536)
+    image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
     image_path = config.get_image_path(image_lists, label_name, image_index,
                                        image_dir, category)
     if not gfile.Exists(image_path):
