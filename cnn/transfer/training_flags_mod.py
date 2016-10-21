@@ -40,6 +40,9 @@ random_brightness = 0
 # image input pixels up or down by
 final_tensor_name = 'final_result'  # The name of the output classification layer in
     # the retrained graph
+
+log_board_data = None    
+
 summaries_dir = 'retrain_inception_logs'  # Where to save summary logs 
           # for TensorBoard
 

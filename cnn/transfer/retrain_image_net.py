@@ -55,11 +55,10 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
-import os
-from tempfile import gettempdir
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
+import cnn.transfer.board_logger as logger
 import  cnn.transfer.bottleneck_config as bottleneck
 import cnn.transfer.config_image_net as config
 import  cnn.transfer.distort_config as distort
@@ -218,6 +217,11 @@ def test_trained_network(sess, validation_parameters):
 
 # Iterates and trains neural network
 def iterate_and_train(sess, iteration_parameters):
+  """Trains network with additional parameters
+    Args:
+      sess - TensorFlow session
+      iteration_parameters - additional training parameters
+  """
   
   (do_distort_images, image_lists,
    distorted_jpeg_data_tensor, distorted_image_tensor,
@@ -225,16 +229,12 @@ def iterate_and_train(sess, iteration_parameters):
    train_step, bottleneck_input, ground_truth_input,
    evaluation_step, cross_entropy) = iteration_parameters
    
+  # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
+  (merged, train_writer, validation_writer) = logger.init_writer(sess)
+   
   
   # Run the training for as many cycles as requested on the command line.
   for i in range(training_flags_mod.how_many_training_steps):
-    
-    # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
-    summaries_dir = os.path.join(gettempdir(), tr_flags.summaries_dir)
-    merged = tf.merge_all_summaries()
-    train_writer = tf.train.SummaryWriter(summaries_dir + '/train',
-                                        sess.graph)
-    validation_writer = tf.train.SummaryWriter(summaries_dir + '/validation')
     
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.

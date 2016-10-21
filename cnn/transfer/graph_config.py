@@ -88,7 +88,9 @@ def list_layers(sess, layer_name):
 # Gets network graph layer by name
 def get_layer(tr_flags, layer_name):  
   """"Creates a graph from saved GraphDef file and returns a Graph object.
-
+  Args:
+    tr_flags - configuration parameters
+    layer_name - network layer name
   Returns:
     Graph holding the trained Inception network, and various tensors we'll be
     manipulating.

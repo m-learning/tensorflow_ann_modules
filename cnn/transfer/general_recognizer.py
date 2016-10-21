@@ -82,6 +82,12 @@ class retrained_recognizer(object):
   
   # Generates forward propagation for recognition
   def run_inference_on_image(self, sys_params=None):
+    """Runs network interface on image
+      Args:
+        sys_parameters - parameters
+      Return:
+        answer - prediction data
+    """
       
     answer = None
 
