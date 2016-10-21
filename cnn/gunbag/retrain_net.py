@@ -61,9 +61,7 @@ import tensorflow as tf
 
 # Training and testing
 def retrain_net_main(_):
-  """
-    Retrains Inception on gunbag data set
-  """
+  """Retrains Inception on gunbag data set"""
   
   tr_files = training_file()
   retrain_image_net.retrain_net(tr_files)

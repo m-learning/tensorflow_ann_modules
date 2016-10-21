@@ -8,6 +8,7 @@ import glob
 import imghdr
 import os
 import sys
+import traceback
 
 
 try:
@@ -15,12 +16,11 @@ try:
 except ImportError:
   print "Importing Image from PIL threw exception"
   import Image
-
+  
+verbose_error = None
 
 class image_converter(object):
-  """
-    Utility class for image manipulation
-  """
+  """Utility class for image manipulation"""
   
   def __init__(self, from_parent, to_dir, prefx):
     self.from_parent = from_parent
@@ -28,8 +28,7 @@ class image_converter(object):
     self.prefx = prefx
   
   def write_file(self, pr, i):
-    """
-      Converts and writes file
+    """Converts and writes file
       Args:
         pr - path for source file
         i - index for file name suffix
@@ -43,8 +42,7 @@ class image_converter(object):
     im.save(n_im)
     
   def write_file_quietly(self, pr, i):
-    """
-      Converts and writes file and logs errors
+    """Converts and writes file and logs errors
       Args:
         pr - path for source file
         i - index for file name suffix    
@@ -57,11 +55,13 @@ class image_converter(object):
         print('incorrect file type - ', file_type)
     except IOError:
       print('Error for - ', pr)
-      os.remove(pr)   
+      if verbose_error:
+        traceback.print_exc()
+      else:
+        os.remove(pr)   
     
   def migrate_images(self):
-    """
-      Converts and migrates images from one directory to other
+    """Converts and migrates images from one directory to other
     """
     i = 0
     from_dirs = os.listdir(self.from_parent)
@@ -78,6 +78,9 @@ if __name__ == '__main__':
   from_dirs = call_args[1]
   to_dir = call_args[2]
   prefx = call_args[3]
+  
+  if len(call_args) > 4:
+    verbose_error = True
   
   from_dirs_list = os.listdir(from_dirs)
   print from_dirs

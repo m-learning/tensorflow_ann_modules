@@ -5,6 +5,7 @@ Initializes training flags
 
 @author: Levan Tsinadze
 '''
+
 # Defines training process directories
 IMAGENET_DIR = 'imagenet'
 BOTTLENECK_DIR = 'bottleneck'
@@ -39,7 +40,8 @@ random_brightness = 0
 # image input pixels up or down by
 final_tensor_name = 'final_result'  # The name of the output classification layer in
     # the retrained graph
-summaries_dir = '/tmp/retrain_inception_logs'  # Where to save summary logs for TensorBoard
+summaries_dir = 'retrain_inception_logs'  # Where to save summary logs 
+          # for TensorBoard
 
 # Training and testing flags
 class training_flags(object):
@@ -63,7 +65,7 @@ class training_flags(object):
                                     # imagenet_synset_to_human_label_map.txt, and
                                     # imagenet_2012_challenge_label_map_proto.pbtxt
     self.bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
-
+    
 # Generates and initializes flags for training and testing
 def init_flaged_data(tr_files):
   return training_flags(tr_files)

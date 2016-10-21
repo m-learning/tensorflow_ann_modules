@@ -6,8 +6,7 @@ Image resizing for VGG network
 import cv2
 
 class image_resizer(object):
-  """
-    Resizes images for VGG network
+  """Resizes images for VGG network
   """
   
   def __init__(self, image_height, image_width):
@@ -16,8 +15,7 @@ class image_resizer(object):
     self.image_size = (image_width, image_height)
   
   def resize_image(self, im):
-    """
-    Resizes image for VGG network
+    """Resizes image for VGG network
     Args: 
       im image to resize as tensor
     Returns: 
@@ -36,8 +34,7 @@ class image_resizer(object):
     
 
   def read_and_resize(self, image_path):
-    """
-    Resizes image for VGG network
+    """Resizes image for VGG network
     Args: 
       image_path path to image
     Returns: 
@@ -49,8 +46,7 @@ class image_resizer(object):
     return res_im
   
   def save_resized(self, im, write_path):
-    """
-    Saves image to specific path
+    """Saves image to specific path
     Args: 
       im image
       write_path path where to save image

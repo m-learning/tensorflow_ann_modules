@@ -55,16 +55,18 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
-import tensorflow as tf
-
+import os
+from tempfile import gettempdir
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
-import cnn.transfer.training_flags_mod as training_flags_mod
-import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.config_image_net as config
 import  cnn.transfer.bottleneck_config as bottleneck
+import cnn.transfer.config_image_net as config
 import  cnn.transfer.distort_config as distort
+import  cnn.transfer.graph_config as graph_config
+import cnn.transfer.training_flags_mod as training_flags_mod
+import tensorflow as tf
+
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
@@ -83,7 +85,11 @@ RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
 def variable_summaries(var, name):
-  """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
+  """Attach a lot of summaries to a Tensor (for TensorBoard visualization).
+    Args:
+      var - variable
+      name - name of variable
+  """
   with tf.name_scope('summaries'):
     mean = tf.reduce_mean(var)
     tf.scalar_summary('mean/' + name, mean)
@@ -223,11 +229,12 @@ def iterate_and_train(sess, iteration_parameters):
   # Run the training for as many cycles as requested on the command line.
   for i in range(training_flags_mod.how_many_training_steps):
     
-    # Merge all the summaries and write them out to /tmp/retrain_logs (by default)
+    # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
+    summaries_dir = os.path.join(gettempdir(), tr_flags.summaries_dir)
     merged = tf.merge_all_summaries()
-    train_writer = tf.train.SummaryWriter(tr_flags.summaries_dir + '/train',
+    train_writer = tf.train.SummaryWriter(summaries_dir + '/train',
                                         sess.graph)
-    validation_writer = tf.train.SummaryWriter(tr_flags.summaries_dir + '/validation')
+    validation_writer = tf.train.SummaryWriter(summaries_dir + '/validation')
     
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.
