@@ -67,22 +67,6 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 import tensorflow as tf
 
 
-# These are all parameters that are tied to the particular model architecture
-# we're using for Inception v3. These include things like tensor names and their
-# sizes. If you want to adapt this script to work with another model, you will
-# need to update these to reflect the values in the network you're using.
-# pylint: disable=line-too-long
-DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
-# pylint: enable=line-too-long
-BOTTLENECK_TENSOR_NAME = 'pool_3/_reshape:0'
-BOTTLENECK_TENSOR_SIZE = 2048
-MODEL_INPUT_WIDTH = 299
-MODEL_INPUT_HEIGHT = 299
-MODEL_INPUT_DEPTH = 3
-JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
-RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
-MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
-
 def variable_summaries(var, name):
   """Attach a lot of summaries to a Tensor (for TensorBoard visualization).
     Args:
@@ -122,7 +106,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   """
   with tf.name_scope('input'):
     bottleneck_input = tf.placeholder_with_default(
-        bottleneck_tensor, shape=[None, BOTTLENECK_TENSOR_SIZE],
+        bottleneck_tensor, shape=[None, graph_config.BOTTLENECK_TENSOR_SIZE],
         name='BottleneckInputPlaceholder')
 
     ground_truth_input = tf.placeholder(tf.float32,
@@ -134,7 +118,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   layer_name = 'final_training_ops'
   with tf.name_scope(layer_name):
     with tf.name_scope('weights'):
-      layer_weights = tf.Variable(tf.truncated_normal([BOTTLENECK_TENSOR_SIZE, class_count], stddev=0.001), name='final_weights')
+      layer_weights = tf.Variable(tf.truncated_normal([graph_config.BOTTLENECK_TENSOR_SIZE, class_count], stddev=0.001), name='final_weights')
       variable_summaries(layer_weights, layer_name + '/weights')
     with tf.name_scope('biases'):
       layer_biases = tf.Variable(tf.zeros([class_count]), name='final_biases')

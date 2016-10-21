@@ -23,8 +23,10 @@ class retrained_recognizer(object):
 
   # Initializes trained neural network graph
   def create_graph(self, model_path):
-    
-    """Creates a graph from saved GraphDef file and returns a saver."""
+    """Creates a graph from saved GraphDef file and returns a saver.
+      Args:
+        model_path - path to graph model
+    """
     # Creates graph from saved graph_def.pb.
     with tf.gfile.FastGFile(model_path, 'rb') as f:
         graph_def = tf.GraphDef()

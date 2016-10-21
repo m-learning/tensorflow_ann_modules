@@ -71,6 +71,11 @@ def list_layer_values(values, layer_name):
 
 # Lists all layers of network
 def list_layers(sess, layer_name):
+  """List All network layers
+    Args:
+      sess - TensorFlow session
+      layer_name - name of layer to list
+  """
   
   result = None
   
