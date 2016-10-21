@@ -18,6 +18,10 @@ class layer_features(object):
     
   # Extracts layer
   def extract_layer(self, tr_file):
+    """Extracts network layer
+      Args:
+        tr_file - training file manager
+    """
     
     tr_flags = config.init_flags_only(tr_file)
     maybe_download_and_extract()

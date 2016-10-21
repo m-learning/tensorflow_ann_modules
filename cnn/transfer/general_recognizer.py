@@ -74,6 +74,12 @@ class retrained_recognizer(object):
   
   # Initializes image path
   def init_image_path(self, sys_params):
+    """Initializes image path to recognize
+      Args:
+        sys_params - runtime parameters
+      Return:
+        image file full path
+    """
     
     if len(sys_params) >= 2:
       test_image_path = self.tr_file.join_path(self.path_funct, sys_params[1])

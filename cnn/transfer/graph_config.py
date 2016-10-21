@@ -29,16 +29,22 @@ RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 
 # Gets graph file
 def init_model_file_name(tr_flags):
+  """Initializes serialized model graph file 
+    Args:
+      tr_flags - training configuration
+    Returns:
+      file full path
+  """
   return os.path.join(tr_flags.model_dir, 'classify_image_graph_def.pb')
 
 # Generates neural network model graph
 def create_inception_graph(tr_flags):
   """"Creates a graph from saved GraphDef file and returns a Graph object.
-  Args:
-    tr_flags - configuration flags
-  Returns:
-    Graph holding the trained Inception network, and various tensors we'll be
-    manipulating.
+    Args:
+      tr_flags - configuration flags
+    Returns:
+      Graph holding the trained Inception network, and various tensors we'll be
+      manipulating.
   """
   with tf.Session() as sess:
     model_filename = init_model_file_name(tr_flags)
@@ -55,6 +61,11 @@ def create_inception_graph(tr_flags):
 
 # List values of graph
 def list_layer_values(values, layer_name):
+  """List All network layers
+    Args:
+      values - layers to filter
+      layer_name - name of layer to list
+  """
   
   result = None
   

@@ -123,6 +123,14 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
 
 # Validates and applies distortions
 def distort_images(prepared_parameters, tr_flags):
+  """Distorts training images
+    Args:
+      prepared_parameters - training parameters
+      tr_flags - training configuration parameters
+    Return:
+      TensorFlow session, flag to distort images, distorted images 
+      and distorted images tensor
+  """
   
   (_, bottleneck_tensor, jpeg_data_tensor,
    _, image_lists) = prepared_parameters

@@ -22,7 +22,8 @@ def init_writer(sess):
   """
   
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
-  summaries_dir = os.path.join(gettempdir(), training_flags_mod.summaries_dir)
+  tmp_dir = gettempdir()
+  summaries_dir = os.path.join(tmp_dir, training_flags_mod.summaries_dir)
   merged = tf.merge_all_summaries()
   train_writer = tf.train.SummaryWriter(summaries_dir + '/train',
                                         sess.graph)
