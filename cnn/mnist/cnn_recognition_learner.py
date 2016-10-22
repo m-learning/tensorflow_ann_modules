@@ -18,8 +18,8 @@ training_iters = 200000
 batch_size = 128
 display_step = 10
 
-# Training methods
 class cnn_learner:
+  """Training methods"""
     
   def __init__(self):
     
@@ -31,6 +31,10 @@ class cnn_learner:
       
   # Initializes and gets training data
   def init_mnist(self):
+    """Initializes MNIST data set
+      Return:
+        mnist - data set
+    """
     
     self.tr_files = training_file()
     data_path = self.tr_files.get_data_directory()
@@ -38,9 +42,8 @@ class cnn_learner:
     
     return mnist
   
-  # Trains neural net
   def traint(self):
-      
+    """Trains neural net"""
     # Initializing the variables
     init = tf.initialize_all_variables()
     # 'Saver' op to save and restore all the variables

@@ -16,6 +16,7 @@ CNN_DROPOUT = 0.75  # Dropout, probability to keep units
 
 # Defile weights and biases
 class cnn_weights:
+  """Initializes weights and biases"""
     
   def __init__(self):
       

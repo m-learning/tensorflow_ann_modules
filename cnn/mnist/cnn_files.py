@@ -15,8 +15,9 @@ PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
 WEIGHTS_FILE = 'conv_model.ckpt'
 
-# Files and directories for parameters (trained), training, validation and test
 class training_file(files_and_path_utils):
+  """Files and directories for parameters (trained), 
+    training, validation and test"""
   
   def __init__(self):
     super(self, training_file).__init__('mnist')
