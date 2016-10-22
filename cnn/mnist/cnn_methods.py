@@ -13,7 +13,6 @@ import tensorflow as tf
 
 STRIDE = 'SAME'
 
-# CNN network functions
 class cnn_functions:
   """CNN network for MNIST classification"""
     
@@ -36,7 +35,6 @@ class cnn_functions:
     
     return tf.nn.relu(x)
   
-  # Pooling layer (Max-Pooling)
   def maxpool2d(self, x, k=2):
     """ MaxPool2D wrapper
       Args:
@@ -47,7 +45,6 @@ class cnn_functions:
                           padding=STRIDE)
   
   
-  # Create model
   def conv_net(self, x, weights, biases, dropout):
     """Full network interface
       Args:
@@ -79,7 +76,6 @@ class cnn_functions:
     
     return out
   
-  # Neural network training functions
   def cnn_pred(self):
     """Prediction function for network interface
       Return: prediction, correct prediction, accuracy

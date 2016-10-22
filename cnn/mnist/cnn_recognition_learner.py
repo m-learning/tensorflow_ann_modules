@@ -82,7 +82,7 @@ class cnn_learner:
                                           self.cnn_fnc.keep_prob: 1.})
                 
 def main():
-  # Runs training with graph initialization
+  """Runs training with graph initialization"""
   with tf.Graph().as_default():
       lrn = cnn_learner()
       lrn.traint()
