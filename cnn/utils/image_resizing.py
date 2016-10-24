@@ -6,8 +6,7 @@ Image resizing for VGG network
 import cv2
 
 class image_resizer(object):
-  """Resizes images for VGG network
-  """
+  """Resizes images for VGG network"""
   
   def __init__(self, image_height, image_width):
     self.image_height = image_height

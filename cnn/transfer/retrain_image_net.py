@@ -282,9 +282,9 @@ def prepare_parameters(tr_file):
       image_lists - training images
   """
   
-  # Set up flags and training data
+  # Configures training flags 
+  global tr_flags
   tr_flags = config.init_flags_and_files(tr_file)
-  
   # Set up the pre-trained graph.
   config.maybe_download_and_extract()
   graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (

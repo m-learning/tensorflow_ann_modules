@@ -44,8 +44,8 @@ def count_files(dir_name):
   
   return file_count
 
-# Utility class for files and directories
 class files_and_path_utils(object):
+  """Utility class for files and directories"""
   
   def __init__(self, parent_cnn_dir, path_to_training_photos=None):
     self.path_to_cnn_directory = os.path.join(DATAS_DIR_NAME, parent_cnn_dir)    
@@ -106,8 +106,8 @@ class files_and_path_utils(object):
     return current_dir
   
 
-# Utility class for training and testing files and directories
 class cnn_file_utils(files_and_path_utils):
+  """Utility class for training and testing files and directories"""
   
   def __init__(self, parent_cnn_dir, image_resizer=None):
     super(cnn_file_utils, self).__init__(parent_cnn_dir)

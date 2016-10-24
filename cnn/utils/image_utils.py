@@ -61,8 +61,8 @@ class image_converter(object):
         os.remove(pr)   
     
   def migrate_images(self):
-    """Converts and migrates images from one directory to other
-    """
+    """Converts and migrates images from one 
+      directory to other"""
     i = 0
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:

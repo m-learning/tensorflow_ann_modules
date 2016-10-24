@@ -46,7 +46,6 @@ log_board_data = True
 summaries_dir = 'retrain_inception_logs'  # Where to save summary logs 
           # for TensorBoard
 
-# Training and testing flags
 class training_flags(object):
   """
     Class to define and configure training flags and hyper parameters
@@ -64,11 +63,17 @@ class training_flags(object):
     self.output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
     
     # File-system cache locations.
-    self.model_dir = tr_files.join_path(prnt_dir , IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
+    self.model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
                                     # imagenet_synset_to_human_label_map.txt, and
                                     # imagenet_2012_challenge_label_map_proto.pbtxt
     self.bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
     
-# Generates and initializes flags for training and testing
 def init_flaged_data(tr_files):
+  """Generates and initializes flags for 
+    training and testing
+    Args:
+      tr_files - trainign files management utility
+    Return:
+      training_flags configured instance
+  """
   return training_flags(tr_files)
