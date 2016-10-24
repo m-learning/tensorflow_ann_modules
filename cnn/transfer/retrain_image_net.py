@@ -55,7 +55,6 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
-
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
@@ -67,6 +66,8 @@ import  cnn.transfer.graph_config as graph_config
 import cnn.transfer.training_flags_mod as training_flags_mod
 import tensorflow as tf
 
+
+tr_flags = None
 
 VALID_RESULT_CODE = 0
 ERROR_RESULT_CODE = -1
@@ -87,7 +88,6 @@ def variable_summaries(var, name):
     tf.scalar_summary('min/' + name, tf.reduce_min(var))
     tf.histogram_summary(name, var)
 
-# Add final training operations
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   """Adds a new softmax and fully-connected layer for training.
 
@@ -154,9 +154,8 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
     result_tensor: The new final node that produces results.
     ground_truth_tensor: The node we feed ground truth data
     into.
-
   Returns:
-    Nothing.
+    evaluation_step- step for model eveluation.
   """
   with tf.name_scope('accuracy'):
     with tf.name_scope('correct_prediction'):
@@ -167,7 +166,6 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
     tf.scalar_summary('accuracy', evaluation_step)
   return evaluation_step
 
-# Saves trained weights and biases
 def save_trained_parameters(sess, graph, keys):
   """
     Saves trained checkpoint
@@ -184,8 +182,13 @@ def save_trained_parameters(sess, graph, keys):
   with gfile.FastGFile(tr_flags.output_labels, 'w') as f:
     f.write('\n'.join(keys) + '\n')
 
-# Test neural net
 def test_trained_network(sess, validation_parameters):
+  """Tests trained network on test set
+    Args:
+      sess - TensorFlow session
+      validation_parameters - parameters for test 
+      and validation
+  """
   
   (_, image_lists, _, _, _, bottleneck_tensor,
    jpeg_data_tensor, _, bottleneck_input,
@@ -267,11 +270,19 @@ def iterate_and_train(sess, iteration_parameters):
       print('%s: Step %d: Validation accuracy = %.1f%%' % 
             (datetime.now(), i, validation_accuracy * 100))
 
-# Validates and prepares training parameters
 def prepare_parameters(tr_file):
+  """Prepares training parameters
+    Args:
+      tr_file - file management utility
+    Return:
+      graph - network graph
+      bottleneck_tensor - bottleneck as tensor
+      jpeg_data_tensor - image as tensor
+      resized_image_tensor - resized image as tensor
+      image_lists - training images
+  """
   
   # Set up flags and training data
-  global tr_flags
   tr_flags = config.init_flags_and_files(tr_file)
   
   # Set up the pre-trained graph.
@@ -294,14 +305,38 @@ def prepare_parameters(tr_file):
   
   return (graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor, image_lists)
 
-# Set up all our weights to their initial default values.
 def prepare_session(sess):
+  """Prepares session for training, validation 
+    and test steps
+    Args:
+      sess - TensorFlow session
+    """
     
   init = tf.initialize_all_variables()
   sess.run(init)
 
-# Prepares training iteration parameters
 def prepare_iteration_parameters(prepared_parameters):
+  """Prepares parameters for training iterations
+    Args:
+      prepared_parameters - prepared training 
+      parameters
+    Return:
+      sess - TensorFlow session
+      graph - network graph
+      do_distort_images - distort flag
+      image_lists - training images list
+      distorted_jpeg_data_tensor - distorted JPEG image 
+                                   as tensor
+      distorted_image_tensor - distorted image 
+                               as tensor
+      bottleneck_tensor - bottleneck layer tensor
+      jpeg_data_tensor - images for iteration
+      train_step - training step descriptor
+      bottleneck_input - input for bottleneck layer
+      ground_truth_input - label for input
+      evaluation_step - prepared step for evaluation
+      cross_entropy - result producer function                             
+  """
   
   (graph, bottleneck_tensor, jpeg_data_tensor,
    resized_image_tensor, image_lists) = prepared_parameters
@@ -326,8 +361,14 @@ def prepare_iteration_parameters(prepared_parameters):
                           train_step, bottleneck_input, ground_truth_input,
                           evaluation_step, cross_entropy))
 
-# Validates tests and saves neural network graph
 def validate_test_and_save(sess, graph, validation_parameters):
+  """Validates and / or tests network
+    Args:
+      sess - TensorFlow session
+      graph - network graph
+      validation_parameters - prepared parameters 
+                              for validation
+  """
   
   (_, image_lists, _, _, _, _, _, _, _, _, _, _) = validation_parameters
   test_trained_network(sess, validation_parameters)

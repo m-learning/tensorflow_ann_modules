@@ -7,9 +7,8 @@ Configuration for neural network graph
 '''
 
 import os.path
-import traceback
-
 from tensorflow.python.platform import gfile
+import traceback
 
 import tensorflow as tf
 
@@ -66,6 +65,8 @@ def list_layer_values(values, layer_name):
     Args:
       values - layers to filter
       layer_name - name of layer to list
+    Return:
+      result - retrieved layer by key
   """
   
   result = None
@@ -85,6 +86,8 @@ def list_layers(sess, layer_name):
     Args:
       sess - TensorFlow session
       layer_name - name of layer to list
+    Return:
+      result - retrieved layer by key
   """
   
   result = None
@@ -105,9 +108,12 @@ def get_layer(tr_flags, layer_name):
     tr_flags - configuration parameters
     layer_name - network layer name
   Returns:
-    Graph holding the trained Inception network, and various tensors we'll be
-    manipulating.
+    net_layer - Graph holding the trained Inception network, 
+                and various tensors we'll be manipulating.
   """
+  
+  net_layer = None
+  
   with tf.Session() as sess:
     model_filename = init_model_file_name(tr_flags)
     with gfile.FastGFile(model_filename, 'rb') as f:
@@ -120,4 +126,6 @@ def get_layer(tr_flags, layer_name):
       except Exception:
         print 'Error occurred'
         traceback.print_exc()
+  
+  return net_layer
         

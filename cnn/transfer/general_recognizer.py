@@ -108,7 +108,7 @@ class retrained_recognizer(object):
       Args:
         sys_parameters - parameters
       Return:
-        answer - top prediction data
+        answer - top predicted data
     """
       
     answer = None

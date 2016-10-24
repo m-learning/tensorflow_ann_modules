@@ -14,7 +14,6 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 import tensorflow as tf
 
 
-# Find if should images
 def should_distort_images(flip_left_right, random_crop, random_scale,
                           random_brightness):
   """Whether any distortions are enabled, from the input flags.

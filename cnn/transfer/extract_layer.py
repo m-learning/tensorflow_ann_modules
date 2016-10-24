@@ -22,8 +22,13 @@ class layer_features(object):
     """Extracts network layer
       Args:
         tr_file - training file manager
+      Return:
+        net_layer - Graph holding the trained Inception network, 
+                    and various tensors we'll be manipulating.
     """
     
     tr_flags = config.init_flags_only(tr_file)
     maybe_download_and_extract()
-    graph_config.get_layer(tr_flags, self.layer_name)
+    net_layer = graph_config.get_layer(tr_flags, self.layer_name)
+    
+    return net_layer
