@@ -19,6 +19,7 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 from six.moves import urllib
 import tensorflow as tf
 
+tr_flags = None
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
@@ -201,9 +202,8 @@ def init_flags_only(tr_file):
       tr_file - utility for files management
   """
   
-  global tr_flags
-  
   # Training flags
+  global tr_flags
   tr_flags = training_flags_mod.init_flaged_data(tr_file)
   
   return tr_flags

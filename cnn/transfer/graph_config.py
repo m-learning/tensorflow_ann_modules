@@ -28,7 +28,6 @@ MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 
-# Gets graph file
 def init_model_file_name(tr_flags):
   """Initializes serialized model graph file 
     Args:

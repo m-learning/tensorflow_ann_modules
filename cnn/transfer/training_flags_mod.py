@@ -11,7 +11,7 @@ IMAGENET_DIR = 'imagenet'
 BOTTLENECK_DIR = 'bottleneck'
 
 # Details of the training configuration.
-how_many_training_steps = 10000  # How many training steps to run before ending
+how_many_training_steps = 15000  # How many training steps to run before ending
 learning_rate = 0.01  # How large a learning rate to use when training
 testing_percentage = 10  # What percentage of images to use as a test set
 validation_percentage = 10  # What percentage of images to use as a validation set

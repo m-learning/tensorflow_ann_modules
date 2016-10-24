@@ -11,7 +11,6 @@ import cnn.transfer.config_image_net as config
 import  cnn.transfer.graph_config as graph_config
 
 
-# Layer extractor from neural network
 class layer_features(object):
   """Class for network layer extraction"""
   
