@@ -7,6 +7,7 @@ Configures bottleneck cache for training
 '''
 import os
 import random
+
 from tensorflow.python.platform import gfile
 
 from cnn.transfer.config_image_net import MAX_NUM_IMAGES_PER_CLASS
@@ -15,7 +16,6 @@ import numpy as np
 import tensorflow as tf
 
 
-# Generates bottleneck on instant image
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             bottleneck_tensor):
   """Runs inference on an image to extract the 'bottleneck' summary layer.
@@ -35,7 +35,6 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
   bottleneck_values = np.squeeze(bottleneck_values)
   
   return bottleneck_values
-
 
 def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
                              category, bottleneck_dir, jpeg_data_tensor,
@@ -88,7 +87,6 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   
   return bottleneck_values
 
-
 def cache_bottlenecks(sess, image_lists, image_dir,
                       bottleneck_dir, jpeg_data_tensor, bottleneck_tensor):
   """Ensures all the training, testing, and validation bottlenecks are cached.
@@ -124,7 +122,6 @@ def cache_bottlenecks(sess, image_lists, image_dir,
         how_many_bottlenecks += 1
         if how_many_bottlenecks % 100 == 0:
           print(str(how_many_bottlenecks) + ' bottleneck files created.')
-
 
 def get_random_cached_bottlenecks(sess, image_lists, how_many,
                                   category, bottleneck_dir, image_dir,
@@ -167,7 +164,6 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many,
     ground_truths.append(ground_truth)
     
   return bottlenecks, ground_truths
-
 
 def get_random_distorted_bottlenecks(
     sess, image_lists, how_many, category, image_dir, input_jpeg_tensor,

@@ -9,8 +9,10 @@ Configuration for neural network graph
 import os.path
 import traceback
 
-import tensorflow as tf
 from tensorflow.python.platform import gfile
+
+import tensorflow as tf
+
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
@@ -59,7 +61,6 @@ def create_inception_graph(tr_flags):
   # Graph components
   return (sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
 
-# List values of graph
 def list_layer_values(values, layer_name):
   """List All network layers
     Args:
@@ -78,9 +79,7 @@ def list_layer_values(values, layer_name):
     print value
     
   return result
-  
 
-# Lists all layers of network
 def list_layers(sess, layer_name):
   """List All network layers
     Args:
@@ -100,8 +99,6 @@ def list_layers(sess, layer_name):
   
   return result
   
-
-# Gets network graph layer by name
 def get_layer(tr_flags, layer_name):  
   """"Creates a graph from saved GraphDef file and returns a Graph object.
   Args:
@@ -121,6 +118,6 @@ def get_layer(tr_flags, layer_name):
         net_layer = list_layers(sess, layer_name)
         print net_layer
       except Exception:
-        print 'Error occured'
+        print 'Error occurred'
         traceback.print_exc()
         

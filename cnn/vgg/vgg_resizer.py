@@ -6,12 +6,13 @@ Image size utility for VGG networks
 
 from cnn.utils.image_resizing import image_resizer
 
+
 vgg_dim = 224
 vgg_size = (vgg_dim, vgg_dim)
 
 class vgg_image_resizer(image_resizer):
   """
-    Image Resizer for VGG network
+    Resizes image for VGG network
   """
   
   def __init__(self):

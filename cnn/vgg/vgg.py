@@ -71,7 +71,7 @@ def vgg_arg_scope(weight_decay=0.0005):
 
 # Gets end points
 def get_endpoints(end_points_collection):
-  return dict((v.name, v) for v in tf.get_collection(end_points_collection))
+  return slim.utils.convert_collection_to_dict(end_points_collection)
 
 def init_vgg(inputs, repeats=3, scope='vgg_16'):
   """Oxford Net VGG 16-Layers version D Example.

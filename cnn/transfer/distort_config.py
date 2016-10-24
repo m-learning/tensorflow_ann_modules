@@ -6,12 +6,13 @@ Configures distort options
 @author: Levan Tsinadze
 '''
 
-import tensorflow as tf
 from tensorflow.python.framework import tensor_shape
 
-import  cnn.transfer.graph_config as graph_config
 import  cnn.transfer.bottleneck_config as bottleneck
+import  cnn.transfer.graph_config as graph_config
 import cnn.transfer.training_flags_mod as training_flags_mod
+import tensorflow as tf
+
 
 # Find if should images
 def should_distort_images(flip_left_right, random_crop, random_scale,
@@ -30,7 +31,6 @@ def should_distort_images(flip_left_right, random_crop, random_scale,
   """
   return (flip_left_right or (random_crop != 0) or (random_scale != 0) or
           (random_brightness != 0))
-
 
 def add_input_distortions(flip_left_right, random_crop, random_scale,
                           random_brightness):
@@ -121,7 +121,6 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
   
   return jpeg_data, distort_result
 
-# Validates and applies distortions
 def distort_images(prepared_parameters, tr_flags):
   """Distorts training images
     Args:

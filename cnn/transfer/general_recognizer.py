@@ -13,15 +13,14 @@ import tensorflow as tf
 RESULT_KEY = 'final_result:0'
 DECODE_KEY = 'DecodeJpeg/contents:0'
 
-# Recognizes image thru trained neural networks
 class retrained_recognizer(object):
+  """Class to run recognition on trained set"""
   
   def __init__(self, tr_file):
     self.tr_file = tr_file
     self.path_funct = tr_file.get_or_init_test_dir
     
 
-  # Initializes trained neural network graph
   def create_graph(self, model_path):
     """Creates a graph from saved GraphDef file and returns a saver.
       Args:
@@ -33,8 +32,11 @@ class retrained_recognizer(object):
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
   
-  # Prints suggested answers
   def print_answers(self, prediction_patrameters):
+    """Prints recognition answer
+      Args:
+        prediction_patrameters - parameters to run recognition
+    """
     
     (top_k, labels, predictions) = prediction_patrameters
     
@@ -43,8 +45,14 @@ class retrained_recognizer(object):
         score = predictions[node_id]
         print('%s (score = %.5f)' % (human_string, score))
         
-  # Runs predictions on image
   def predict_answer(self, sess, image_parameter):
+    """Runs prediction on trained / fine tuned network
+      Args:
+        sess - TensorFlow session
+        image_parameter - image for prediction
+      Return:
+        predictions - recognition result on image
+    """
     
     (image_data, _) = image_parameter
     softmax_tensor = sess.graph.get_tensor_by_name(RESULT_KEY)
@@ -55,9 +63,15 @@ class retrained_recognizer(object):
     predictions = np.squeeze(predictions)
     
     return predictions
-  # Runs neural net to recognize objects on image
+  
   def recognize_image(self, sess, image_parameter):
-    
+    """Runs and refines prediction on trained / fine tuned network
+      Args:
+        sess - TensorFlow session
+        image_parameter - image for prediction
+      Return:
+        answer - refined top recognition result on image
+    """
     # Decorates predictions
     predictions = self.predict_answer(sess, image_parameter)
     # Gets top prediction (top matchs)s
@@ -94,7 +108,7 @@ class retrained_recognizer(object):
       Args:
         sys_parameters - parameters
       Return:
-        answer - prediction data
+        answer - top prediction data
     """
       
     answer = None

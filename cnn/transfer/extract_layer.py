@@ -6,17 +6,18 @@ Extracts layer from neural network
 @author: Levan Tsinadze
 '''
 
+from cnn.transfer.config_image_net import maybe_download_and_extract
 import cnn.transfer.config_image_net as config
 import  cnn.transfer.graph_config as graph_config
-from cnn.transfer.config_image_net import maybe_download_and_extract
+
 
 # Layer extractor from neural network
 class layer_features(object):
+  """Class for network layer extraction"""
   
   def __init__(self, layer_name):
     self.layer_name = 'import/' + layer_name
     
-  # Extracts layer
   def extract_layer(self, tr_file):
     """Extracts network layer
       Args:

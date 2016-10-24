@@ -55,6 +55,7 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
+
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
@@ -66,6 +67,9 @@ import  cnn.transfer.graph_config as graph_config
 import cnn.transfer.training_flags_mod as training_flags_mod
 import tensorflow as tf
 
+
+VALID_RESULT_CODE = 0
+ERROR_RESULT_CODE = -1
 
 def variable_summaries(var, name):
   """Attach a lot of summaries to a Tensor (for TensorBoard visualization).
@@ -112,7 +116,6 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
     ground_truth_input = tf.placeholder(tf.float32,
                                         [None, class_count],
                                         name='GroundTruthInput')
-
   # Organizing the following ops as `final_training_ops` so they're easier
   # to see in TensorBoard
   layer_name = 'final_training_ops'
@@ -219,7 +222,6 @@ def iterate_and_train(sess, iteration_parameters):
   
   # Run the training for as many cycles as requested on the command line.
   for i in range(training_flags_mod.how_many_training_steps):
-    
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.
     if do_distort_images:
@@ -357,11 +359,13 @@ def retrain_net(tr_file):
     Args:
       tr_file - utility object to manage files
   """
-  
   # Prepares training parameters
   prepared_parameters = prepare_parameters(tr_file)
   
-  if prepared_parameters is None:
-    return -1
-  else:
+  if prepared_parameters is not None:
     retrain_valid_net(prepared_parameters)
+    result_code = VALID_RESULT_CODE
+  else:
+    result_code = ERROR_RESULT_CODE
+  
+  return result_code

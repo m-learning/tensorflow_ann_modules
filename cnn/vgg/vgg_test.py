@@ -31,6 +31,7 @@ slim = tf.contrib.slim
 
 
 class VGGATest(tf.test.TestCase):
+  """Tests for VGG network modules"""
 
   def testBuild(self):
     batch_size = 5

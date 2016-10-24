@@ -13,12 +13,12 @@ import re
 import sys
 import tarfile
 
-from six.moves import urllib
-
-import tensorflow as tf
 from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags_mod as training_flags_mod
+from six.moves import urllib
+import tensorflow as tf
+
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
@@ -28,7 +28,6 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
-# Creates images list
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
   """Builds a list of training images from the file system.
 
@@ -108,7 +107,6 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     
   return result
 
-# Gets training data path
 def get_image_path(image_lists, label_name, index, image_dir, category):
   """"Returns a path to an image for a label at the given index.
 
@@ -141,7 +139,6 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
   
   return full_path
 
-# Calculates bottleneck path
 def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
                         category):
   """"Returns a path to a bottleneck file for a label at the given index.
@@ -161,7 +158,6 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
   return get_image_path(image_lists, label_name, index, bottleneck_dir,
                         category) + '.txt'
 
-# Downloads and extracts trained model
 def maybe_download_and_extract():
   """Download and extract model tar file.
 
@@ -189,7 +185,6 @@ def maybe_download_and_extract():
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
   tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
-
 def ensure_dir_exists(dir_name):
   """Makes sure the folder exists on disk.
 
@@ -199,7 +194,6 @@ def ensure_dir_exists(dir_name):
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)
 
-# Initializing training flags
 def init_flags_only(tr_file):
   """
     Configures trained checkpoints
@@ -214,7 +208,6 @@ def init_flags_only(tr_file):
   
   return tr_flags
 
-# Initializes training flags and files
 def init_flags_and_files(tr_file):
   """
     Initializes training flags

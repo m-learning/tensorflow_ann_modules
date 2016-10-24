@@ -20,7 +20,6 @@ def init_writer(sess):
       train_writer - train log writer
       validation_writer - validation log writer
   """
-  
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
   tmp_dir = gettempdir()
   summaries_dir = os.path.join(tmp_dir, training_flags_mod.summaries_dir)
