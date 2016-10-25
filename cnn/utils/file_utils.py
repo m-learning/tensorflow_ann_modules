@@ -110,8 +110,11 @@ class files_and_path_utils(object):
     
     return result_dir 
   
-  # Gets current directory of script
   def get_current(self):
+    """Gets current directory of script
+      Return:
+        current_dir - current directory
+    """
       
     current_dir = os.path.dirname(os.path.realpath(__file__))
     

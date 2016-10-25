@@ -7,7 +7,7 @@ Extracts layer from neural network
 '''
 
 from cnn.transfer.config_image_net import maybe_download_and_extract
-import cnn.transfer.config_image_net as config
+import cnn.transfer.config_image_net as flags
 import  cnn.transfer.graph_config as graph_config
 
 
@@ -26,8 +26,8 @@ class layer_features(object):
                     and various tensors we'll be manipulating.
     """
     
-    tr_flags = config.init_flags_only(tr_file)
+    flags.init_flags_only(tr_file)
     maybe_download_and_extract()
-    net_layer = graph_config.get_layer(tr_flags, self.layer_name)
+    net_layer = graph_config.get_layer(self.layer_name)
     
     return net_layer

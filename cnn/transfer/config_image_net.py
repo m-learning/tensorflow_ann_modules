@@ -1,10 +1,10 @@
-'''
+"""
 Created on Jul 15, 2016
 
 Configures parameters before retraining
 
 @author: Levan Tsinadze
-'''
+"""
 
 import glob
 import hashlib
@@ -12,12 +12,12 @@ import os.path
 import re
 import sys
 import tarfile
-
 from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags_mod as flags
 from six.moves import urllib
 import tensorflow as tf
+
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their

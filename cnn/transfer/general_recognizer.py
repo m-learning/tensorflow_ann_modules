@@ -112,7 +112,6 @@ class retrained_recognizer(object):
     if tf.gfile.Exists(test_image_path):
     # Reads image to recognize
       image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
-  
       # Creates graph from saved GraphDef
       model_path = self.tr_file.get_or_init_files_path()
       # Initializes and loads netural network

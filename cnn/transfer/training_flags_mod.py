@@ -1,10 +1,15 @@
-'''
+"""
 Created on Jun 28, 2016
 
 Initializes training flags
 
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 
 # Defines training process directories
 IMAGENET_DIR = 'imagenet'
@@ -95,6 +100,7 @@ def retrieve_args(sys_argv):
   if len(sys_argv) > 1:
     global how_many_training_steps
     how_many_training_steps = int(sys_argv[1])
+    print('Number of raining steps is set as - ' + how_many_training_steps)
 
 def init_flaged_data(tr_files):
   """Generates and initializes flags for 

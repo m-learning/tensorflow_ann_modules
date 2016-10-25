@@ -7,7 +7,7 @@ Logs events to TensorBoard
 import os
 from tempfile import gettempdir
 
-import cnn.transfer.training_flags_mod as training_flags_mod
+import cnn.transfer.training_flags_mod as flags
 import tensorflow as tf
 
 
@@ -21,7 +21,7 @@ def init_log_directories(sess):
       validatn_sum_dir - validation summaries directory
   """
   tmp_dir = gettempdir()
-  summaries_dir = os.path.join(tmp_dir, training_flags_mod.summaries_dir)
+  summaries_dir = os.path.join(tmp_dir, flags.summaries_dir)
   training_sum_dir = summaries_dir + '/train'
   validatn_sum_dir = summaries_dir + '/validation'
   

@@ -1,10 +1,10 @@
-'''
+"""
 Created on Jul 15, 2016
 
 Configures distort options
 
 @author: Levan Tsinadze
-'''
+"""
 
 from tensorflow.python.framework import tensor_shape
 

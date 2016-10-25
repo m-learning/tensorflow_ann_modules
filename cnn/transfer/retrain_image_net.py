@@ -50,6 +50,7 @@ This produces a new model file that can be loaded and run by any TensorFlow
 program, for example the label_image sample code.
 
 """
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -344,7 +345,8 @@ def prepare_iteration_parameters(prepared_parameters):
   # Add the new layer that we'll be training.
   (train_step, cross_entropy, bottleneck_input,
    ground_truth_input, final_tensor) = add_final_training_ops(len(image_lists.keys()),
-                                          flags.final_tensor_name, bottleneck_tensor)
+                                                              flags.final_tensor_name,
+                                                              bottleneck_tensor)
   # Set up all our weights to their initial default values.
   prepare_session(sess)
 
@@ -394,7 +396,6 @@ def retrain_net(tr_file):
   """
   # Prepares training parameters
   prepared_parameters = prepare_parameters(tr_file)
-  
   if prepared_parameters is not None:
     retrain_valid_net(prepared_parameters)
     result_code = VALID_RESULT_CODE
