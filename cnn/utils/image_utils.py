@@ -16,8 +16,11 @@ try:
 except ImportError:
   print "Importing Image from PIL threw exception"
   import Image
-  
+
 verbose_error = None
+
+IMAGE_RGB_FORMAT = 'RGB'
+IMAGE_SAVE_FORMAT = 'jpeg'
 
 class image_converter(object):
   """Utility class for image manipulation"""
@@ -26,8 +29,19 @@ class image_converter(object):
     self.from_parent = from_parent
     self.to_dir = to_dir
     self.prefx = prefx
+    
+  def convert_image(self, im):
+    """Converts PNG images to JPG format
+      Args:
+        im - image
+      Return:
+        jpg_im - converted image
+    """
+    jpg_im = im.convert(IMAGE_RGB_FORMAT)
+    return jpg_im
+    
   
-  def write_file(self, pr, i):
+  def write_file(self, pr, i, jpg_im=None):
     """Converts and writes file
       Args:
         pr - path for source file
@@ -37,7 +51,10 @@ class image_converter(object):
     n_im = os.path.join(self.to_dir, fl_name)
     if os.path.exists(n_im):
       os.remove(n_im)
-    im = Image.open(pr)
+    if jpg_im is None:
+      im = Image.open(pr)
+    else:
+      im = jpg_im
     print im
     im.save(n_im)
     
@@ -49,8 +66,13 @@ class image_converter(object):
     """
     try:
       file_type = imghdr.what(pr)
-      if file_type in ('jpg:', 'jpeg'):
+      if file_type in ('jpg:', 'jpeg', 'JPG:', 'JPEG'):
         self.write_file(pr, i)
+      elif file_type in ('png', 'PNG'):
+        im = Image.open(pr)
+        jpg_im = self.convert_image(im)
+        self.write_file(pr, i, jpg_im)
+        print "Image is converted" + pr + "\n"
       else:
         print('incorrect file type - ', file_type)
     except IOError:

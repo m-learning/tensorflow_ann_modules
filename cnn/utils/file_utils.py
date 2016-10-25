@@ -78,8 +78,16 @@ class files_and_path_utils(object):
     
     return result
   
-  # Joins and creates file or directory paths
   def join_and_init_path(self, path_inst, *other_path):
+    """Joins and creates file or directory paths
+      Args:
+        path_inst - image path or function 
+                    returning path
+        other_path - vavargs for other paths
+                     or functions
+      Return:
+        result - joined path
+    """
     
     result = self.join_path(path_inst, *other_path)
     self.init_file_or_path(result)

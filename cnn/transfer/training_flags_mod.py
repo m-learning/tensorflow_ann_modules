@@ -47,8 +47,8 @@ summaries_dir = 'retrain_inception_logs'  # Where to save summary logs
           # for TensorBoard
 
 class training_flags(object):
-  """
-    Class to define and configure training flags and hyper parameters
+  """Class to define and configure training flags 
+  and hyper parameters
   """
   
   # Initializes flags for training

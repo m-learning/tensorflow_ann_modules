@@ -20,7 +20,6 @@ class image_resizer(object):
     Returns: 
       res_im resized image as tensor
     """
-    
     im_h, im_w = im.shape[:2]
     if im_h < self.image_height or im_w < self.image_width:
       res_im = cv2.resize(im, self.image_size, interpolation=cv2.INTER_CUBIC)
@@ -53,8 +52,7 @@ class image_resizer(object):
     cv2.imwrite(write_path, im)
     
   def read_resize_write(self, image_path, write_path):
-    """
-    Resizes image for VGG network
+    """Resizes image for VGG network
     Args: 
       image_path path to image
       write_path path to save resized image
