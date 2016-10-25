@@ -63,11 +63,9 @@ import  cnn.transfer.bottleneck_config as bottleneck
 import cnn.transfer.config_image_net as config
 import  cnn.transfer.distort_config as distort
 import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.training_flags_mod as training_flags_mod
+import cnn.transfer.training_flags_mod as flags
 import tensorflow as tf
 
-
-tr_flags = None
 
 VALID_RESULT_CODE = 0
 ERROR_RESULT_CODE = -1
@@ -144,7 +142,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
 
   with tf.name_scope('train'):
     train_step = tf.train.GradientDescentOptimizer(
-      training_flags_mod.learning_rate).minimize(cross_entropy_mean)
+      flags.learning_rate).minimize(cross_entropy_mean)
 
   return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
           final_tensor)
@@ -178,10 +176,10 @@ def save_trained_parameters(sess, graph, keys):
   """
   
   output_graph_def = graph_util.convert_variables_to_constants(
-      sess, graph.as_graph_def(), [training_flags_mod.final_tensor_name])
-  with gfile.FastGFile(tr_flags.output_graph, 'wb') as f:
+      sess, graph.as_graph_def(), [flags.final_tensor_name])
+  with gfile.FastGFile(flags.output_graph, 'wb') as f:
     f.write(output_graph_def.SerializeToString())
-  with gfile.FastGFile(tr_flags.output_labels, 'w') as f:
+  with gfile.FastGFile(flags.output_labels, 'w') as f:
     f.write('\n'.join(keys) + '\n')
 
 def test_trained_network(sess, validation_parameters):
@@ -197,8 +195,8 @@ def test_trained_network(sess, validation_parameters):
    ground_truth_input, evaluation_step, _) = validation_parameters
   
   test_bottlenecks, test_ground_truth = bottleneck.get_random_cached_bottlenecks(
-      sess, image_lists, training_flags_mod.test_batch_size, 'testing',
-      tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
+      sess, image_lists, flags.test_batch_size, 'testing',
+      flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
       bottleneck_tensor)
   test_accuracy = sess.run(
       evaluation_step,
@@ -225,18 +223,18 @@ def iterate_and_train(sess, iteration_parameters):
    
   
   # Run the training for as many cycles as requested on the command line.
-  for i in range(training_flags_mod.how_many_training_steps):
+  for i in range(flags.how_many_training_steps):
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.
     if do_distort_images:
       train_bottlenecks, train_ground_truth = bottleneck.get_random_distorted_bottlenecks(
-          sess, image_lists, training_flags_mod.train_batch_size, 'training',
-          tr_flags.image_dir, distorted_jpeg_data_tensor,
+          sess, image_lists, flags.train_batch_size, 'training',
+          flags.image_dir, distorted_jpeg_data_tensor,
           distorted_image_tensor, resized_image_tensor, bottleneck_tensor)
     else:
       train_bottlenecks, train_ground_truth = bottleneck.get_random_cached_bottlenecks(
-          sess, image_lists, training_flags_mod.train_batch_size, 'training',
-          tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
+          sess, image_lists, flags.train_batch_size, 'training',
+          flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
           bottleneck_tensor)
     # Feed the bottlenecks and ground truth into the graph, and run a training
     # step. Capture training summaries for TensorBoard with the `merged` op.
@@ -246,8 +244,8 @@ def iterate_and_train(sess, iteration_parameters):
     train_writer.add_summary(train_summary, i)
     
     # Every so often, print out how well the graph is training.
-    is_last_step = (i + 1 == training_flags_mod.how_many_training_steps)
-    if (i % training_flags_mod.eval_step_interval) == 0 or is_last_step:
+    is_last_step = (i + 1 == flags.how_many_training_steps)
+    if (i % flags.eval_step_interval) == 0 or is_last_step:
       train_accuracy, cross_entropy_value = sess.run(
           [evaluation_step, cross_entropy],
           feed_dict={bottleneck_input: train_bottlenecks,
@@ -258,8 +256,8 @@ def iterate_and_train(sess, iteration_parameters):
                                                  cross_entropy_value))
       validation_bottlenecks, validation_ground_truth = (
           bottleneck.get_random_cached_bottlenecks(
-              sess, image_lists, training_flags_mod.validation_batch_size, 'validation',
-              tr_flags.bottleneck_dir, tr_flags.image_dir, jpeg_data_tensor,
+              sess, image_lists, flags.validation_batch_size, 'validation',
+              flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
               bottleneck_tensor))
       # Run a validation step and capture training summaries for TensorBoard
       # with the `merged` op.
@@ -284,23 +282,22 @@ def prepare_parameters(tr_file):
   """
   
   # Configures training flags 
-  global tr_flags
-  tr_flags = config.init_flags_and_files(tr_file)
+  config.init_flags_and_files(tr_file)
   # Set up the pre-trained graph.
   config.maybe_download_and_extract()
   graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (
-      graph_config.create_inception_graph(tr_flags))
+      graph_config.create_inception_graph())
 
   # Look at the folder structure, and create lists of all the images.
-  image_lists = config.create_image_lists(tr_flags.image_dir, training_flags_mod.testing_percentage,
-                                          training_flags_mod.validation_percentage)
+  image_lists = config.create_image_lists(flags.image_dir, flags.testing_percentage,
+                                          flags.validation_percentage)
   print(image_lists)
   class_count = len(image_lists.keys())
   if class_count == 0:
-    print('No valid folders of images found at ' + tr_flags.image_dir)
+    print('No valid folders of images found at ' + flags.image_dir)
     return None
   if class_count == 1:
-    print('Only one valid folder of images found at ' + tr_flags.image_dir + 
+    print('Only one valid folder of images found at ' + flags.image_dir + 
           ' - multiple classes are needed for classification.')
     return None
   
@@ -343,12 +340,11 @@ def prepare_iteration_parameters(prepared_parameters):
 
   # See if the command-line flags mean we're applying any distortions.
   (sess, do_distort_images,
-   distorted_jpeg_data_tensor, distorted_image_tensor) = distort.distort_images(prepared_parameters, tr_flags)
+   distorted_jpeg_data_tensor, distorted_image_tensor) = distort.distort_images(prepared_parameters)
   # Add the new layer that we'll be training.
   (train_step, cross_entropy, bottleneck_input,
    ground_truth_input, final_tensor) = add_final_training_ops(len(image_lists.keys()),
-                                          training_flags_mod.final_tensor_name,
-                                          bottleneck_tensor)
+                                          flags.final_tensor_name, bottleneck_tensor)
   # Set up all our weights to their initial default values.
   prepare_session(sess)
 

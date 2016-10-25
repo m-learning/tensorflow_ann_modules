@@ -46,28 +46,56 @@ log_board_data = True
 summaries_dir = 'retrain_inception_logs'  # Where to save summary logs 
           # for TensorBoard
 
-class training_flags(object):
-  """Class to define and configure training flags 
-  and hyper parameters
+########################################
+# Parameters for runtime configuration #
+########################################
+
+# Training data and cache directories
+prnt_dir = None
+
+# Input and output file flags.
+image_dir = None  # Path to folders of labeled images
+output_graph = None  # Where to save the trained graph
+output_labels = None  # Where to save the trained graph's labels
+
+# File-system cache locations.
+model_dir = None  # Path to classify_image_graph_def.pb, """
+                                # imagenet_synset_to_human_label_map.txt, and
+                                # imagenet_2012_challenge_label_map_proto.pbtxt
+bottleneck_dir = None  # Path to cache bottleneck layer values as files
+
+def _set_training_flags(tr_files):
+  """Initializes flags for training
+    Args:
+      tr_files - training files utility
+  """
+
+  global prnt_dir, image_dir, output_graph
+  global output_labels, model_dir, bottleneck_dir
+  # Training data and cache directories
+  prnt_dir = tr_files.get_data_general_directory()
+  
+  # Input and output file flags.
+  image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
+  output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
+  output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
+  
+  # File-system cache locations.
+  model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
+                                  # imagenet_synset_to_human_label_map.txt, and
+                                  # imagenet_2012_challenge_label_map_proto.pbtxt
+  bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
+
+def retrieve_args(sys_argv):
+  """Adds configuration from system arguments
+    Args:
+     sys_argv - runtime parameters
   """
   
-  # Initializes flags for training
-  def __init__(self, tr_files):
+  if len(sys_argv) > 1:
+    global how_many_training_steps
+    how_many_training_steps = int(sys_argv[1])
 
-    # Training data and cache directories
-    prnt_dir = tr_files.get_data_general_directory()
-    
-    # Input and output file flags.
-    self.image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
-    self.output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
-    self.output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
-    
-    # File-system cache locations.
-    self.model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
-                                    # imagenet_synset_to_human_label_map.txt, and
-                                    # imagenet_2012_challenge_label_map_proto.pbtxt
-    self.bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
-    
 def init_flaged_data(tr_files):
   """Generates and initializes flags for 
     training and testing
@@ -76,4 +104,4 @@ def init_flaged_data(tr_files):
     Return:
       training_flags configured instance
   """
-  return training_flags(tr_files)
+  _set_training_flags(tr_files)

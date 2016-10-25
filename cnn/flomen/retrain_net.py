@@ -54,17 +54,23 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from sys import argv
+
+from cnn.flomen.cnn_files import training_file
+from cnn.transfer import training_flags_mod as flags
+import cnn.transfer.retrain_image_net as retrain_image_net
 import tensorflow as tf
 
-import cnn.transfer.retrain_image_net as retrain_image_net
-from cnn.flomen.cnn_files import training_file
 
-# Training and testing
 def retrain_net_main(_):
+  """Retrains Inception custom data set"""
   
   tr_files = training_file()
   retrain_image_net.retrain_net(tr_files)
   
 # Runs training and test process
 if __name__ == '__main__':
+  """Runs training and test process"""
+  
+  flags.retrieve_args(argv)
   tf.app.run(retrain_net_main)

@@ -10,7 +10,7 @@ from tensorflow.python.framework import tensor_shape
 
 import  cnn.transfer.bottleneck_config as bottleneck
 import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.training_flags_mod as training_flags_mod
+import cnn.transfer.training_flags_mod as flags
 import tensorflow as tf
 
 
@@ -120,11 +120,10 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
   
   return jpeg_data, distort_result
 
-def distort_images(prepared_parameters, tr_flags):
+def distort_images(prepared_parameters):
   """Distorts training images
     Args:
       prepared_parameters - training parameters
-      tr_flags - training configuration parameters
     Return:
       TensorFlow session, flag to distort images, distorted images 
       and distorted images tensor
@@ -134,20 +133,20 @@ def distort_images(prepared_parameters, tr_flags):
    _, image_lists) = prepared_parameters
   
   do_distort_images = should_distort_images(
-      training_flags_mod.flip_left_right, training_flags_mod.random_crop, training_flags_mod.random_scale,
-      training_flags_mod.random_brightness)
+      flags.flip_left_right, flags.random_crop, flags.random_scale,
+      flags.random_brightness)
 
   sess = tf.Session()
   if do_distort_images:
     # We will be applying distortions, so setup the operations we'll need.
     distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
-        training_flags_mod.flip_left_right, training_flags_mod.random_crop, training_flags_mod.random_scale,
-        training_flags_mod.random_brightness)
+        flags.flip_left_right, flags.random_crop, flags.random_scale,
+        flags.random_brightness)
   else:
     distorted_jpeg_data_tensor, distorted_image_tensor = None, None
     # We'll make sure we've calculated the 'bottleneck' image summaries and
     # cached them on disk.
-    bottleneck.cache_bottlenecks(sess, image_lists, tr_flags.image_dir, tr_flags.bottleneck_dir,
+    bottleneck.cache_bottlenecks(sess, image_lists, flags.image_dir, flags.bottleneck_dir,
                       jpeg_data_tensor, bottleneck_tensor)
     
   return (sess, do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)

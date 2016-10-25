@@ -10,6 +10,8 @@ import os.path
 from tensorflow.python.platform import gfile
 import traceback
 
+import cnn.transfer.training_flags_mod as flags
+
 import tensorflow as tf
 
 
@@ -28,25 +30,21 @@ MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 
-def init_model_file_name(tr_flags):
+def init_model_file_name():
   """Initializes serialized model graph file 
-    Args:
-      tr_flags - training configuration
     Returns:
       file full path
   """
-  return os.path.join(tr_flags.model_dir, 'classify_image_graph_def.pb')
+  return os.path.join(flags.model_dir, 'classify_image_graph_def.pb')
 
-def create_inception_graph(tr_flags):
+def create_inception_graph():
   """"Creates a graph from saved GraphDef file and returns a Graph object.
-    Args:
-      tr_flags - configuration flags
     Returns:
       Graph holding the trained Inception network, and various tensors we'll be
       manipulating.
   """
   with tf.Session() as sess:
-    model_filename = init_model_file_name(tr_flags)
+    model_filename = init_model_file_name()
     with gfile.FastGFile(model_filename, 'rb') as f:
       graph_def = tf.GraphDef()
       graph_def.ParseFromString(f.read())
@@ -100,10 +98,9 @@ def list_layers(sess, layer_name):
   
   return result
   
-def get_layer(tr_flags, layer_name):  
+def get_layer(layer_name):  
   """"Creates a graph from saved GraphDef file and returns a Graph object.
   Args:
-    tr_flags - configuration parameters
     layer_name - network layer name
   Returns:
     net_layer - Graph holding the trained Inception network, 
@@ -113,7 +110,7 @@ def get_layer(tr_flags, layer_name):
   net_layer = None
   
   with tf.Session() as sess:
-    model_filename = init_model_file_name(tr_flags)
+    model_filename = init_model_file_name()
     with gfile.FastGFile(model_filename, 'rb') as f:
       graph_def = tf.GraphDef()
       graph_def.ParseFromString(f.read())

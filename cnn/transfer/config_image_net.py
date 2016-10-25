@@ -15,11 +15,9 @@ import tarfile
 
 from tensorflow.python.platform import gfile
 
-import cnn.transfer.training_flags_mod as training_flags_mod
+import cnn.transfer.training_flags_mod as flags
 from six.moves import urllib
 import tensorflow as tf
-
-tr_flags = None
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
@@ -165,7 +163,7 @@ def maybe_download_and_extract():
   If the pretrained model we're using doesn't already exist, this function
   downloads it from the TensorFlow.org website and unpacks it into a directory.
   """
-  dest_directory = tr_flags.model_dir
+  dest_directory = flags.model_dir
   if not os.path.exists(dest_directory):
     os.makedirs(dest_directory)
   filename = DATA_URL.split('/')[-1]
@@ -204,24 +202,17 @@ def init_flags_only(tr_file):
     Args:
       tr_file - utility for files management
   """
-  
   # Training flags
-  global tr_flags
-  tr_flags = training_flags_mod.init_flaged_data(tr_file)
-  
-  return tr_flags
+  flags.init_flaged_data(tr_file)
 
 def init_flags_and_files(tr_file):
   """Initializes training flags
     Args:
       tr_file - file utility manager
-    Returns:
-      tr_flags - object containing configuration parameters
   """
   
   # Training flags
-  tr_flags = init_flags_only(tr_file)
+  init_flags_only(tr_file)
   # Gets training set for neural network
   tr_file.get_or_init_training_set()
   
-  return tr_flags
