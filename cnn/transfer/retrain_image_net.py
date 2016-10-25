@@ -122,7 +122,8 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   layer_name = 'final_training_ops'
   with tf.name_scope(layer_name):
     with tf.name_scope('weights'):
-      layer_weights = tf.Variable(tf.truncated_normal([graph_config.BOTTLENECK_TENSOR_SIZE, class_count], stddev=0.001), name='final_weights')
+      layer_weights = tf.Variable(tf.truncated_normal([graph_config.BOTTLENECK_TENSOR_SIZE, class_count],
+                                                       stddev=0.001), name='final_weights')
       variable_summaries(layer_weights, layer_name + '/weights')
     with tf.name_scope('biases'):
       layer_biases = tf.Variable(tf.zeros([class_count]), name='final_biases')
@@ -165,11 +166,11 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
     with tf.name_scope('accuracy'):
       evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     tf.scalar_summary('accuracy', evaluation_step)
+    
   return evaluation_step
 
 def save_trained_parameters(sess, graph, keys):
-  """
-    Saves trained checkpoint
+  """Saves trained checkpoint
     Args:
      sess - TensorFlow session
      graph - Inception-V3 graph
@@ -206,7 +207,6 @@ def test_trained_network(sess, validation_parameters):
   print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
   
 
-# Iterates and trains neural network
 def iterate_and_train(sess, iteration_parameters):
   """Trains network with additional parameters
     Args:
@@ -293,7 +293,7 @@ def prepare_parameters(tr_file):
 
   # Look at the folder structure, and create lists of all the images.
   image_lists = config.create_image_lists(tr_flags.image_dir, training_flags_mod.testing_percentage,
-                                   training_flags_mod.validation_percentage)
+                                          training_flags_mod.validation_percentage)
   print(image_lists)
   class_count = len(image_lists.keys())
   if class_count == 0:
@@ -312,7 +312,6 @@ def prepare_session(sess):
     Args:
       sess - TensorFlow session
     """
-    
   init = tf.initialize_all_variables()
   sess.run(init)
 
@@ -377,7 +376,6 @@ def validate_test_and_save(sess, graph, validation_parameters):
   # Write out the trained graph and labels with the weights stored as constants.
   save_trained_parameters(sess, graph, image_lists.keys())
 
-# Retrains neural network after validation
 def retrain_valid_net(prepared_parameters):
   """Retrains Inception after validation over parameters
     Args:
@@ -393,7 +391,6 @@ def retrain_valid_net(prepared_parameters):
   # some new images we haven't used before.
   validate_test_and_save(sess, graph, iteration_parameters)
 
-# Runs training and testing
 def retrain_net(tr_file):
   """Retrains Inception on different data set
     Args:

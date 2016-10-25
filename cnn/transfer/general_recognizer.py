@@ -39,7 +39,6 @@ class retrained_recognizer(object):
     """
     
     (top_k, labels, predictions) = prediction_patrameters
-    
     for node_id in top_k:
         human_string = labels[node_id]
         score = predictions[node_id]
@@ -108,26 +107,23 @@ class retrained_recognizer(object):
       Return:
         answer - top predicted data
     """
-      
-    answer = None
-
     # Gets test image path
     test_image_path = self.init_image_path(sys_params)
-    if not tf.gfile.Exists(test_image_path):
-        tf.logging.fatal('File does not exist %s', test_image_path)
-        return answer
-
+    if tf.gfile.Exists(test_image_path):
     # Reads image to recognize
-    image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
-
-    # Creates graph from saved GraphDef
-    model_path = self.tr_file.get_or_init_files_path()
-    # Initializes and loads netural network
-    self.create_graph(model_path)
-    # initializes labels path
-    labels_path = self.tr_file.get_or_init_labels_path()
-    image_parameter = (image_data, labels_path)
-    with tf.Session() as sess:
-      answer = self.recognize_image(sess, image_parameter)
+      image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
+  
+      # Creates graph from saved GraphDef
+      model_path = self.tr_file.get_or_init_files_path()
+      # Initializes and loads netural network
+      self.create_graph(model_path)
+      # initializes labels path
+      labels_path = self.tr_file.get_or_init_labels_path()
+      image_parameter = (image_data, labels_path)
+      with tf.Session() as sess:
+        answer = self.recognize_image(sess, image_parameter)
+    else:
+      tf.logging.fatal('File does not exist %s', test_image_path)
+      answer = None
       
     return answer

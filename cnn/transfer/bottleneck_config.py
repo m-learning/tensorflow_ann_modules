@@ -163,7 +163,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many,
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
     
-  return bottlenecks, ground_truths
+  return (bottlenecks, ground_truths)
 
 def get_random_distorted_bottlenecks(
     sess, image_lists, how_many, category, image_dir, input_jpeg_tensor,
@@ -218,4 +218,4 @@ def get_random_distorted_bottlenecks(
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
   
-  return bottlenecks, ground_truths
+  return (bottlenecks, ground_truths)
