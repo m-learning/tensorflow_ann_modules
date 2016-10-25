@@ -6,6 +6,10 @@ Configures parameters before retraining
 @author: Levan Tsinadze
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import glob
 import hashlib
 import os.path
