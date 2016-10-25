@@ -379,8 +379,7 @@ def validate_test_and_save(sess, graph, validation_parameters):
 
 # Retrains neural network after validation
 def retrain_valid_net(prepared_parameters):
-  """
-    Retrains Inception after validation over parameters
+  """Retrains Inception after validation over parameters
     Args:
       prepared_parameters - tuple of training parameters
   """
@@ -396,8 +395,7 @@ def retrain_valid_net(prepared_parameters):
 
 # Runs training and testing
 def retrain_net(tr_file):
-  """
-    Retrains Inception on different data set
+  """Retrains Inception on different data set
     Args:
       tr_file - utility object to manage files
   """

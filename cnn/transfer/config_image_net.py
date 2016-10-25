@@ -196,8 +196,7 @@ def ensure_dir_exists(dir_name):
     os.makedirs(dir_name)
 
 def init_flags_only(tr_file):
-  """
-    Configures trained checkpoints
+  """Configures trained checkpoints
     Args:
       tr_file - utility for files management
   """
@@ -209,8 +208,7 @@ def init_flags_only(tr_file):
   return tr_flags
 
 def init_flags_and_files(tr_file):
-  """
-    Initializes training flags
+  """Initializes training flags
     Args:
       tr_file - file utility manager
     Returns:

@@ -86,7 +86,6 @@ class retrained_recognizer(object):
   
     return answer
   
-  # Initializes image path
   def init_image_path(self, sys_params):
     """Initializes image path to recognize
       Args:
@@ -102,7 +101,6 @@ class retrained_recognizer(object):
       
     return test_image_path
   
-  # Generates forward propagation for recognition
   def run_inference_on_image(self, sys_params=None):
     """Runs network interface on image
       Args:

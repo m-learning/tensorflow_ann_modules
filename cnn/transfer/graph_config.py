@@ -37,7 +37,6 @@ def init_model_file_name(tr_flags):
   """
   return os.path.join(tr_flags.model_dir, 'classify_image_graph_def.pb')
 
-# Generates neural network model graph
 def create_inception_graph(tr_flags):
   """"Creates a graph from saved GraphDef file and returns a Graph object.
     Args:

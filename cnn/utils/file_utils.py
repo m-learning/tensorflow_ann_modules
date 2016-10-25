@@ -94,8 +94,16 @@ class files_and_path_utils(object):
     
     return result
   
-  # Creates appropriated directory if such does not exists
   def init_dir(self, dir_path, *other_path):
+    """Creates appropriated directory 
+       if such does not exists
+      Args:
+        dir_path - directory path
+        *other_path - vavargs for other paths
+                     or functions
+      Return:
+        result_dir - joined directory path
+    """
     
     result_dir = self.join_path(dir_path, *other_path)
     self.init_file_or_path(result_dir)
