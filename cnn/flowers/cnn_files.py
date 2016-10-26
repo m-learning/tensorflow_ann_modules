@@ -6,6 +6,7 @@ Files for training data
 @author: Levan Tsinadze
 '''
 
+import glob
 import os
 import shutil
 import sys
@@ -21,12 +22,26 @@ TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.t
 # Files and directories for parameters (trained), training, validation and test
 class training_file(cnn_file_utils):
   
-  def __init__(self):
-    super(training_file, self).__init__('flowers')
+  def __init__(self, image_resizer=None):
+    super(training_file, self).__init__('flowers', image_resizer)
     
     # Method to get data set directory
   def get_dataset_dir(self):
     return super(training_file, self).get_data_directory()
+  
+  # Resizes flower images
+  def resize_flower_images(self, training_dir):
+    
+    if self.image_resizer:
+      scan_dir = self.join_path(training_dir, 'flower_photos')
+      if os.path.exists(scan_dir):
+        flower_dirs = ('daisy', 'dandelion', 'tulips', 'roses', 'sunflowers')
+        for scan_sub_dir in flower_dirs:
+          flower_dir_pref = self.join_path(scan_dir, scan_sub_dir)
+          if os.path.exists(flower_dir_pref):
+            flower_dir = os.path.join(flower_dir_pref, '*.jpg')
+            for pr in glob.glob(flower_dir):
+              self.read_and_write(pr, pr)
       
   # Gets or generates training set
   def get_or_init_training_set(self):
@@ -49,3 +64,4 @@ class training_file(cnn_file_utils):
       shutil.rmtree(training_dir, ignore_errors=True)
       os.mkdir(training_dir)
     tarfile.open(filepath, 'r:gz').extractall(training_dir)
+    self.resize_flower_images(training_dir)

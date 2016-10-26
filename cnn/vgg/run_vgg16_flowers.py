@@ -10,10 +10,12 @@ from __future__ import division
 from PIL import Image
 
 from cnn.flowers.cnn_files import training_file as flower_files
-import cnn.vgg.vgg as vgg
-import cnn.nets.run_network as general_network
 from cnn.nets.run_network import network_interface
+import cnn.nets.run_network as general_network
 from cnn.preprocessing.vgg_preprocessing import preprocess_image
+from cnn.vgg import vgg_resizer
+import cnn.vgg.vgg as vgg
+from cnn.vgg.vgg_resizer import vgg_image_resizer
 import numpy as np
 import tensorflow as tf
 
@@ -21,7 +23,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 batch_size = 1
-height, width = 224, 224
+height, width = vgg_resizer.vgg_dim, vgg_resizer.vgg_dim
 
 # Runs Inception-ResNet-v2 Module
 class vgg_interface(network_interface):
@@ -79,7 +81,7 @@ class vgg_interface(network_interface):
               
 if __name__ == '__main__':
   
-  cnn_file = flower_files()
+  cnn_file = flower_files(vgg_image_resizer())
   app_interface = vgg_interface(cnn_file)
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
   app_interface.run_interface(test_file_path)

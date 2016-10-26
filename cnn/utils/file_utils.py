@@ -10,6 +10,13 @@ import os
 import types
 
 
+try:
+  from PIL import Image
+except ImportError:
+  print "Importing Image from PIL threw exception"
+  import Image
+
+
 # General parent directory for files
 DATAS_DIR_NAME = 'datas'
 
@@ -37,8 +44,8 @@ def count_files(dir_name):
   
   return file_count
 
-# Utility class for files and directories
 class files_and_path_utils(object):
+  """Utility class for files and directories"""
   
   def __init__(self, parent_cnn_dir, path_to_training_photos=None):
     self.path_to_cnn_directory = os.path.join(DATAS_DIR_NAME, parent_cnn_dir)    
@@ -71,24 +78,43 @@ class files_and_path_utils(object):
     
     return result
   
-  # Joins and creates file or directory paths
   def join_and_init_path(self, path_inst, *other_path):
+    """Joins and creates file or directory paths
+      Args:
+        path_inst - image path or function 
+                    returning path
+        other_path - vavargs for other paths
+                     or functions
+      Return:
+        result - joined path
+    """
     
     result = self.join_path(path_inst, *other_path)
     self.init_file_or_path(result)
     
     return result
   
-  # Creates appropriated directory if such does not exists
   def init_dir(self, dir_path, *other_path):
+    """Creates appropriated directory 
+       if such does not exists
+      Args:
+        dir_path - directory path
+        *other_path - vavargs for other paths
+                     or functions
+      Return:
+        result_dir - joined directory path
+    """
     
     result_dir = self.join_path(dir_path, *other_path)
     self.init_file_or_path(result_dir)
     
     return result_dir 
   
-  # Gets current directory of script
   def get_current(self):
+    """Gets current directory of script
+      Return:
+        current_dir - current directory
+    """
       
     current_dir = os.path.dirname(os.path.realpath(__file__))
     
@@ -99,11 +125,39 @@ class files_and_path_utils(object):
     return current_dir
   
 
-# Utility class for training and testing files and directories
 class cnn_file_utils(files_and_path_utils):
+  """Utility class for training and testing files and directories"""
   
-  def __init__(self, parent_cnn_dir):
+  def __init__(self, parent_cnn_dir, image_resizer=None):
     super(cnn_file_utils, self).__init__(parent_cnn_dir)
+    self.image_resizer = image_resizer
+    
+    # Reads image with or without resizing
+  def read_image(self, pr):
+    
+    if self.image_resizer is None:
+      im = Image.open(pr)
+    else:
+      im = self.image_resizer.read_and_resize(pr)
+      
+    return im
+  
+  # Writes image with or without resizing
+  def write_image(self, im, n_im):
+    
+    if self.image_resizer is None:
+      im.save(n_im)
+    else:
+      self.image_resizer.save_resized(im, n_im)
+      
+  # Reads and saves (resized or not) image from one path to other
+  def read_and_write(self, pr, n_im):
+    
+    if self.image_resizer is None:
+      im = Image.open(pr)
+      im.save(n_im)
+    else:
+      self.image_resizer.read_resize_write(pr, n_im)
   
   # Gets or creates directories
   def get_data_general_directory(self):
@@ -124,6 +178,13 @@ class cnn_file_utils(files_and_path_utils):
   # Gets directory for training set and parameters
   def get_data_directory(self):
     return self.join_path(self.get_training_directory, self.path_to_training_photos)
+  
+  # Gets or creates directory for training set and parameters
+  def get_or_init_data_directory(self):
+    
+    dir_path = self.get_data_directory()
+    if not os.path.exists(dir_path):
+      os.makedirs(dir_path)
   
   # Gets or creates directory for trained parameters
   def init_files_directory(self):

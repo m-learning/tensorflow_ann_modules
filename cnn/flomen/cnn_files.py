@@ -44,8 +44,8 @@ PERSONS_JPEG_DIR = 'JPEGImages'
 # Files and directories for parameters (trained), training, validation and test
 class training_file(cnn_file_utils):
   
-  def __init__(self):
-    super(training_file, self).__init__('flomen')
+  def __init__(self, image_resizer=None):
+    super(training_file, self).__init__('flomen', image_resizer)
   
   # Method to get data set directory
   def get_dataset_dir(self):
@@ -57,11 +57,10 @@ class training_file(cnn_file_utils):
     i = 0
     scan_persons_dir = os.path.join(src_dir, img_type)
     for pr in glob.glob(scan_persons_dir):
-      im = Image.open(pr)
       fl_name = prfx + 'cnvrt_prs_' + str(i) + '.jpg'
       n_im = os.path.join(persons_dir, fl_name)
       if not os.path.exists(n_im):
-        im.save(n_im)
+        self.read_and_write(pr, n_im)
         os.remove(pr)
       i += 1
   
@@ -128,7 +127,21 @@ class training_file(cnn_file_utils):
       else:
         zip_ref.extractall(training_dir)
         pers_dir = persons_dir
-      self.convert_person_images(prfx, pers_dir, persons_dir, img_type)      
+      self.convert_person_images(prfx, pers_dir, persons_dir, img_type)
+  
+  # Resizes flower images
+  def resize_flower_images(self, training_dir):
+    
+    if self.image_resizer:
+      scan_dir = self.join_path(training_dir, 'flower_photos')
+      if os.path.exists(scan_dir):
+        flower_dirs = ('daisy', 'dandelion', 'tulips', 'roses', 'sunflowers')
+        for scan_sub_dir in flower_dirs:
+          flower_dir_pref = self.join_path(scan_dir, scan_sub_dir)
+          if os.path.exists(flower_dir_pref):
+            flower_dir = os.path.join(flower_dir_pref, '*.jpg')
+            for pr in glob.glob(flower_dir):
+              self.read_and_write(pr, pr)
   
   # Gets or generates training set
   def get_or_init_training_set(self):
@@ -151,5 +164,6 @@ class training_file(cnn_file_utils):
       shutil.rmtree(training_dir, ignore_errors=True)
       os.mkdir(training_dir)
     tarfile.open(filepath, 'r:gz').extractall(training_dir)
+    self.resize_flower_images(training_dir)
     self.get_persons_set(dest_directory)
     print 'Training set is prepared'

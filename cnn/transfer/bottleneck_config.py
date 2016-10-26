@@ -8,13 +8,14 @@ Configures bottleneck cache for training
 import os
 import random
 
-import numpy as np
-import tensorflow as tf
 from tensorflow.python.platform import gfile
 
+from cnn.transfer.config_image_net import MAX_NUM_IMAGES_PER_CLASS
 import cnn.transfer.config_image_net as config
+import numpy as np
+import tensorflow as tf
 
-# Generates bottleneck on instant image
+
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             bottleneck_tensor):
   """Runs inference on an image to extract the 'bottleneck' summary layer.
@@ -28,13 +29,11 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
   Returns:
     Numpy array of bottleneck values.
   """
-  bottleneck_values = sess.run(
-      bottleneck_tensor,
-      {image_data_tensor: image_data})
+  bottleneck_values = sess.run(bottleneck_tensor,
+                              {image_data_tensor: image_data})
   bottleneck_values = np.squeeze(bottleneck_values)
   
   return bottleneck_values
-
 
 def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
                              category, bottleneck_dir, jpeg_data_tensor,
@@ -87,7 +86,6 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   
   return bottleneck_values
 
-
 def cache_bottlenecks(sess, image_lists, image_dir,
                       bottleneck_dir, jpeg_data_tensor, bottleneck_tensor):
   """Ensures all the training, testing, and validation bottlenecks are cached.
@@ -124,7 +122,6 @@ def cache_bottlenecks(sess, image_lists, image_dir,
         if how_many_bottlenecks % 100 == 0:
           print(str(how_many_bottlenecks) + ' bottleneck files created.')
 
-
 def get_random_cached_bottlenecks(sess, image_lists, how_many,
                                   category, bottleneck_dir, image_dir,
                                   jpeg_data_tensor, bottleneck_tensor):
@@ -155,7 +152,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many,
   for unused_i in range(how_many):
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
-    image_index = random.randrange(65536)
+    image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
     bottleneck = get_or_create_bottleneck(sess, image_lists, label_name,
                                           image_index, image_dir, category,
                                           bottleneck_dir, jpeg_data_tensor,
@@ -165,8 +162,7 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many,
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
     
-  return bottlenecks, ground_truths
-
+  return (bottlenecks, ground_truths)
 
 def get_random_distorted_bottlenecks(
     sess, image_lists, how_many, category, image_dir, input_jpeg_tensor,
@@ -202,7 +198,7 @@ def get_random_distorted_bottlenecks(
   for unused_i in range(how_many):
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
-    image_index = random.randrange(65536)
+    image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
     image_path = config.get_image_path(image_lists, label_name, image_index,
                                        image_dir, category)
     if not gfile.Exists(image_path):
@@ -221,4 +217,4 @@ def get_random_distorted_bottlenecks(
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
   
-  return bottlenecks, ground_truths
+  return (bottlenecks, ground_truths)

@@ -6,11 +6,22 @@ Configuration for neural network graph
 @author: Levan Tsinadze
 '''
 
+import os.path
+from tensorflow.python.platform import gfile
+import traceback
+
+import cnn.transfer.training_flags_mod as flags
+
+import tensorflow as tf
+
+
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
 # sizes. If you want to adapt this script to work with another model, you will
 # need to update these to reflect the values in the network you're using.
 # pylint: disable=line-too-long
+DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+# pylint: enable=line-too-long
 BOTTLENECK_TENSOR_NAME = 'pool_3/_reshape:0'
 BOTTLENECK_TENSOR_SIZE = 2048
 MODEL_INPUT_WIDTH = 299
@@ -19,26 +30,21 @@ MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
 
-import os.path
-import traceback
+def init_model_file_name():
+  """Initializes serialized model graph file 
+    Returns:
+      file full path
+  """
+  return os.path.join(flags.model_dir, 'classify_image_graph_def.pb')
 
-import tensorflow as tf
-from tensorflow.python.platform import gfile
-
-# Gets graph file
-def init_model_file_name(tr_flags):
-  return os.path.join(tr_flags.model_dir, 'classify_image_graph_def.pb')
-
-# Generates neural network model graph
-def create_inception_graph(tr_flags):
+def create_inception_graph():
   """"Creates a graph from saved GraphDef file and returns a Graph object.
-
-  Returns:
-    Graph holding the trained Inception network, and various tensors we'll be
-    manipulating.
+    Returns:
+      Graph holding the trained Inception network, and various tensors we'll be
+      manipulating.
   """
   with tf.Session() as sess:
-    model_filename = init_model_file_name(tr_flags)
+    model_filename = init_model_file_name()
     with gfile.FastGFile(model_filename, 'rb') as f:
       graph_def = tf.GraphDef()
       graph_def.ParseFromString(f.read())
@@ -50,8 +56,14 @@ def create_inception_graph(tr_flags):
   # Graph components
   return (sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
 
-# List values of graph
 def list_layer_values(values, layer_name):
+  """List All network layers
+    Args:
+      values - layers to filter
+      layer_name - name of layer to list
+    Return:
+      result - retrieved layer by key
+  """
   
   result = None
   
@@ -64,10 +76,15 @@ def list_layer_values(values, layer_name):
     print value
     
   return result
-  
 
-# Lists all layers of network
 def list_layers(sess, layer_name):
+  """List All network layers
+    Args:
+      sess - TensorFlow session
+      layer_name - name of layer to list
+    Return:
+      result - retrieved layer by key
+  """
   
   result = None
   
@@ -81,17 +98,19 @@ def list_layers(sess, layer_name):
   
   return result
   
-
-# Gets network graph layer by name
-def get_layer(tr_flags, layer_name):  
+def get_layer(layer_name):  
   """"Creates a graph from saved GraphDef file and returns a Graph object.
-
+  Args:
+    layer_name - network layer name
   Returns:
-    Graph holding the trained Inception network, and various tensors we'll be
-    manipulating.
+    net_layer - Graph holding the trained Inception network, 
+                and various tensors we'll be manipulating.
   """
+  
+  net_layer = None
+  
   with tf.Session() as sess:
-    model_filename = init_model_file_name(tr_flags)
+    model_filename = init_model_file_name()
     with gfile.FastGFile(model_filename, 'rb') as f:
       graph_def = tf.GraphDef()
       graph_def.ParseFromString(f.read())
@@ -100,5 +119,8 @@ def get_layer(tr_flags, layer_name):
         net_layer = list_layers(sess, layer_name)
         print net_layer
       except Exception:
-        print 'Error occured'
+        print 'Error occurred'
         traceback.print_exc()
+  
+  return net_layer
+        

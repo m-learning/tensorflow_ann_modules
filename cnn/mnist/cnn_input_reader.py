@@ -19,13 +19,13 @@ n_input = 784  # MNIST data input (img shape: 28*28)
 # Image reader for recognition
 def getBestShift(img):
     
-    cy, cx = ndimage.measurements.center_of_mass(img)
+  cy, cx = ndimage.measurements.center_of_mass(img)
 
-    rows, cols = img.shape
-    shiftx = np.round(cols / 2.0 - cx).astype(int)
-    shifty = np.round(rows / 2.0 - cy).astype(int)
+  rows, cols = img.shape
+  shiftx = np.round(cols / 2.0 - cx).astype(int)
+  shifty = np.round(rows / 2.0 - cy).astype(int)
 
-    return shiftx, shifty
+  return shiftx, shifty
 
 # Shifts image
 def shift(img, sx, sy):

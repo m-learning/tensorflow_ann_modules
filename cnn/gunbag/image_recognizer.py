@@ -12,7 +12,7 @@ from __future__ import print_function
 
 import sys
 
-from cnn.flomen.cnn_files import training_file
+from cnn.gunbag.cnn_files import training_file
 from cnn.transfer.general_recognizer import retrained_recognizer
 
 

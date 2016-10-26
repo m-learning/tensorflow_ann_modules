@@ -13,7 +13,9 @@ from cnn.datasets import imagenet
 from cnn.flomen.cnn_files import training_file as flomen_files
 import cnn.nets.run_network as general_network
 from cnn.preprocessing.vgg_preprocessing import preprocess_image
+from cnn.vgg import vgg_resizer
 import cnn.vgg.vgg as vgg
+from cnn.vgg.vgg_resizer import vgg_image_resizer
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -22,7 +24,7 @@ import tensorflow as tf
 slim = tf.contrib.slim
 
 batch_size = 1
-height, width = 224, 224
+height, width = vgg_resizer.vgg_dim, vgg_resizer.vgg_dim
 network_interface = vgg.vgg_16_fc
 
 # Runs VGG Module
@@ -91,6 +93,37 @@ class vgg_interface(object):
       
               _, predictions = sess.run([test_image, end_interface])
               self.print_answer(predictions)
+              
+  def run_resized(self, image_path, resized_path):
+    
+    resizer = vgg_image_resizer()
+    resizer.read_resize_write(image_path, resized_path)
+    
+    with tf.Graph().as_default():
+
+      with slim.arg_scope(vgg.vgg_arg_scope()):
+          inputs = tf.random_uniform((batch_size, height, width, 3))
+          end_interface = general_network.interface_function(inputs,
+                                                             num_classes=1000,
+                                                             is_training=False)
+          print resized_path
+          print self.checkpoint_dir
+          
+          print end_interface
+          init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
+                                                   slim.get_model_variables(general_network.network_name))
+          with tf.Session() as sess:
+              
+              init_fn(sess)
+      
+              test_image_file = tf.gfile.FastGFile(resized_path, 'rb').read()
+              test_image = tf.image.decode_jpeg(test_image_file, channels=3)
+              test_image = preprocess_image(test_image, height, width)
+      
+              logits, predictions = sess.run([test_image, end_interface])
+              print logits
+              print predictions
+              self.print_answer(predictions)
   
   # Runs image classifier
   def run_scaled(self, image_path):
@@ -126,7 +159,8 @@ class vgg_interface(object):
               
 if __name__ == '__main__':
   
-  cnn_file = flomen_files()
+  cnn_file = flomen_files(vgg_image_resizer())
   app_interface = vgg_interface(cnn_file, 'vgg_16.ckpt')
   test_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'test_image.jpg')
-  app_interface.run_interface(test_file_path)
+  resized_file_path = cnn_file.join_path(cnn_file.get_or_init_test_dir(), 'resized_image.jpg')
+  app_interface.run_resized(test_file_path, test_file_path)

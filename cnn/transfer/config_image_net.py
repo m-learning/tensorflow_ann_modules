@@ -1,10 +1,14 @@
-'''
+"""
 Created on Jul 15, 2016
 
 Configures parameters before retraining
 
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import glob
 import hashlib
@@ -12,13 +16,12 @@ import os.path
 import re
 import sys
 import tarfile
-
-from six.moves import urllib
-
-import tensorflow as tf
 from tensorflow.python.platform import gfile
 
-import cnn.transfer.training_flags_mod as training_flags_mod
+import cnn.transfer.training_flags_mod as flags
+from six.moves import urllib
+import tensorflow as tf
+
 
 # These are all parameters that are tied to the particular model architecture
 # we're using for Inception v3. These include things like tensor names and their
@@ -26,8 +29,8 @@ import cnn.transfer.training_flags_mod as training_flags_mod
 # need to update these to reflect the values in the network you're using.
 # pylint: disable=line-too-long
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
-# Creates images list
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
   """Builds a list of training images from the file system.
 
@@ -89,7 +92,9 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
       # itself, so we do a hash of that and then use that to generate a
       # probability value that we use to assign it.
       hash_name_hashed = hashlib.sha1(hash_name.encode('utf-8')).hexdigest()
-      percentage_hash = (int(hash_name_hashed, 16) % (65536)) * (100 / 65535.0)
+      percentage_hash = ((int(hash_name_hashed, 16) % 
+                         (MAX_NUM_IMAGES_PER_CLASS + 1)) * 
+                         (100.0 / MAX_NUM_IMAGES_PER_CLASS))
       if percentage_hash < validation_percentage:
         validation_images.append(base_name)
       elif percentage_hash < (testing_percentage + validation_percentage):
@@ -105,7 +110,6 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     
   return result
 
-# Gets training data path
 def get_image_path(image_lists, label_name, index, image_dir, category):
   """"Returns a path to an image for a label at the given index.
 
@@ -138,7 +142,6 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
   
   return full_path
 
-# Calculates bottleneck path
 def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
                         category):
   """"Returns a path to a bottleneck file for a label at the given index.
@@ -158,21 +161,24 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
   return get_image_path(image_lists, label_name, index, bottleneck_dir,
                         category) + '.txt'
 
-# Downloads and extracts trained model
 def maybe_download_and_extract():
   """Download and extract model tar file.
 
   If the pretrained model we're using doesn't already exist, this function
   downloads it from the TensorFlow.org website and unpacks it into a directory.
   """
-  dest_directory = tr_flags.model_dir
+  dest_directory = flags.model_dir
   if not os.path.exists(dest_directory):
     os.makedirs(dest_directory)
   filename = DATA_URL.split('/')[-1]
   filepath = os.path.join(dest_directory, filename)
   if not os.path.exists(filepath):
-
     def _progress(count, block_size, total_size):
+      """Downloads file with progress
+        Args:
+          block_size - download block size
+          total_size - full file size
+      """
       sys.stdout.write('\r>> Downloading %s %.1f%%' % 
                        (filename,
                         float(count * block_size) / float(total_size) * 100.0))
@@ -186,7 +192,6 @@ def maybe_download_and_extract():
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
   tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
-
 def ensure_dir_exists(dir_name):
   """Makes sure the folder exists on disk.
 
@@ -196,22 +201,22 @@ def ensure_dir_exists(dir_name):
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)
 
-# Initializing training flags
 def init_flags_only(tr_file):
-  
-  global tr_flags
-  
+  """Configures trained checkpoints
+    Args:
+      tr_file - utility for files management
+  """
   # Training flags
-  tr_flags = training_flags_mod.init_flaged_data(tr_file)
-  
-  return tr_flags
+  flags.init_flaged_data(tr_file)
 
-# Initializes training flags and files
 def init_flags_and_files(tr_file):
+  """Initializes training flags
+    Args:
+      tr_file - file utility manager
+  """
   
   # Training flags
-  tr_flags = init_flags_only(tr_file)
+  init_flags_only(tr_file)
   # Gets training set for neural network
   tr_file.get_or_init_training_set()
   
-  return tr_flags

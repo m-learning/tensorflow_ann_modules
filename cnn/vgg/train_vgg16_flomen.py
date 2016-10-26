@@ -16,12 +16,13 @@ from cnn.datasets import download_and_convert_flomen
 from cnn.flomen.cnn_files import training_file
 from cnn.nets.config_parameters import train_and_eval_config
 import cnn.vgg.vgg_constants as constants
+from cnn.vgg.vgg_resizer import vgg_image_resizer
 
 
 # Data set name
 dataset_name = 'flomen'
 
-training_parameters = (training_file(), dataset_name,
+training_parameters = (training_file(vgg_image_resizer()), dataset_name,
                        download_and_convert_flomen,
                        None, None,
                        constants.checkpoint_file,

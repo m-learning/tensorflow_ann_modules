@@ -9,11 +9,16 @@ from cnn_methods import cnn_functions
 import tensorflow as tf
 
 
-# Recognizer class
 class image_recognizer:
+  """Recognizer class"""
     
-  # Recognizes digit from file
   def recognize_image(self, image_file_path):
+    """Recognizes digit from file
+      Args:
+        image_file_path - path for image file
+      Return:
+        Recognized digit
+    """
   
     cnn_fnc = cnn_functions()
     pred = cnn_fnc.conv2d
