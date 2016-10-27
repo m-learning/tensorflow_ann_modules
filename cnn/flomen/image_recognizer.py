@@ -16,8 +16,8 @@ from cnn.flomen.cnn_files import training_file
 from cnn.transfer.general_recognizer import retrained_recognizer
 
 
-# Recognizes image thru trained neural networks
 class image_recognizer(retrained_recognizer):
+  """Recognizes image thru trained neural networks"""
   
   def __init__(self):
     tr_file = training_file()
@@ -25,6 +25,5 @@ class image_recognizer(retrained_recognizer):
 
 if __name__ == '__main__':
   """Runs image recognition"""
-  
   img_recognizer = image_recognizer()
   img_recognizer.run_inference_on_image(sys.argv)

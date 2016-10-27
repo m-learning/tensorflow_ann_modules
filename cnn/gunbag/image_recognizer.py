@@ -25,6 +25,5 @@ class image_recognizer(retrained_recognizer):
 
 if __name__ == '__main__':
   """Runs image recognition"""
-  
   img_recognizer = image_recognizer()
   img_recognizer.run_inference_on_image(sys.argv)

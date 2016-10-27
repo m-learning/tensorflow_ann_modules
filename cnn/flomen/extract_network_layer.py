@@ -15,14 +15,15 @@ from cnn.transfer.extract_layer import layer_features
 import tensorflow as tf
 
 
-# Training and testing
 def extract_net_main(_):
+  """Extracts network layer for 
+     training and testing"""
   
   tr_files = training_file()
   features = layer_features('pool_3:0')
   features.extract_layer(tr_files)
   
   
-# Runs layer extractor
 if __name__ == '__main__':
+  """Runs layer extractor"""
   tf.app.run(extract_net_main)
