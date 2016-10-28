@@ -7,7 +7,6 @@ Configures bottleneck cache for training
 '''
 import os
 import random
-
 from tensorflow.python.platform import gfile
 
 from cnn.transfer.config_image_net import MAX_NUM_IMAGES_PER_CLASS

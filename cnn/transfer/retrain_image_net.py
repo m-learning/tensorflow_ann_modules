@@ -113,8 +113,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
         bottleneck_tensor, shape=[None, graph_config.BOTTLENECK_TENSOR_SIZE],
         name='BottleneckInputPlaceholder')
 
-    ground_truth_input = tf.placeholder(tf.float32,
-                                        [None, class_count],
+    ground_truth_input = tf.placeholder(tf.float32, [None, class_count],
                                         name='GroundTruthInput')
   # Organizing the following ops as `final_training_ops` so they're easier
   # to see in TensorBoard
@@ -145,8 +144,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
     train_step = tf.train.GradientDescentOptimizer(
       flags.learning_rate).minimize(cross_entropy_mean)
 
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input,
-          final_tensor)
+  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
   """Inserts the operations we need to evaluate the accuracy of our results.
@@ -221,7 +219,6 @@ def iterate_and_train(sess, iteration_parameters):
    
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
   (merged, train_writer, validation_writer) = logger.init_writer(sess)
-   
   
   # Run the training for as many cycles as requested on the command line.
   for i in range(flags.how_many_training_steps):
@@ -343,13 +340,13 @@ def prepare_iteration_parameters(prepared_parameters):
   (sess, do_distort_images,
    distorted_jpeg_data_tensor, distorted_image_tensor) = distort.distort_images(prepared_parameters)
   # Add the new layer that we'll be training.
+  num_classes = len(image_lists.keys())  # Calculates number of output classes
   (train_step, cross_entropy, bottleneck_input,
-   ground_truth_input, final_tensor) = add_final_training_ops(len(image_lists.keys()),
+   ground_truth_input, final_tensor) = add_final_training_ops(num_classes,
                                                               flags.final_tensor_name,
                                                               bottleneck_tensor)
   # Set up all our weights to their initial default values.
   prepare_session(sess)
-
   # Create the operations we need to evaluate the accuracy of our new layer.
   evaluation_step = add_evaluation_step(final_tensor, ground_truth_input)
 
@@ -370,7 +367,6 @@ def validate_test_and_save(sess, graph, validation_parameters):
   
   (_, image_lists, _, _, _, _, _, _, _, _, _, _) = validation_parameters
   test_trained_network(sess, validation_parameters)
-
   # Write out the trained graph and labels with the weights stored as constants.
   save_trained_parameters(sess, graph, image_lists.keys())
 

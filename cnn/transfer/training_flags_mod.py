@@ -75,16 +75,14 @@ def _set_training_flags(tr_files):
       tr_files - training files utility
   """
 
-  global prnt_dir, image_dir, output_graph
-  global output_labels, model_dir, bottleneck_dir
+  global prnt_dir, image_dir, output_graph, \
+         output_labels, model_dir, bottleneck_dir
   # Training data and cache directories
   prnt_dir = tr_files.get_data_general_directory()
-  
   # Input and output file flags.
   image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
   output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
   output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
-  
   # File-system cache locations.
   model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
                                   # imagenet_synset_to_human_label_map.txt, and
