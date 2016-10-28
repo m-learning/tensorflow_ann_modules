@@ -14,7 +14,7 @@ from resizeimage import resizeimage
 class pillow_resizer(object):
   """Image resizing with image "Pillow" resize utilities"""
   
-  def ___init___(self, height, width=None):
+  def __init__(self, height, width=None):
     self.height = height
     if width is None:
       self.width = height
@@ -31,3 +31,12 @@ class pillow_resizer(object):
         resized image
     """
     return resizeimage.resize_thumbnail(img, self.size)
+  
+  def resize_cover(self, img):
+    """Resizes passed image with "cover" method
+      Args: 
+        img = image
+      Returns:
+        resized image
+    """
+    return resizeimage.resize_cover(img, self.size)

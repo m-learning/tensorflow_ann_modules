@@ -77,7 +77,7 @@ class image_converter(object):
     """
     
     if resize_image:
-      img = img = self.pillow_resizer.resize_thumbnail(im)
+      img = self.resizer.resize_thumbnail(im)
     else:
       img = im
     
