@@ -74,4 +74,4 @@ class training_file(cnn_file_utils):
     """Gets or generates training set"""
     self.get_or_init_files_path()
     self.get_or_init_data_directory()
-    print 'Training set is prepared'
+    print('Training set is prepared')

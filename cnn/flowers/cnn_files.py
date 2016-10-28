@@ -65,7 +65,7 @@ class training_file(cnn_file_utils):
         sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
         sys.stdout.flush()
       filepath, _ = urllib.request.urlretrieve(TRAINIG_SET_URL, filepath, _progress)
-    print()
+    print("Get statinfo")
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
     training_dir = self.get_training_directory()

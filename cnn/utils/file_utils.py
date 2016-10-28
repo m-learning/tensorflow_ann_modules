@@ -136,8 +136,13 @@ class cnn_file_utils(files_and_path_utils):
     super(cnn_file_utils, self).__init__(parent_cnn_dir)
     self.image_resizer = image_resizer
     
-    # Reads image with or without resizing
   def read_image(self, pr):
+    """Reads image with or without resizing
+     Args:
+      pr - image path
+     Returns:
+      im - resized image
+    """
     
     if self.image_resizer is None:
       im = Image.open(pr)
