@@ -1,9 +1,15 @@
-'''
+"""
 Created on Oct 17, 2016
 Image resizing for VGG network
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import cv2
+
 
 class image_resizer(object):
   """Resizes images for VGG network"""

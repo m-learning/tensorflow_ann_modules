@@ -10,6 +10,8 @@ import os
 import sys
 import traceback
 
+from cnn.utils.pillow_resizing import pillow_resizer
+
 
 try:
   from PIL import Image
@@ -17,10 +19,13 @@ except ImportError:
   print "Importing Image from PIL threw exception"
   import Image
 
+resize_image = False
 verbose_error = None
 
 IMAGE_RGB_FORMAT = 'RGB'
 IMAGE_SAVE_FORMAT = 'jpeg'
+
+IMAGE_SIZE = 299
 
 class image_converter(object):
   """Utility class for image manipulation"""
@@ -29,6 +34,7 @@ class image_converter(object):
     self.from_parent = from_parent
     self.to_dir = to_dir
     self.prefx = prefx
+    self.resizer = pillow_resizer(IMAGE_SIZE)
     
   def convert_image(self, im):
     """Converts PNG images to JPG format
@@ -66,10 +72,11 @@ class image_converter(object):
     """
     try:
       file_type = imghdr.what(pr)
+      im = Image.open(pr)
       if file_type in ('jpg:', 'jpeg', 'JPG:', 'JPEG'):
+        img = pillow_resizer.
         self.write_file(pr, i)
       elif file_type in ('png', 'PNG'):
-        im = Image.open(pr)
         jpg_im = self.convert_image(im)
         self.write_file(pr, i, jpg_im)
         print "Image is converted" + pr + "\n"
@@ -102,8 +109,11 @@ if __name__ == '__main__':
   prefx = call_args[3]
   
   if len(call_args) > 4:
-    verbose_error = True
+    resize_image = True
   
+  if len(call_args) > 5:
+    verbose_error = True
+    
   from_dirs_list = os.listdir(from_dirs)
   print from_dirs
   print from_dirs_list

@@ -1,10 +1,14 @@
-'''
+"""
 Created on Jul 6, 2016
 
 Utility class for training test and validation data files
 
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import os
 import types
@@ -13,7 +17,7 @@ import types
 try:
   from PIL import Image
 except ImportError:
-  print "Importing Image from PIL threw exception"
+  print("Importing Image from PIL threw exception")
   import Image
 
 
