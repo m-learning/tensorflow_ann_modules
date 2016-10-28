@@ -65,7 +65,7 @@ class image_converter(object):
       im = Image.open(pr)
     else:
       im = jpg_im
-    print im
+    print(im)
     im.save(n_im)
     
   def resize_if_nedded(self, im):
@@ -99,7 +99,7 @@ class image_converter(object):
         jpg_im = self.convert_image(im)
         img = self.resize_if_nedded(jpg_im)
         self.write_file(pr, i, img)
-        print "Image is converted" + pr + "\n"
+        print("Image is converted" , pr , "\n")
       else:
         print('incorrect file type - ', file_type)
     except IOError:
@@ -116,7 +116,7 @@ class image_converter(object):
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:
       scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')
-      print scan_dir
+      print(scan_dir)
       for pr in glob.glob(scan_dir):
         self.write_file_quietly(pr, i)
         i += 1
@@ -135,10 +135,10 @@ if __name__ == '__main__':
     verbose_error = True
     
   from_dirs_list = os.listdir(from_dirs)
-  print from_dirs
-  print from_dirs_list
-  print to_dir
-  print prefx
+  print(from_dirs)
+  print(from_dirs_list)
+  print(to_dir)
+  print(prefx)
   
   converter = image_converter(from_dirs, to_dir, prefx)
   converter.migrate_images()

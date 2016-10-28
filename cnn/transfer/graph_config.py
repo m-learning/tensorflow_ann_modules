@@ -11,9 +11,8 @@ from __future__ import division
 from __future__ import print_function
 
 import os.path
-import traceback
-
 from tensorflow.python.platform import gfile
+import traceback
 
 import cnn.transfer.training_flags_mod as flags
 import tensorflow as tf
@@ -72,12 +71,12 @@ def list_layer_values(values, layer_name):
   result = None
   
   for value in values:
-    print type(value)
-    print value._op.name
-    print value.name
+    print(type(value))
+    print(value._op.name)
+    print(value.name)
     if value.name == layer_name:
       result = value
-    print value
+    print(value)
     
   return result
 
@@ -93,7 +92,7 @@ def list_layers(sess, layer_name):
   result = None
   
   layer_ops = sess.graph.get_operations()
-  print layer_ops
+  print(layer_ops)
   for layer_op in layer_ops:
     values = layer_op.values()
     result = list_layer_values(values, layer_name)
@@ -121,9 +120,9 @@ def get_layer(layer_name):
       tf.import_graph_def(graph_def)
       try:
         net_layer = list_layers(sess, layer_name)
-        print net_layer
+        print(net_layer)
       except Exception:
-        print 'Error occurred'
+        print('Error occurred')
         traceback.print_exc()
   
   return net_layer
