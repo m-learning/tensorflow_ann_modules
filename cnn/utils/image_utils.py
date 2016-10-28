@@ -1,8 +1,12 @@
-'''
+"""
 Created on Oct 19, 2016
 Utility class for images
 @author: levan-lev
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import glob
 import imghdr
@@ -16,7 +20,7 @@ from cnn.utils.pillow_resizing import pillow_resizer
 try:
   from PIL import Image
 except ImportError:
-  print "Importing Image from PIL threw exception"
+  print("Importing Image from PIL threw exception")
   import Image
 
 resize_image = False
@@ -64,6 +68,21 @@ class image_converter(object):
     print im
     im.save(n_im)
     
+  def resize_if_nedded(self, im):
+    """Resizes passed image if configured
+      Args:
+        im - image
+      Returns:
+        img - resized image
+    """
+    
+    if resize_image:
+      img = img = self.pillow_resizer.resize_thumbnail(im)
+    else:
+      img = im
+    
+    return img
+    
   def write_file_quietly(self, pr, i):
     """Converts and writes file and logs errors
       Args:
@@ -74,11 +93,12 @@ class image_converter(object):
       file_type = imghdr.what(pr)
       im = Image.open(pr)
       if file_type in ('jpg:', 'jpeg', 'JPG:', 'JPEG'):
-        img = pillow_resizer.
-        self.write_file(pr, i)
+        img = self.resize_if_nedded(im)
+        self.write_file(pr, i, img)
       elif file_type in ('png', 'PNG'):
         jpg_im = self.convert_image(im)
-        self.write_file(pr, i, jpg_im)
+        img = self.resize_if_nedded(jpg_im)
+        self.write_file(pr, i, img)
         print "Image is converted" + pr + "\n"
       else:
         print('incorrect file type - ', file_type)

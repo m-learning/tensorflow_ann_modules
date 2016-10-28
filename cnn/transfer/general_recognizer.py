@@ -1,10 +1,10 @@
-'''
+"""
 Created on Jun 28, 2016
 
 Runs retrained neural network for recognition
 
 @author: Levan Tsinadze
-'''
+"""
 
 import numpy as np
 import tensorflow as tf

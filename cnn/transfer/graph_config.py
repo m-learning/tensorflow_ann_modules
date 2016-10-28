@@ -1,14 +1,19 @@
-'''
+"""
 Created on Jul 15, 2016
 
 Configuration for neural network graph
 
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import os.path
-from tensorflow.python.platform import gfile
 import traceback
+
+from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags_mod as flags
 import tensorflow as tf
