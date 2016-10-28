@@ -49,7 +49,7 @@ class retrained_recognizer(object):
       Args:
         sess - TensorFlow session
         image_parameter - image for prediction
-      Return:
+      Returns:
         predictions - recognition result on image
     """
     
@@ -68,7 +68,7 @@ class retrained_recognizer(object):
       Args:
         sess - TensorFlow session
         image_parameter - image for prediction
-      Return:
+      Returns:
         answer - refined top recognition result on image
     """
     # Decorates predictions
@@ -89,7 +89,7 @@ class retrained_recognizer(object):
     """Initializes image path to recognize
       Args:
         sys_params - runtime parameters
-      Return:
+      Returns:
         image file full path
     """
     
@@ -104,7 +104,7 @@ class retrained_recognizer(object):
     """Runs network interface on image
       Args:
         sys_parameters - parameters
-      Return:
+      Returns:
         answer - top predicted data
     """
     # Gets test image path

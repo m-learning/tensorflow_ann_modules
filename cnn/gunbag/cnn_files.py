@@ -12,6 +12,7 @@ import shutil
 
 from cnn.utils.file_utils import cnn_file_utils
 
+
 # Files and directory constant parameters
 DATASET_DIR = '/home/levan-lev/Documents/ann/gunbag'
 
@@ -24,7 +25,7 @@ class training_file(cnn_file_utils):
   
   def get_dataset_dir(self):
     """Method to get data set directory
-      Return:
+      Returns:
         data set directory
     """
     return super(training_file, self).get_training_directory()
@@ -53,7 +54,7 @@ class training_file(cnn_file_utils):
       Args:
         dest_directory - destination directory
         zip_ref - archive file reference
-      Return:
+      Returns:
         dataset_dir - dataset directory
     """
     

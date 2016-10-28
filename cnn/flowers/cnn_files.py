@@ -28,7 +28,7 @@ class training_file(cnn_file_utils):
     
   def get_dataset_dir(self):
     """Method to get data set directory
-      Return:
+      Returns:
         data set directory
     """
     return super(training_file, self).get_data_directory()

@@ -274,7 +274,7 @@ def prepare_parameters(tr_file):
   """Prepares training parameters
     Args:
       tr_file - file management utility
-    Return:
+    Returns:
       graph - network graph
       bottleneck_tensor - bottleneck as tensor
       jpeg_data_tensor - image as tensor
@@ -318,7 +318,7 @@ def prepare_iteration_parameters(prepared_parameters):
     Args:
       prepared_parameters - prepared training 
       parameters
-    Return:
+    Returns:
       sess - TensorFlow session
       graph - network graph
       do_distort_images - distort flag

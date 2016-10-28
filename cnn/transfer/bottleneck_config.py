@@ -68,8 +68,8 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
                                         bottleneck_dir, category)
   if not os.path.exists(bottleneck_path):
     print('Creating bottleneck at ' + bottleneck_path)
-    image_path = config.get_image_path(image_lists, label_name, index,
-                                       image_dir, category)
+    path_parameters = (image_lists, label_name, index, image_dir, category)
+    image_path = config.get_image_path(path_parameters)
     if not gfile.Exists(image_path):
       tf.logging.fatal('File does not exist %s', image_path)
     image_data = gfile.FastGFile(image_path, 'rb').read()
@@ -199,8 +199,9 @@ def get_random_distorted_bottlenecks(
     label_index = random.randrange(class_count)
     label_name = list(image_lists.keys())[label_index]
     image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
-    image_path = config.get_image_path(image_lists, label_name, image_index,
-                                       image_dir, category)
+    path_parameters = (image_lists, label_name, image_index,
+                       image_dir, category)
+    image_path = config.get_image_path(path_parameters)
     if not gfile.Exists(image_path):
       tf.logging.fatal('File does not exist %s', image_path)
     jpeg_data = gfile.FastGFile(image_path, 'rb').read()

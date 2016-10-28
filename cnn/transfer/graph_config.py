@@ -11,7 +11,6 @@ from tensorflow.python.platform import gfile
 import traceback
 
 import cnn.transfer.training_flags_mod as flags
-
 import tensorflow as tf
 
 
@@ -61,7 +60,7 @@ def list_layer_values(values, layer_name):
     Args:
       values - layers to filter
       layer_name - name of layer to list
-    Return:
+    Returns:
       result - retrieved layer by key
   """
   
@@ -82,7 +81,7 @@ def list_layers(sess, layer_name):
     Args:
       sess - TensorFlow session
       layer_name - name of layer to list
-    Return:
+    Returns:
       result - retrieved layer by key
   """
   

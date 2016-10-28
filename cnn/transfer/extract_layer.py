@@ -21,7 +21,7 @@ class layer_features(object):
     """Extracts network layer
       Args:
         tr_file - training file manager
-      Return:
+      Returns:
         net_layer - Graph holding the trained Inception network, 
                     and various tensors we'll be manipulating.
     """

@@ -110,7 +110,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     
   return result
 
-def get_image_path(image_lists, label_name, index, image_dir, category):
+def get_image_path(path_parameters):
   """"Returns a path to an image for a label at the given index.
 
   Args:
@@ -127,6 +127,7 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
     File system path string to an image that meets the requested parameters.
 
   """
+  (image_lists, label_name, index, image_dir, category) = path_parameters
   if label_name not in image_lists:
     tf.logging.fatal('Label does not exist %s.', label_name)
   label_lists = image_lists[label_name]
@@ -158,8 +159,11 @@ def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
   Returns:
     File system path string to an image that meets the requested parameters.
   """
-  return get_image_path(image_lists, label_name, index, bottleneck_dir,
-                        category) + '.txt'
+  path_parameters = (image_lists, label_name, index, bottleneck_dir, category)
+  image_path = get_image_path(path_parameters)
+  bottleneck_path = image_path + '.txt'
+  
+  return bottleneck_path
 
 def maybe_download_and_extract():
   """Download and extract model tar file.

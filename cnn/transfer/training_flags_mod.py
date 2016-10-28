@@ -107,7 +107,7 @@ def init_flaged_data(tr_files):
     training and testing
     Args:
       tr_files - trainign files management utility
-    Return:
+    Returns:
       training_flags configured instance
   """
   _set_training_flags(tr_files)

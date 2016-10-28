@@ -50,7 +50,7 @@ class training_file(cnn_file_utils):
   
   def get_dataset_dir(self):
     """Method to get data set directory
-      Return:
+      Returns:
         data set directory
     """
     return super(training_file, self).get_training_directory()
@@ -78,7 +78,7 @@ class training_file(cnn_file_utils):
       Args:
         dest_directory - destination directory
         zip_ref - reference to zip file
-      Return:
+      Returns:
         pers_dir - persons directory
     """
     
@@ -95,7 +95,7 @@ class training_file(cnn_file_utils):
       Args:
         dest_directory - destination directory
         zip_ref - reference to zip file
-      Return:
+      Returns:
         pers_dir - persons directory
     """
     
@@ -112,7 +112,7 @@ class training_file(cnn_file_utils):
       Args:
         dest_directory - destination directory
         zip_ref - reference to zip file
-      Return:
+      Returns:
         pers_dir - persons directory    
     """
     
