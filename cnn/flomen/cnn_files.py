@@ -203,4 +203,4 @@ class training_file(cnn_file_utils):
     tarfile.open(filepath, 'r:gz').extractall(training_dir)
     self.resize_flower_images(training_dir)
     self.get_persons_set(dest_directory)
-    print 'Training set is prepared'
+    print('Training set is prepared')

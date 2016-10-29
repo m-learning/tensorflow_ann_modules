@@ -209,8 +209,11 @@ class cnn_file_utils(files_and_path_utils):
   def get_or_init_files_path(self):
     return self.join_path(self.init_files_directory, WEIGHTS_FILE)
       
-  # Gets training data  / parameters directory path
   def get_or_init_labels_path(self):
+    """Gets training data  / parameters directory path
+      Returns:
+        joined path to labels
+    """
     return self.join_path(self.init_files_directory, LABELS_FILE)
 
   # Gets directory for test images

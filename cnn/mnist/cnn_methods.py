@@ -1,19 +1,22 @@
-'''
+"""
 Created on Jun 18, 2016
 
 Initializes convolutional and pooling layers for network
 
 @author: Levan Tsinadze
-'''
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-from cnn_parameters import cnn_weights
-import cnn_parameters as pr
+from cnn.mnist.cnn_parameters import cnn_weights
+import cnn.mnist.cnn_parameters as pr
 import tensorflow as tf
 
 
 STRIDE = 'SAME'
 
-class cnn_functions:
+class cnn_functions(object):
   """CNN network for MNIST classification"""
     
   def __init__(self):

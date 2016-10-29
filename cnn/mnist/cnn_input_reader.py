@@ -1,8 +1,12 @@
-'''
+"""
 Created on Jun 17, 2016
 
 @author: Levan Tsinadze
-'''
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import math
 from scipy import ndimage
 
@@ -45,7 +49,7 @@ def read_input_file(image_file_path):
   gray = cv2.resize(255 - gray, (28, 28))
   # better black and white version
   (thresh, gray) = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-  print thresh
+  print(thresh)
 
   while np.sum(gray[0]) == 0:
       gray = gray[1:]

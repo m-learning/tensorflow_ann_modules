@@ -57,8 +57,8 @@ from __future__ import print_function
 from sys import argv
 
 from cnn.gunbag.cnn_files import training_file
+from cnn.transfer import retrain_image_net
 from cnn.transfer import training_flags_mod as flags
-import cnn.transfer.retrain_image_net as retrain_image_net
 import tensorflow as tf
 
 

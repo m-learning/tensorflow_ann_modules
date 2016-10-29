@@ -1,10 +1,13 @@
-'''
+"""
 Created on Jun 18, 2016
 
 Weights and biases for network
 
 @author: Levan Tsinadze
-'''
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import tensorflow as tf
 
@@ -15,7 +18,7 @@ N_CLASSES = 10  # MNIST total classes (0-9 digits)
 CNN_DROPOUT = 0.75  # Dropout, probability to keep units
 
 # Defile weights and biases
-class cnn_weights:
+class cnn_weights(object):
   """Initializes weights and biases"""
     
   def __init__(self):

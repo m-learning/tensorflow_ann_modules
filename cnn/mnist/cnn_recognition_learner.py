@@ -1,14 +1,17 @@
-'''
+"""
 Created on Jun 18, 2016
 
 @author: Levan Tsinadze
-'''
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from tensorflow.examples.tutorials.mnist import input_data
 
-from cnn_files import training_file
-from cnn_methods import cnn_functions
-import cnn_parameters
+from cnn.mnist import cnn_parameters
+from cnn.mnist.cnn_files import training_file
+from cnn.mnist.cnn_methods import cnn_functions
 import tensorflow as tf
 
 
@@ -18,7 +21,7 @@ training_iters = 200000
 batch_size = 128
 display_step = 10
 
-class cnn_learner:
+class cnn_learner(object):
   """Training methods"""
     
   def __init__(self):
@@ -67,19 +70,19 @@ class cnn_learner:
                 loss, acc = sess.run([self.cost, self.accuracy], feed_dict={self.cnn_fnc.x: batch_x,
                                                                   self.cnn_fnc.y: batch_y,
                                                                   self.cnn_fnc.keep_prob: 1.})
-                print "Iter " + str(step * batch_size) + ", Minibatch Loss= " + \
+                print("Iter " + str(step * batch_size) + ", Minibatch Loss= " + \
                       "{:.6f}".format(loss) + ", Training Accuracy= " + \
-                      "{:.5f}".format(acc)
+                      "{:.5f}".format(acc))
             step += 1
-        print "Optimization Finished!"
+        print("Optimization Finished!")
         save_path = saver.save(sess, parameters_path)
-        print "Model saved in file: %s" % save_path
+        print("Model saved in file: %s" % save_path)
     
         # Calculate accuracy for 256 mnist test images
-        print "Testing Accuracy:", \
+        print ("Testing Accuracy:", \
             sess.run(self.accuracy, feed_dict={self.cnn_fnc.x: mnist.test.images[:256],
                                           self.cnn_fnc.y: mnist.test.labels[:256],
-                                          self.cnn_fnc.keep_prob: 1.})
+                                          self.cnn_fnc.keep_prob: 1.}))
                 
 def main():
   """Runs training with graph initialization"""
