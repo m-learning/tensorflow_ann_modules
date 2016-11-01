@@ -11,7 +11,7 @@ from __future__ import print_function
 import os
 from tempfile import gettempdir
 
-import cnn.transfer.training_flags_mod as flags
+import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 

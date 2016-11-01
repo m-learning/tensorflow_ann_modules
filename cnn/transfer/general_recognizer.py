@@ -20,9 +20,9 @@ DECODE_KEY = 'DecodeJpeg/contents:0'
 class retrained_recognizer(object):
   """Class to run recognition on trained set"""
   
-  def __init__(self, tr_file):
-    self.tr_file = tr_file
-    self.path_funct = tr_file.get_or_init_test_dir
+  def __init__(self, training_file_const):
+    self.tr_file = training_file_const()
+    self.path_funct = self.tr_file.get_or_init_test_dir
     
 
   def create_graph(self, model_path):

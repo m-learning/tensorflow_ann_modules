@@ -14,7 +14,7 @@ import os.path
 from tensorflow.python.platform import gfile
 import traceback
 
-import cnn.transfer.training_flags_mod as flags
+import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 

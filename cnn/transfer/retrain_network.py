@@ -59,92 +59,22 @@ from datetime import datetime
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
+from  cnn.transfer import graph_config
+from cnn.transfer import dataset_config as dataset
 import cnn.transfer.board_logger as logger
 import  cnn.transfer.bottleneck_config as bottleneck
-import cnn.transfer.config_image_net as config
 import  cnn.transfer.distort_config as distort
-import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.training_flags_mod as flags
+import cnn.transfer.network_config as config
+import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 
 VALID_RESULT_CODE = 0
 ERROR_RESULT_CODE = -1
 
-def variable_summaries(var, name):
-  """Attach a lot of summaries to a Tensor 
-     (for TensorBoard visualization).
-    Args:
-      var - variable
-      name - name of variable
-  """
-  with tf.name_scope('summaries'):
-    mean = tf.reduce_mean(var)
-    tf.scalar_summary('mean/' + name, mean)
-    with tf.name_scope('stddev'):
-      stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
-    tf.scalar_summary('stddev/' + name, stddev)
-    tf.scalar_summary('max/' + name, tf.reduce_max(var))
-    tf.scalar_summary('min/' + name, tf.reduce_min(var))
-    tf.histogram_summary(name, var)
-
-def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
-  """Adds a new softmax and fully-connected layer for training.
-
-  We need to retrain the top layer to identify our new classes, so this function
-  adds the right operations to the graph, along with some variables to hold the
-  weights, and then sets up all the gradients for the backward pass.
-
-  The set up for the softmax and fully-connected layers is based on:
-  https://tensorflow.org/versions/master/tutorials/mnist/beginners/index.html
-
-  Args:
-    class_count: Integer of how many categories of things we're trying to
-    recognize.
-    final_tensor_name: Name string for the new final node that produces results.
-    bottleneck_tensor: The output of the main CNN graph.
-
-  Returns:
-    The tensors for the training and cross entropy results, and tensors for the
-    bottleneck input and ground truth input.
-  """
-  with tf.name_scope('input'):
-    bottleneck_input = tf.placeholder_with_default(
-        bottleneck_tensor, shape=[None, graph_config.BOTTLENECK_TENSOR_SIZE],
-        name='BottleneckInputPlaceholder')
-
-    ground_truth_input = tf.placeholder(tf.float32, [None, class_count],
-                                        name='GroundTruthInput')
-  # Organizing the following ops as `final_training_ops` so they're easier
-  # to see in TensorBoard
-  layer_name = 'final_training_ops'
-  with tf.name_scope(layer_name):
-    with tf.name_scope('weights'):
-      layer_weights = tf.Variable(tf.truncated_normal([graph_config.BOTTLENECK_TENSOR_SIZE, class_count],
-                                                       stddev=0.001), name='final_weights')
-      variable_summaries(layer_weights, layer_name + '/weights')
-    with tf.name_scope('biases'):
-      layer_biases = tf.Variable(tf.zeros([class_count]), name='final_biases')
-      variable_summaries(layer_biases, layer_name + '/biases')
-    with tf.name_scope('Wx_plus_b'):
-      logits = tf.matmul(bottleneck_input, layer_weights) + layer_biases
-      tf.histogram_summary(layer_name + '/pre_activations', logits)
-
-  final_tensor = tf.nn.softmax(logits, name=final_tensor_name)
-  tf.histogram_summary(final_tensor_name + '/activations', final_tensor)
-
-  with tf.name_scope('cross_entropy'):
-    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
-      logits, ground_truth_input)
-    with tf.name_scope('total'):
-      cross_entropy_mean = tf.reduce_mean(cross_entropy)
-    tf.scalar_summary('cross entropy', cross_entropy_mean)
-
-  with tf.name_scope('train'):
-    train_step = tf.train.GradientDescentOptimizer(
-      flags.learning_rate).minimize(cross_entropy_mean)
-
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
+TRAINING_CATEGORY = 'training'
+VALIDATION_CATEGORY = 'validation'
+TESTING_CATEGORY = 'testing'
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
   """Inserts the operations we need to evaluate the accuracy of our results.
@@ -192,11 +122,10 @@ def test_trained_network(sess, validation_parameters):
   (_, image_lists, _, _, _, bottleneck_tensor,
    jpeg_data_tensor, _, bottleneck_input,
    ground_truth_input, evaluation_step, _) = validation_parameters
-  
-  test_bottlenecks, test_ground_truth = bottleneck.get_random_cached_bottlenecks(
-      sess, image_lists, flags.test_batch_size, 'testing',
-      flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
-      bottleneck_tensor)
+  bottleneck_params = (sess, image_lists, flags.test_batch_size, TESTING_CATEGORY,
+                       flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
+                       bottleneck_tensor)
+  test_bottlenecks, test_ground_truth = bottleneck.get_random_cached_bottlenecks(bottleneck_params)
   test_accuracy = sess.run(
       evaluation_step,
       feed_dict={bottleneck_input: test_bottlenecks,
@@ -225,15 +154,14 @@ def iterate_and_train(sess, iteration_parameters):
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.
     if do_distort_images:
-      train_bottlenecks, train_ground_truth = bottleneck.get_random_distorted_bottlenecks(
-          sess, image_lists, flags.train_batch_size, 'training',
-          flags.image_dir, distorted_jpeg_data_tensor,
-          distorted_image_tensor, resized_image_tensor, bottleneck_tensor)
+      bottleneck_params = (sess, image_lists, flags.train_batch_size, TRAINING_CATEGORY,
+                           flags.image_dir, distorted_jpeg_data_tensor,
+                           distorted_image_tensor, resized_image_tensor, bottleneck_tensor)
+      train_bottlenecks, train_ground_truth = bottleneck.get_random_distorted_bottlenecks(bottleneck_params)
     else:
-      train_bottlenecks, train_ground_truth = bottleneck.get_random_cached_bottlenecks(
-          sess, image_lists, flags.train_batch_size, 'training',
-          flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
-          bottleneck_tensor)
+      bottleneck_params = (sess, image_lists, flags.train_batch_size, TRAINING_CATEGORY,
+                           flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
+      (train_bottlenecks, train_ground_truth) = bottleneck.get_random_cached_bottlenecks(bottleneck_params)
     # Feed the bottlenecks and ground truth into the graph, and run a training
     # step. Capture training summaries for TensorBoard with the `merged` op.
     train_summary, _ = sess.run([merged, train_step],
@@ -252,11 +180,9 @@ def iterate_and_train(sess, iteration_parameters):
                                                       train_accuracy * 100))
       print('%s: Step %d: Cross entropy = %f' % (datetime.now(), i,
                                                  cross_entropy_value))
-      validation_bottlenecks, validation_ground_truth = (
-          bottleneck.get_random_cached_bottlenecks(
-              sess, image_lists, flags.validation_batch_size, 'validation',
-              flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
-              bottleneck_tensor))
+      bottleneck_params = (sess, image_lists, flags.validation_batch_size, VALIDATION_CATEGORY,
+                     flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
+      validation_bottlenecks, validation_ground_truth = (bottleneck.get_random_cached_bottlenecks(bottleneck_params))
       # Run a validation step and capture training summaries for TensorBoard
       # with the `merged` op.
       validation_summary, validation_accuracy = sess.run(
@@ -282,12 +208,12 @@ def prepare_parameters(tr_file):
   # Configures training flags 
   config.init_flags_and_files(tr_file)
   # Set up the pre-trained graph.
-  config.maybe_download_and_extract()
+  dataset.maybe_download_and_extract()
   graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (
       graph_config.create_inception_graph())
 
   # Look at the folder structure, and create lists of all the images.
-  image_lists = config.create_image_lists(flags.image_dir, flags.testing_percentage,
+  image_lists = dataset.create_image_lists(flags.image_dir, flags.testing_percentage,
                                           flags.validation_percentage)
   print(image_lists)
   class_count = len(image_lists.keys())
@@ -342,7 +268,7 @@ def prepare_iteration_parameters(prepared_parameters):
   # Add the new layer that we'll be training.
   num_classes = len(image_lists.keys())  # Calculates number of output classes
   (train_step, cross_entropy, bottleneck_input,
-   ground_truth_input, final_tensor) = add_final_training_ops(num_classes,
+   ground_truth_input, final_tensor) = config.add_final_training_ops(num_classes,
                                                               flags.final_tensor_name,
                                                               bottleneck_tensor)
   # Set up all our weights to their initial default values.

@@ -10,9 +10,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cnn.transfer.config_image_net import maybe_download_and_extract
-import cnn.transfer.config_image_net as flags
+from cnn.transfer.dataset_config import maybe_download_and_extract
 import  cnn.transfer.graph_config as graph_config
+import cnn.transfer.network_config as flags
 
 
 class layer_features(object):

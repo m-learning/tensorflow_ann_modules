@@ -1,8 +1,6 @@
 """
-Created on Jul 15, 2016
-
-Configures parameters before retraining
-
+Created on Nov 1, 2016
+Initializes and configures image data set
 @author: Levan Tsinadze
 """
 
@@ -18,7 +16,7 @@ import sys
 import tarfile
 from tensorflow.python.platform import gfile
 
-import cnn.transfer.training_flags_mod as flags
+import cnn.transfer.training_flags as flags
 from six.moves import urllib
 import tensorflow as tf
 
@@ -204,20 +202,3 @@ def ensure_dir_exists(dir_name):
   """
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)
-
-def init_flags_only(tr_file):
-  """Configures trained checkpoints
-    Args:
-      tr_file - utility for files management
-  """
-  flags.init_flaged_data(tr_file)
-
-def init_flags_and_files(tr_file):
-  """Initializes training flags
-    Args:
-      tr_file - file utility manager
-  """
-  
-  init_flags_only(tr_file)
-  tr_file.get_or_init_training_set()
-  

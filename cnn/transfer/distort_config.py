@@ -14,7 +14,7 @@ from tensorflow.python.framework import tensor_shape
 
 import  cnn.transfer.bottleneck_config as bottleneck
 import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.training_flags_mod as flags
+import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 
@@ -151,8 +151,8 @@ def distort_images(prepared_parameters):
     distorted_jpeg_data_tensor, distorted_image_tensor = None, None
     # We'll make sure we've calculated the 'bottleneck' image summaries and
     # cached them on disk.
-    bottleneck.cache_bottlenecks(sess, image_lists, flags.image_dir,
-                                 flags.bottleneck_dir, jpeg_data_tensor,
-                                 bottleneck_tensor)
+    cache_params = (sess, image_lists, flags.image_dir, flags.bottleneck_dir,
+                    jpeg_data_tensor, bottleneck_tensor)
+    bottleneck.cache_bottlenecks(cache_params)
     
   return (sess, do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)

@@ -56,8 +56,8 @@ from __future__ import print_function
 
 from sys import argv
 
-from cnn.transfer import training_flags_mod as flags
-import cnn.transfer.retrain_image_net as retrain_image_net
+from cnn.transfer import training_flags as flags
+import cnn.transfer.retrain_network as retrainer
 from cnn.zebras.cnn_files import training_file
 import tensorflow as tf
 
@@ -66,7 +66,7 @@ def retrain_net_main(_):
   """Retrains Inception custom data set"""
   
   tr_files = training_file()
-  retrain_image_net.retrain_net(tr_files)
+  retrainer.retrain_net(tr_files)
   
 if __name__ == '__main__':
   """Runs training and test process"""
