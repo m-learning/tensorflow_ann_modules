@@ -18,10 +18,9 @@ class pillow_resizer(object):
     self.height = height
     if width is None:
       self.width = height
-      self.size = [height, height]    
     else:
       self.width = width
-      self.size = [width, height]
+    self.size = [self.width, self.height]
 
   def resize_thumbnail(self, img):
     """Resizes passed image with "thumbnail" method

@@ -105,7 +105,7 @@ class files_and_path_utils(object):
                     returning path
         other_path - vavargs for other paths
                      or functions
-      Return:
+      Returns:
         result - joined path
     """
     
@@ -121,7 +121,7 @@ class files_and_path_utils(object):
         dir_path - directory path
         *other_path - vavargs for other paths
                      or functions
-      Return:
+      Returns:
         result_dir - joined directory path
     """
     
@@ -132,7 +132,7 @@ class files_and_path_utils(object):
   
   def get_current(self):
     """Gets current directory of script
-      Return:
+      Returns:
         current_dir - current directory
     """
       

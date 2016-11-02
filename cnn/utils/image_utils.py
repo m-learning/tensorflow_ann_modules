@@ -31,6 +31,17 @@ IMAGE_SAVE_FORMAT = 'jpeg'
 
 IMAGE_SIZE = 299
 
+class image_indexer(object):
+  """Image parameters for indexing"""
+  
+  def __init__(self, rotate_angles):
+    self.rotate_angles = rotate_angles
+    self.i = 0
+    
+  def incr_indexer(self):
+    """Increments image index"""
+    self.i += 1
+
 class image_converter(object):
   """Utility class for image manipulation"""
   
@@ -130,30 +141,35 @@ class image_converter(object):
     img = self.resize_if_nedded(im)
     self.write_file(pr, i, img)
     
+  def rotate_and_write(self, rotate_params):
+    """Rotates and writes images in destination directory
+      Args:
+        rotate_params - rotation parameters
+    """
+    
+    (pr, im, indexer) = rotate_params
+    
+    rotate_angles = indexer.rotate_angles
+    if im is not None and rotate_angles is not None:
+      for ang in rotate_angles:
+        im_r = im.rotate(ang, expand=True)
+        self.resize_and_write(pr, indexer.i, im_r)
+        indexer.incr_indexer()
+    
   def migrate_images(self):
     """Converts and migrates images from one 
-      directory to other"""
+       directory to other"""
     
-    i = 0
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:
       scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')
       print(scan_dir)
+      indexer = image_indexer((30, 45, 60, 90, -30, -45, -60, -90))
       for pr in glob.glob(scan_dir):
-        im = self.write_file_quietly(pr, i)
-        i += 1
-        if im is not None:
-          im1 = im.rotate(45, expand=True)
-          self.resize_and_write(pr, i, im1)
-          i += 1
-          im2 = im.rotate(90, expand=True)
-          self.resize_and_write(pr, i, im2)
-          i += 1
-          im3 = im.rotate(-45, expand=True)
-          i += 1
-          self.resize_and_write(pr, i, im3)
-          i += 1
-          
+        im = self.write_file_quietly(pr, indexer.i)
+        indexer.incr_indexer()
+        rotate_params = (pr, im, indexer)
+        self.rotate_and_write(rotate_params)
         
 if __name__ == '__main__':
   

@@ -72,7 +72,7 @@ bottleneck_dir = None  # Path to cache bottleneck layer values as files
 def _set_training_flags(tr_files):
   """Initializes flags for training
     Args:
-      tr_files - training files utility
+      tr_files - training files manager
   """
 
   global prnt_dir, image_dir, output_graph, \
