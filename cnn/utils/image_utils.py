@@ -56,6 +56,8 @@ class image_converter(object):
       Args:
         pr - path for source file
         i - index for file name suffix
+      Returns:
+        im - saved image
     """
     fl_name = self.prefx + '_' + 'cnvrt_data_' + str(i) + '.jpg'
     n_im = os.path.join(self.to_dir, fl_name)
@@ -67,6 +69,8 @@ class image_converter(object):
       im = jpg_im
     print(im)
     im.save(n_im)
+    
+    return im
     
   def resize_if_nedded(self, im):
     """Resizes passed image if configured
@@ -87,39 +91,69 @@ class image_converter(object):
     """Converts and writes file and logs errors
       Args:
         pr - path for source file
-        i - index for file name suffix    
+        i - index for file name suffix 
+      Returns:
+        saved_im - saved image
     """
+    
     try:
       file_type = imghdr.what(pr)
       im = Image.open(pr)
       if file_type in ('jpg:', 'jpeg', 'JPG:', 'JPEG'):
         img = self.resize_if_nedded(im)
-        self.write_file(pr, i, img)
+        saved_im = self.write_file(pr, i, img)
       elif file_type in ('png', 'PNG'):
         jpg_im = self.convert_image(im)
         img = self.resize_if_nedded(jpg_im)
-        self.write_file(pr, i, img)
+        saved_im = self.write_file(pr, i, img)
         print("Image is converted" , pr , "\n")
       else:
         print('incorrect file type - ', file_type)
+        saved_im = None
     except IOError:
       print('Error for - ', pr)
+      saved_im = None
       if verbose_error:
         traceback.print_exc()
       else:
         os.remove(pr)   
+        
+    return saved_im
+  
+  def resize_and_write(self, pr, i, im):
+    """Resizes and saves image
+      Args:
+        pr - source image
+        i - index for file name suffix
+        im - image to resize and save
+    """
+    img = self.resize_if_nedded(im)
+    self.write_file(pr, i, img)
     
   def migrate_images(self):
     """Converts and migrates images from one 
       directory to other"""
+    
     i = 0
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:
       scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')
       print(scan_dir)
       for pr in glob.glob(scan_dir):
-        self.write_file_quietly(pr, i)
+        im = self.write_file_quietly(pr, i)
         i += 1
+        if im is not None:
+          im1 = im.rotate(45, expand=True)
+          self.resize_and_write(pr, i, im1)
+          i += 1
+          im2 = im.rotate(90, expand=True)
+          self.resize_and_write(pr, i, im2)
+          i += 1
+          im3 = im.rotate(-45, expand=True)
+          i += 1
+          self.resize_and_write(pr, i, im3)
+          i += 1
+          
         
 if __name__ == '__main__':
   

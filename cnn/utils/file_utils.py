@@ -39,14 +39,28 @@ LABELS_FILE = 'output_labels.txt'
 TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
-# Counts files in directory
 def count_files(dir_name):
+  """Counts files in directory
+    Args:
+      dir_name - directory name
+    Returns:
+      file_count - amount of files
+  """
   
   file_count = 0
   for _, _, files in os.walk(dir_name):
     file_count += len(files)
   
   return file_count
+
+def ensure_dir_exists(dir_name):
+  """Makes sure the folder exists on disk.
+
+  Args:
+    dir_name: Path string to the folder we want to create.
+  """
+  if not os.path.exists(dir_name):
+    os.makedirs(dir_name)
 
 class files_and_path_utils(object):
   """Utility class for files and directories"""
@@ -58,15 +72,17 @@ class files_and_path_utils(object):
     else:
       self.path_to_training_photos = path_to_training_photos
   
-    # Creates file if not exists
   def init_file_or_path(self, file_path):
+    """Creates file if not exists
+      Args:
+        file_path - file path
+      Returns:
+        file_path - the same path
+    """
     
-    if not os.path.exists(file_path):
-      os.makedirs(file_path)
-    
+    ensure_dir_exists(file_path)
     return file_path
   
-  # Joins path from method
   def join_path(self, path_inst, *other_path):
     """Joins passed file paths and function generating path
       Args:

@@ -16,6 +16,7 @@ from tensorflow.python.platform import gfile
 
 from cnn.transfer.dataset_config import MAX_NUM_IMAGES_PER_CLASS
 import cnn.transfer.dataset_config as dataset 
+from cnn.utils import file_utils
 import numpy as np
 import tensorflow as tf
 
@@ -69,7 +70,7 @@ def get_or_create_bottleneck(create_params):
   label_lists = image_lists[label_name]
   sub_dir = label_lists['dir']
   sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
-  dataset.ensure_dir_exists(sub_dir_path)
+  file_utils.ensure_dir_exists(sub_dir_path)
   bottleneck_path = dataset.get_bottleneck_path(image_lists, label_name, index,
                                         bottleneck_dir, category)
   if not os.path.exists(bottleneck_path):
@@ -116,7 +117,7 @@ def cache_bottlenecks(cache_params):
   (sess, image_lists, image_dir, bottleneck_dir,
    jpeg_data_tensor, bottleneck_tensor) = cache_params
   how_many_bottlenecks = 0
-  dataset.ensure_dir_exists(bottleneck_dir)
+  file_utils.ensure_dir_exists(bottleneck_dir)
   for label_name, label_lists in image_lists.items():
     for category in ['training', 'testing', 'validation']:
       category_list = label_lists[category]

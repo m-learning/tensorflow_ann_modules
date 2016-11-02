@@ -193,12 +193,4 @@ def maybe_download_and_extract():
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
   tarfile.open(filepath, 'r:gz').extractall(dest_directory)
-
-def ensure_dir_exists(dir_name):
-  """Makes sure the folder exists on disk.
-
-  Args:
-    dir_name: Path string to the folder we want to create.
-  """
-  if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
+  

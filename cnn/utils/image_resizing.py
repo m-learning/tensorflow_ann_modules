@@ -24,7 +24,7 @@ class image_resizer(object):
     Args: 
       im image to resize as tensor
     Returns: 
-      res_im resized image as tensor
+      res_im - resized image as tensor
     """
     im_h, im_w = im.shape[:2]
     if im_h < self.image_height or im_w < self.image_width:
@@ -42,7 +42,7 @@ class image_resizer(object):
     Args: 
       image_path path to image
     Returns: 
-      res_im resized image as tensor
+      res_im - resized image as tensor
     """
     im = cv2.imread(image_path, 1)
     res_im = self.resize_image(im)
