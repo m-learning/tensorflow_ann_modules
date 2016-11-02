@@ -15,6 +15,26 @@ import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 
+def weight_variable(shape):
+  """Create a weight variable with appropriate initialization
+    Args:
+      shape - shape of weight tensor
+    Returns:
+      variable placeholder
+  """
+  initial = tf.truncated_normal(shape, stddev=0.001)
+  return tf.Variable(initial, name='final_weights')
+
+def bias_variable(shape):
+  """Create a bias variable with appropriate initialization
+    Args:
+      shape - shape of bias tensor
+    Returns:
+      variable placeholder
+  """
+  initial = tf.zeros(shape)
+  return tf.Variable(initial, name='final_biases')
+
 def variable_summaries(var, name):
   """Attach a lot of summaries to a Tensor 
      (for TensorBoard visualization).
@@ -31,6 +51,36 @@ def variable_summaries(var, name):
     tf.scalar_summary('max/' + name, tf.reduce_max(var))
     tf.scalar_summary('min/' + name, tf.reduce_min(var))
     tf.histogram_summary(name, var)
+    
+def network_layer(layer_params):
+  """Generates fully connected network layer
+    Args:
+      layer_paras - layer parameters (dimensions, activation function etc)
+    Returns:
+      
+  """
+  (input_tensor, input_dim, output_dim, layer_name,
+   activation_name, activation_function) = layer_params
+  with tf.name_scope(layer_name):
+    with tf.name_scope('weights'):
+      layer_weights = weight_variable([input_dim, output_dim])
+      variable_summaries(layer_weights, layer_name + '/weights')
+    with tf.name_scope('dropout'):
+      keep_prob = tf.placeholder(tf.float32)
+      tf.scalar_summary('dropout_keep_probability', keep_prob)
+      drop = tf.nn.dropout(input_tensor, keep_prob)
+      variable_summaries(drop, layer_name + '/dropout')    
+    with tf.name_scope('biases'):
+      layer_biases = bias_variable([output_dim])
+      variable_summaries(layer_biases, layer_name + '/biases')
+    with tf.name_scope('Wx_plus_b'):
+      preactivations = tf.matmul(drop, layer_weights) + layer_biases
+      tf.histogram_summary(layer_name + '/pre_activations', preactivations)
+    with tf.name_scope(activation_name):
+      activations = activation_function(preactivations)
+      tf.histogram_summary(layer_name + '/activations', activations)
+  
+  return (preactivations, activations, keep_prob)
 
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   """Adds a new softmax and fully-connected layer for training.
@@ -50,7 +100,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
 
   Returns:
     The tensors for the training and cross entropy results, and tensors for the
-    bottleneck input and ground truth input.
+    bottleneck input and ground truth input and dropout keep probability.
   """
   with tf.name_scope('input'):
     bottleneck_input = tf.placeholder_with_default(
@@ -62,20 +112,9 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   # Organizing the following ops as `final_training_ops` so they're easier
   # to see in TensorBoard
   layer_name = 'final_training_ops'
-  with tf.name_scope(layer_name):
-    with tf.name_scope('weights'):
-      layer_weights = tf.Variable(tf.truncated_normal([graph_config.BOTTLENECK_TENSOR_SIZE, class_count],
-                                                       stddev=0.001), name='final_weights')
-      variable_summaries(layer_weights, layer_name + '/weights')
-    with tf.name_scope('biases'):
-      layer_biases = tf.Variable(tf.zeros([class_count]), name='final_biases')
-      variable_summaries(layer_biases, layer_name + '/biases')
-    with tf.name_scope('Wx_plus_b'):
-      logits = tf.matmul(bottleneck_input, layer_weights) + layer_biases
-      tf.histogram_summary(layer_name + '/pre_activations', logits)
-
-  final_tensor = tf.nn.softmax(logits, name=final_tensor_name)
-  tf.histogram_summary(final_tensor_name + '/activations', final_tensor)
+  layer_params = (bottleneck_input, graph_config.BOTTLENECK_TENSOR_SIZE,
+                  class_count, layer_name, final_tensor_name, tf.nn.softmax)
+  (logits, final_tensor, keep_prob) = network_layer(layer_params)
 
   with tf.name_scope('cross_entropy'):
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
@@ -88,7 +127,8 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
     train_step = tf.train.GradientDescentOptimizer(
       flags.learning_rate).minimize(cross_entropy_mean)
 
-  return (train_step, cross_entropy_mean, bottleneck_input, ground_truth_input, final_tensor)
+  return (train_step, cross_entropy_mean, bottleneck_input,
+          ground_truth_input, final_tensor, keep_prob)
 
 def init_flags_only(tr_file):
   """Configures trained checkpoints

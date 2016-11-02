@@ -60,8 +60,8 @@ class retrained_recognizer(object):
     (image_data, _) = image_parameter
     softmax_tensor = sess.graph.get_tensor_by_name(RESULT_KEY)
     # Runs recognition thru net
-    imege_tensor = {DECODE_KEY: image_data}
-    predictions = sess.run(softmax_tensor, imege_tensor)
+    image_tensor = {DECODE_KEY: image_data}
+    predictions = sess.run(softmax_tensor, image_tensor)
     # Decorates predictions
     predictions = np.squeeze(predictions)
     

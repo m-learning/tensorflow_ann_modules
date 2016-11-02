@@ -20,6 +20,7 @@ Retraining network test cases
 # ==============================================================================
 # pylint: disable=g-bad-import-order,unused-import
 """Tests the graph freezing tool."""
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -35,6 +36,7 @@ import tensorflow as tf
 
 
 class ImageRetrainingTest(test_util.TensorFlowTestCase):
+  """Test cases for retraining"""
 
   def dummyImageLists(self):
     return {'label_one': {'dir': 'somedir', 'training': ['image_one.jpg',

@@ -15,6 +15,9 @@ from __future__ import print_function
 IMAGENET_DIR = 'imagenet'
 BOTTLENECK_DIR = 'bottleneck'
 
+# Keep probability for "dropout" layers
+keep_prob = 50.0
+
 # Details of the training configuration.
 how_many_training_steps = 25000  # How many training steps to run before ending
 learning_rate = 0.01  # How large a learning rate to use when training

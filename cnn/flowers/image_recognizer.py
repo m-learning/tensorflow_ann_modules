@@ -13,7 +13,7 @@ from __future__ import print_function
 import sys
 
 from cnn.flowers.cnn_files import training_file
-from cnn.transfer.general_recognizer import retrained_recognizer
+from cnn.transfer.recognizer_interface import retrained_recognizer
 
 
 class image_recognizer(retrained_recognizer):
