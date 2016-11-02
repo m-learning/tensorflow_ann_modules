@@ -55,12 +55,13 @@ def variable_summaries(var, name):
 def network_layer(layer_params):
   """Generates fully connected network layer
     Args:
-      layer_paras - layer parameters (dimensions, activation function etc)
+      layer_paras - layer parameters
     Returns:
-      
+      preactivations - pre activation tensor
+      activations - activation tensor
+      keep_prob - placeholder for "dropout" keep propability parameter
   """
-  (input_tensor, input_dim, output_dim, layer_name,
-   activation_name, activation_function) = layer_params
+  (input_tensor, input_dim, output_dim, layer_name) = layer_params
   with tf.name_scope(layer_name):
     with tf.name_scope('weights'):
       layer_weights = weight_variable([input_dim, output_dim])
@@ -76,9 +77,24 @@ def network_layer(layer_params):
     with tf.name_scope('Wx_plus_b'):
       preactivations = tf.matmul(drop, layer_weights) + layer_biases
       tf.histogram_summary(layer_name + '/pre_activations', preactivations)
-    with tf.name_scope(activation_name):
-      activations = activation_function(preactivations)
-      tf.histogram_summary(layer_name + '/activations', activations)
+  
+  return (preactivations, keep_prob)
+    
+def full_network_layer(full_layer_params):
+  """Generates fully connected network layer
+    Args:
+      layer_paras - layer parameters (dimensions, activation function etc)
+    Returns:
+      preactivations - pre activation tensor
+      activations - activation tensor
+      keep_prob - placeholder for "dropout" keep propability parameter
+  """
+  (input_tensor, input_dim, output_dim, layer_name,
+   activation_name, activation_function) = full_layer_params
+  layer_params = (input_tensor, input_dim, output_dim, layer_name)
+  (preactivations, keep_prob) = network_layer(layer_params)
+  activations = activation_function(preactivations, name=activation_name)
+  tf.histogram_summary(activation_name + '/activations', activations)
   
   return (preactivations, activations, keep_prob)
 
@@ -114,7 +130,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   layer_name = 'final_training_ops'
   layer_params = (bottleneck_input, graph_config.BOTTLENECK_TENSOR_SIZE,
                   class_count, layer_name, final_tensor_name, tf.nn.softmax)
-  (logits, final_tensor, keep_prob) = network_layer(layer_params)
+  (logits, final_tensor, keep_prob) = full_network_layer(layer_params)
 
   with tf.name_scope('cross_entropy'):
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(

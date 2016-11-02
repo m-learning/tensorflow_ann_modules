@@ -24,7 +24,6 @@ class retrained_recognizer(object):
     self.tr_file = training_file_const()
     self.path_funct = self.tr_file.get_or_init_test_dir
     
-
   def create_graph(self, model_path):
     """Creates a graph from saved GraphDef file and returns a saver.
       Args:

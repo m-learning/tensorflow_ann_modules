@@ -172,6 +172,74 @@ def get_random_cached_bottlenecks(bottleneck_params):
     
   return (bottlenecks, ground_truths)
 
+def get_val_test_bottlenecks(bottleneck_params):
+  """Retrieves bottleneck values for cached images.
+  If no distortions are being applied, this function can retrieve the cached
+  bottleneck values directly from disk for images. It picks a random set of
+  images from the specified category.
+  Args:
+    sess: Current TensorFlow Session.
+    image_lists: Dictionary of training images for each label.
+    how_many: The number of bottleneck values to return.
+    category: Name string of which set to pull from - training, testing, or
+    validation.
+    bottleneck_dir: Folder string holding cached files of bottleneck values.
+    image_dir: Root folder string of the subfolders containing the training
+    images.
+    jpeg_data_tensor: The layer to feed jpeg image data into.
+    bottleneck_tensor: The bottleneck output layer of the CNN graph.
+  Returns:
+    List of bottleneck arrays and their corresponding ground truths 
+    and image paths.
+  """
+  (sess, image_lists, _, category, bottleneck_dir, image_dir,
+   jpeg_data_tensor, bottleneck_tensor) = bottleneck_params
+  
+  class_count = len(image_lists.keys())
+  # test_class_dist = get_test_random_dist(image_lists)
+  bottlenecks = []
+  ground_truths = []
+  img_paths = []
+  for label_index, img_class in enumerate(image_lists.keys()):
+    if category not in image_lists[img_class]:
+      tf.logging.fatal('Category does not exist %s.', category)
+
+    if len(image_lists[img_class][category]) < 1:
+      tf.logging.fatal('Category has no images - %s.', category)
+
+    for image in image_lists[img_class][category]:
+      # get bottleneck and img_path
+      sub_dir = image_lists[img_class]['dir']
+      sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
+      file_utils.ensure_dir_exists(sub_dir_path)
+      bottleneck_path = os.path.join(bottleneck_dir, sub_dir, image) + '.txt'
+      if not os.path.exists(bottleneck_path):
+        print('Creating bottleneck at ' + bottleneck_path)
+        image_path = os.path.join(image_dir, sub_dir, image)
+        if not gfile.Exists(image_path):
+          tf.logging.fatal('File does not exist %s', image_path)
+        image_data = gfile.FastGFile(image_path, 'rb').read()
+        bottleneck_values = run_bottleneck_on_image(sess, image_data,
+                                                    jpeg_data_tensor,
+                                                    bottleneck_tensor)
+        bottleneck_string = ','.join(str(x) for x in bottleneck_values)
+        with open(bottleneck_path, 'w') as bottleneck_file:
+          bottleneck_file.write(bottleneck_string)
+
+      with open(bottleneck_path, 'r') as bottleneck_file:
+        bottleneck_string = bottleneck_file.read()
+      bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+
+      # set ground_truth
+      ground_truth = np.zeros(class_count, dtype=np.float32)
+      ground_truth[label_index] = 1.0
+
+      bottlenecks.append(bottleneck_values)
+      ground_truths.append(ground_truth)
+      img_paths.append(bottleneck_path)
+      
+  return (bottlenecks, ground_truths, img_paths)
+
 def get_random_distorted_bottlenecks(bottleneck_params):
   """Retrieves bottleneck values for training images, after distortions.
 

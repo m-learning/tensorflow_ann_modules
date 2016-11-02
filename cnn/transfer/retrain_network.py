@@ -56,7 +56,6 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
-
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
@@ -298,7 +297,7 @@ def validate_test_and_save(sess, graph, validation_parameters):
                               for validation
   """
   
-  (_, image_lists, _, _, _, _, _, _, _, _, _, _) = validation_parameters
+  (_, image_lists, _, _, _, _, _, _, _, _, _, _, _) = validation_parameters
   test_trained_network(sess, validation_parameters)
   # Write out the trained graph and labels with the weights stored as constants.
   save_trained_parameters(sess, graph, image_lists.keys())
