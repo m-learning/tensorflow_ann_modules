@@ -10,8 +10,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import sys
-
 from cnn.flowers.cnn_files import training_file
 from cnn.transfer.recognizer_interface import retrained_recognizer
 
@@ -25,4 +23,4 @@ class image_recognizer(retrained_recognizer):
 if __name__ == '__main__':
   """Runs image recognition"""
   img_recognizer = image_recognizer()
-  img_recognizer.run_inference_on_image(sys.argv)
+  img_recognizer.run_inference_on_image()

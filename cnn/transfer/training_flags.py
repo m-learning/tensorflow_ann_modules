@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import argparse
 
+
 # Defines training process directories
 IMAGENET_DIR = 'imagenet'
 BOTTLENECK_DIR = 'bottleneck'
@@ -101,23 +102,37 @@ def _set_training_flags(tr_files):
                                   # imagenet_2012_challenge_label_map_proto.pbtxt
   bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
 
-def retrieve_args(arg_parser):
+def retrieve_args(argument_flags):
   """Adds configuration from command line arguments
     Args:
      arg_parser - runtime parameters parser
   """
   
-  if arg_parser.training_steps:
+  if argument_flags.training_steps:
     global how_many_training_steps
-    how_many_training_steps = int(arg_parser.training_steps)
+    how_many_training_steps = argument_flags.training_steps
     print('Number of training steps was set as - ' , str(how_many_training_steps))
+  
+  if argument_flags.keep_prob:
+    global keep_prob
+    if argument_flags.keep_prob > 1:
+      keep_prob = (argument_flags.keep_prob / _factor_for_keep_prob)
+    else:
+      keep_prob = argument_flags.keep_prob
+      
 
 def parse_and_retrieve():
   """Retrieves command line arguments"""
   
   arg_parser = argparse.ArgumentParser()
-  arg_parser.add_argument('--training_steps', help='iteration number')
-  arg_parser.parse_args()
+  arg_parser.add_argument('--training_steps',
+                          help='Number of training iterations',
+                          type=int)
+  arg_parser.add_argument('--keep_prob',
+                          help='Dropout keep probability',
+                          type=float) 
+  (argument_flags, _) = arg_parser.parse_known_args()
+  retrieve_args(argument_flags)
 
 def init_flaged_data(tr_files):
   """Generates and initializes flags for 
@@ -128,11 +143,3 @@ def init_flaged_data(tr_files):
       training_flags configured instance
   """
   _set_training_flags(tr_files)
-  
-def set_keep_prob(keep_prob_prec):
-  """Sets "dropout" keep probability parameter
-   Args:
-     keep_prob_prec - keep probability percentage
-  """
-  global keep_prob
-  keep_prob = (keep_prob_prec / _factor_for_keep_prob)

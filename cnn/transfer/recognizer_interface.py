@@ -11,6 +11,7 @@ from __future__ import division
 from __future__ import print_function
 
 import cnn.transfer.training_flags as flags
+import argparse
 import numpy as np
 import tensorflow as tf
 
@@ -91,22 +92,26 @@ class retrained_recognizer(object):
   
     return answer
   
-  def init_image_path(self, sys_params):
+  def init_image_path(self):
     """Initializes image path to recognize
       Args:
         sys_params - runtime parameters
       Returns:
         image file full path
     """
-    
-    if len(sys_params) >= 2:
-      test_image_path = self.tr_file.join_path(self.path_funct, sys_params[1])
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('--image_path',
+                            help='Image path for recognition',
+                            type=str)
+    (cmd_arguments, _) = arg_parser.parse_known_args()
+    if cmd_arguments.image_path:
+      test_image_path = self.tr_file.join_path(self.path_funct, cmd_arguments.image_path)
     else:
       test_image_path = self.tr_file.get_or_init_test_path()
       
     return test_image_path
   
-  def run_inference_on_image(self, sys_params=None):
+  def run_inference_on_image(self):
     """Runs network interface on image
       Args:
         sys_parameters - parameters
@@ -114,7 +119,7 @@ class retrained_recognizer(object):
         answer - top predicted data
     """
     # Gets test image path
-    test_image_path = self.init_image_path(sys_params)
+    test_image_path = self.init_image_path()
     if tf.gfile.Exists(test_image_path):
       # Reads image to recognize
       image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
