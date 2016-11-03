@@ -12,7 +12,7 @@ import cv2
 
 
 class image_resizer(object):
-  """Resizes images for VGG network"""
+  """Resizes images for Inception and VGG networks"""
   
   def __init__(self, image_height, image_width):
     self.image_height = image_height

@@ -54,8 +54,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from sys import argv
-
 from cnn.flomen.cnn_files import training_file
 from cnn.transfer import retrain_network as retrainer
 from cnn.transfer import training_flags as flags
@@ -72,5 +70,5 @@ def retrain_net_main(_):
 if __name__ == '__main__':
   """Runs training and test process"""
   
-  flags.retrieve_args(argv)
+  flags.parse_and_retrieve()
   tf.app.run(retrain_net_main)

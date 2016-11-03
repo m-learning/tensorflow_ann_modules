@@ -10,6 +10,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
 
 # Defines training process directories
 IMAGENET_DIR = 'imagenet'
@@ -100,16 +101,23 @@ def _set_training_flags(tr_files):
                                   # imagenet_2012_challenge_label_map_proto.pbtxt
   bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
 
-def retrieve_args(sys_argv):
-  """Adds configuration from system arguments
+def retrieve_args(arg_parser):
+  """Adds configuration from command line arguments
     Args:
-     sys_argv - runtime parameters
+     arg_parser - runtime parameters parser
   """
   
-  if len(sys_argv) > 1:
+  if arg_parser.training_steps:
     global how_many_training_steps
-    how_many_training_steps = int(sys_argv[1])
+    how_many_training_steps = int(arg_parser.training_steps)
     print('Number of training steps was set as - ' , str(how_many_training_steps))
+
+def parse_and_retrieve():
+  """Retrieves command line arguments"""
+  
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--training_steps', help='iteration number')
+  arg_parser.parse_args()
 
 def init_flaged_data(tr_files):
   """Generates and initializes flags for 
