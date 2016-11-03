@@ -59,7 +59,7 @@ def network_layer(layer_params):
     Returns:
       preactivations - pre activation tensor
       activations - activation tensor
-      keep_prob - placeholder for "dropout" keep propability parameter
+      keep_prob - placeholder for "dropout" keep probability parameter
   """
   (input_tensor, input_dim, output_dim, layer_name) = layer_params
   with tf.name_scope(layer_name):
@@ -87,7 +87,7 @@ def full_network_layer(full_layer_params):
     Returns:
       preactivations - pre activation tensor
       activations - activation tensor
-      keep_prob - placeholder for "dropout" keep propability parameter
+      keep_prob - placeholder for "dropout" keep probability parameter
   """
   (input_tensor, input_dim, output_dim, layer_name,
    activation_name, activation_function) = full_layer_params

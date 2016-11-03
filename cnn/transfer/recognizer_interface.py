@@ -18,7 +18,7 @@ RESULT_KEY = 'final_result:0'
 DECODE_KEY = 'DecodeJpeg/contents:0'
 
 class retrained_recognizer(object):
-  """Class to run recognition on trained set"""
+  """Class to run recognition by trained network"""
   
   def __init__(self, training_file_const):
     self.tr_file = training_file_const()

@@ -151,6 +151,7 @@ def iterate_and_train(sess, iteration_parameters):
   (merged, train_writer, validation_writer) = logger.init_writer(sess)
   
   flaged_keep_prob = flags.keep_prob / 100
+  print('Dropout keep probability is set as - ', flaged_keep_prob)
   # Run the training for as many cycles as requested on the command line.
   for i in range(flags.how_many_training_steps):
     # Get a catch of input bottleneck values, either calculated fresh every time
