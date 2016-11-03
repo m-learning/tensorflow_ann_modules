@@ -42,14 +42,14 @@ class training_file(files_and_path_utils):
   
   def get_data_directory(self):
     """Gets directory for training set and parameters
-      Return:
+      Returns:
         path to data directory
     """
     return self.join_path(self.get_current, self.path_to_cnn_directory, PATH_FOR_TRAINING)
   
   def init_files_directory(self):
     """Initializes weights and biases files directory
-      Retuyrn:
+      Returns:
         current_dir - path to initialized directory
     """
       
@@ -62,7 +62,7 @@ class training_file(files_and_path_utils):
   
   def get_or_init_files_path(self):
     """Gets training data  / parameters directory path
-      Return:
+      Returns:
         path to model checkpoint file
     """
     return self.join_path(self.init_files_directory, WEIGHTS_FILE)

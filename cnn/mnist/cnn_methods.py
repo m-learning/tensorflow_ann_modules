@@ -54,7 +54,7 @@ class cnn_functions(object):
         x - input tensor
         ksize - kernel size
         strides - strides for convolve and pooling
-      Return:
+      Returns:
         out - output from network
     """
   
@@ -81,7 +81,7 @@ class cnn_functions(object):
   
   def cnn_pred(self):
     """Prediction function for network interface
-      Return: prediction, correct prediction, accuracy
+      Returns: prediction, correct prediction, accuracy
     """
       
     cnn_params = cnn_weights()

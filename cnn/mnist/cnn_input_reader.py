@@ -20,8 +20,14 @@ IMAGE_SIZE = 28
 # Input for fully connected layer
 n_input = 784  # MNIST data input (img shape: 28*28)
 
-# Image reader for recognition
 def getBestShift(img):
+  """Gets best shift for image
+    Args:
+      im - image
+    Returns:
+      shiftx - shift by x
+      shifty - shift by y
+  """
     
   cy, cx = ndimage.measurements.center_of_mass(img)
 
@@ -31,8 +37,15 @@ def getBestShift(img):
 
   return shiftx, shifty
 
-# Shifts image
 def shift(img, sx, sy):
+  """Shifts image
+    Args:
+      img - image
+      sx - x shift
+      sy - y shift
+    Returns:
+      shifted - modified (shifted) image
+  """
   
   rows, cols = img.shape
   M = np.float32([[1, 0, sx], [0, 1, sy]])
@@ -41,6 +54,12 @@ def shift(img, sx, sy):
   return shifted
 
 def read_input_file(image_file_path):
+  """Reads input file for recognition
+    Args:
+      image_file_path - path to image
+    Returns:
+      image_rec - image tensor
+  """
     
   image_rec = np.zeros((1, n_input))
       

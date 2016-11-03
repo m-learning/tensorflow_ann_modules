@@ -15,7 +15,7 @@ import tensorflow as tf
 
 
 class image_recognizer(object):
-  """Recognizer class"""
+  """Class to generate and run recognizer interface"""
     
   def recognize_image(self, image_file_path):
     """Recognizes digit from file

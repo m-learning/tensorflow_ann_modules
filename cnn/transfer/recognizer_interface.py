@@ -10,12 +10,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import cnn.transfer.training_flags as flags
 import numpy as np
 import tensorflow as tf
 
 
 RESULT_KEY = 'final_result:0'
 DECODE_KEY = 'DecodeJpeg/contents:0'
+DROPOUT_KEY = 'final_training_ops/dropout/Placeholder:0'
 
 class retrained_recognizer(object):
   """Class to run recognition by trained network"""
@@ -59,7 +61,8 @@ class retrained_recognizer(object):
     (image_data, _) = image_parameter
     softmax_tensor = sess.graph.get_tensor_by_name(RESULT_KEY)
     # Runs recognition thru net
-    image_tensor = {DECODE_KEY: image_data}
+    image_tensor = {DECODE_KEY: image_data,
+                    DROPOUT_KEY: flags.keep_all_prob}
     predictions = sess.run(softmax_tensor, image_tensor)
     # Decorates predictions
     predictions = np.squeeze(predictions)

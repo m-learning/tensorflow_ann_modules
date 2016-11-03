@@ -130,7 +130,7 @@ def test_trained_network(sess, validation_parameters):
       evaluation_step,
       feed_dict={bottleneck_input: test_bottlenecks,
                  ground_truth_input: test_ground_truth,
-                 keep_prob: 1.0})
+                 keep_prob: flags.keep_all_prob})
   print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
   
 
@@ -150,8 +150,7 @@ def iterate_and_train(sess, iteration_parameters):
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
   (merged, train_writer, validation_writer) = logger.init_writer(sess)
   
-  flaged_keep_prob = flags.keep_prob / 100
-  print('Dropout keep probability is set as - ', flaged_keep_prob)
+  print('Dropout keep probability was set as - ', flags.keep_prob)
   # Run the training for as many cycles as requested on the command line.
   for i in range(flags.how_many_training_steps):
     # Get a catch of input bottleneck values, either calculated fresh every time
@@ -170,7 +169,7 @@ def iterate_and_train(sess, iteration_parameters):
     train_summary, _ = sess.run([merged, train_step],
              feed_dict={bottleneck_input: train_bottlenecks,
                         ground_truth_input: train_ground_truth,
-                        keep_prob: flaged_keep_prob})
+                        keep_prob: flags.keep_prob})
     train_writer.add_summary(train_summary, i)
     
     # Every so often, print out how well the graph is training.
@@ -180,7 +179,7 @@ def iterate_and_train(sess, iteration_parameters):
           [merged, evaluation_step, cross_entropy],
           feed_dict={bottleneck_input: train_bottlenecks,
                      ground_truth_input: train_ground_truth,
-                     keep_prob: flaged_keep_prob})
+                     keep_prob: flags.keep_prob})
       validation_writer.add_summary(validation_summary, i)
       print('%s: Step %d: Train accuracy = %.1f%%' % (datetime.now(), i,
                                                       train_accuracy * 100))
@@ -195,7 +194,7 @@ def iterate_and_train(sess, iteration_parameters):
           [merged, evaluation_step],
           feed_dict={bottleneck_input: validation_bottlenecks,
                      ground_truth_input: validation_ground_truth,
-                     keep_prob: 1.0})
+                     keep_prob: flags.keep_all_prob})
       validation_writer.add_summary(validation_summary, i)
       print('%s: Step %d: Validation accuracy = %.1f%%' % 
             (datetime.now(), i, validation_accuracy * 100))

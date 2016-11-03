@@ -35,7 +35,7 @@ class cnn_learner(object):
   # Initializes and gets training data
   def init_mnist(self):
     """Initializes MNIST data set
-      Return:
+      Returns:
         mnist - data set
     """
     

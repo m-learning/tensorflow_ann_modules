@@ -17,7 +17,7 @@ from cnn.transfer.recognizer_interface import retrained_recognizer
 
 
 class image_recognizer(retrained_recognizer):
-  """Recognizes image thru trained neural networks"""
+  """Recognizes image with trained neural networks"""
   
   def __init__(self):
     super(image_recognizer, self).__init__(training_file)

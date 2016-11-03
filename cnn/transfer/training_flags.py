@@ -16,7 +16,9 @@ IMAGENET_DIR = 'imagenet'
 BOTTLENECK_DIR = 'bottleneck'
 
 # Keep probability for "dropout" layers
-keep_prob = 50.0
+keep_prob = 0.5
+
+keep_all_prob = 1.0
 
 # Details of the training configuration.
 how_many_training_steps = 25000  # How many training steps to run before ending
@@ -72,6 +74,12 @@ model_dir = None  # Path to classify_image_graph_def.pb, """
                                 # imagenet_2012_challenge_label_map_proto.pbtxt
 bottleneck_dir = None  # Path to cache bottleneck layer values as files
 
+###########################
+# Encapsulated parameters #
+###########################
+
+_factor_for_keep_prob = 100
+
 def _set_training_flags(tr_files):
   """Initializes flags for training
     Args:
@@ -112,3 +120,11 @@ def init_flaged_data(tr_files):
       training_flags configured instance
   """
   _set_training_flags(tr_files)
+  
+def set_keep_prob(keep_prob_prec):
+  """Sets "dropout" keep probability parameter
+   Args:
+     keep_prob_prec - keep probability percentage
+  """
+  global keep_prob
+  keep_prob = (keep_prob_prec / _factor_for_keep_prob)
