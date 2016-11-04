@@ -26,6 +26,9 @@ def init_log_directories(sess):
   """
   tmp_dir = gettempdir()
   summaries_dir = os.path.join(tmp_dir, flags.summaries_dir)
+  if tf.gfile.Exists(summaries_dir):
+    tf.gfile.DeleteRecursively(summaries_dir)
+  tf.gfile.MakeDirs(summaries_dir)
   training_sum_dir = summaries_dir + '/train'
   validatn_sum_dir = summaries_dir + '/validation'
   

@@ -146,6 +146,38 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   return (train_step, cross_entropy_mean, bottleneck_input,
           ground_truth_input, final_tensor, keep_prob)
 
+def add_evaluation_step(result_tensor, ground_truth_tensor):
+  """Inserts the operations we need to evaluate the accuracy of our results.
+
+  Args:
+    result_tensor: The new final node that produces results.
+    ground_truth_tensor: The node we feed ground truth data
+    into.
+  Returns:
+    evaluation_step- step for model eveluation.
+  """
+  with tf.name_scope('accuracy'):
+    with tf.name_scope('correct_prediction'):
+      correct_prediction = tf.equal(tf.argmax(result_tensor, 1), \
+        tf.argmax(ground_truth_tensor, 1))
+    with tf.name_scope('accuracy'):
+      evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    tf.scalar_summary('accuracy', evaluation_step)
+    
+  return evaluation_step
+
+def add_prediction_step(result_tensor):
+  """Inserts the operations we need to evaluate accuracy of prediction results
+    Args:
+      result_tensor - tensor to run prediction
+    Returns:
+      prediction_step - prediction "op"
+  """
+  with tf.name_scope('prediction'):
+    prediction_step = tf.argmax(result_tensor, 1)
+  
+  return prediction_step
+
 def init_flags_only(tr_file):
   """Configures trained checkpoints
     Args:

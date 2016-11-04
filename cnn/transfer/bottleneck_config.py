@@ -41,6 +41,68 @@ def run_bottleneck_on_image(bottleneck_params):
   
   return bottleneck_values
 
+def get_or_create_bottleneck_and_path(create_params):
+  """Retrieves or calculates bottleneck values for an image.
+
+  If a cached version of the bottleneck data exists on-disk, return that,
+  otherwise calculate the data and save it to disk for future use.
+
+  Args:
+    create_params - tuple to create bottleneck contains
+      sess: The current active TensorFlow Session.
+      image_lists: Dictionary of training images for each label.
+      label_name: Label string we want to get an image for.
+      index: Integer offset of the image we want. This will be modulo-ed by the
+      available number of images for the label, so it can be arbitrarily large.
+      image_dir: Root folder string  of the subfolders containing the training
+      images.
+      category: Name string of which  set to pull images from - training, testing,
+      or validation.
+      bottleneck_dir: Folder string holding cached files of bottleneck values.
+      jpeg_data_tensor: The tensor to feed loaded jpeg data into.
+      bottleneck_tensor: The output tensor for the bottleneck values.
+
+  Returns:
+    String - bottleneck path
+    Numpy array of values produced by the bottleneck layer for the image.
+  """
+  (sess, image_lists, label_name, index, image_dir, category, bottleneck_dir,
+   jpeg_data_tensor, bottleneck_tensor, img_class, image) = create_params
+  if label_name is None:
+    label_lists = image_lists[img_class]
+  else:
+    label_lists = image_lists[label_name]
+  sub_dir = label_lists['dir']
+  sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
+  file_utils.ensure_dir_exists(sub_dir_path)
+  if image is None:
+    bot_path_params = (image_lists, label_name, index, bottleneck_dir, category)
+    bottleneck_path = dataset.get_bottleneck_path(bot_path_params)
+  else:
+    bottleneck_path = os.path.join(bottleneck_dir, sub_dir, image) + '.txt'
+  if not os.path.exists(bottleneck_path):
+    print('Creating bottleneck at ', bottleneck_path)
+    if image is None:
+      img_path_params = (image_lists, label_name, index, image_dir, category)
+      image_path = dataset.get_image_path(img_path_params)
+    else:
+      image_path = os.path.join(image_dir, sub_dir, image)
+    if not gfile.Exists(image_path):
+      tf.logging.fatal('File does not exist %s', image_path)
+    image_data = gfile.FastGFile(image_path, 'rb').read()
+    bottleneck_params = (sess, image_data, jpeg_data_tensor, bottleneck_tensor)
+    bottleneck_values = run_bottleneck_on_image(bottleneck_params)
+    bottleneck_string = ','.join(str(x) for x in bottleneck_values)
+    with open(bottleneck_path, 'w') as bottleneck_file:
+      bottleneck_file.write(bottleneck_string)
+
+  with open(bottleneck_path, 'r') as bottleneck_file:
+    bottleneck_string = bottleneck_file.read()
+  bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+  
+  return (bottleneck_values, bottleneck_path)
+  
+
 def get_or_create_bottleneck(create_params):
   """Retrieves or calculates bottleneck values for an image.
 
@@ -65,31 +127,7 @@ def get_or_create_bottleneck(create_params):
   Returns:
     Numpy array of values produced by the bottleneck layer for the image.
   """
-  (sess, image_lists, label_name, index, image_dir, category, bottleneck_dir,
-   jpeg_data_tensor, bottleneck_tensor) = create_params
-  label_lists = image_lists[label_name]
-  sub_dir = label_lists['dir']
-  sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
-  file_utils.ensure_dir_exists(sub_dir_path)
-  bottleneck_path = dataset.get_bottleneck_path(image_lists, label_name, index,
-                                        bottleneck_dir, category)
-  if not os.path.exists(bottleneck_path):
-    print('Creating bottleneck at ', bottleneck_path)
-    path_parameters = (image_lists, label_name, index, image_dir, category)
-    image_path = dataset.get_image_path(path_parameters)
-    if not gfile.Exists(image_path):
-      tf.logging.fatal('File does not exist %s', image_path)
-    image_data = gfile.FastGFile(image_path, 'rb').read()
-    bottleneck_params = (sess, image_data, jpeg_data_tensor, bottleneck_tensor)
-    bottleneck_values = run_bottleneck_on_image(bottleneck_params)
-    bottleneck_string = ','.join(str(x) for x in bottleneck_values)
-    with open(bottleneck_path, 'w') as bottleneck_file:
-      bottleneck_file.write(bottleneck_string)
-
-  with open(bottleneck_path, 'r') as bottleneck_file:
-    bottleneck_string = bottleneck_file.read()
-  bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
-  
+  (bottleneck_values, _) = get_or_create_bottleneck_and_path(create_params)
   return bottleneck_values
 
 def cache_bottlenecks(cache_params):
@@ -124,7 +162,7 @@ def cache_bottlenecks(cache_params):
       for index, unused_base_name in enumerate(category_list):
         create_params = (sess, image_lists, label_name, index,
                          image_dir, category, bottleneck_dir,
-                         jpeg_data_tensor, bottleneck_tensor)
+                         jpeg_data_tensor, bottleneck_tensor, None, None)
         get_or_create_bottleneck(create_params)
         how_many_bottlenecks += 1
         if how_many_bottlenecks % 100 == 0:
@@ -163,7 +201,7 @@ def get_random_cached_bottlenecks(bottleneck_params):
     image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
     create_params = (sess, image_lists, label_name, image_index,
                  image_dir, category, bottleneck_dir,
-                 jpeg_data_tensor, bottleneck_tensor)
+                 jpeg_data_tensor, bottleneck_tensor, None, None)
     bottleneck = get_or_create_bottleneck(create_params)
     ground_truth = np.zeros(class_count, dtype=np.float32)
     ground_truth[label_index] = 1.0
@@ -209,26 +247,10 @@ def get_val_test_bottlenecks(bottleneck_params):
 
     for image in image_lists[img_class][category]:
       # get bottleneck and img_path
-      sub_dir = image_lists[img_class]['dir']
-      sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
-      file_utils.ensure_dir_exists(sub_dir_path)
-      bottleneck_path = os.path.join(bottleneck_dir, sub_dir, image) + '.txt'
-      if not os.path.exists(bottleneck_path):
-        print('Creating bottleneck at ' + bottleneck_path)
-        image_path = os.path.join(image_dir, sub_dir, image)
-        if not gfile.Exists(image_path):
-          tf.logging.fatal('File does not exist %s', image_path)
-        image_data = gfile.FastGFile(image_path, 'rb').read()
-        bottleneck_values = run_bottleneck_on_image(sess, image_data,
-                                                    jpeg_data_tensor,
-                                                    bottleneck_tensor)
-        bottleneck_string = ','.join(str(x) for x in bottleneck_values)
-        with open(bottleneck_path, 'w') as bottleneck_file:
-          bottleneck_file.write(bottleneck_string)
-
-      with open(bottleneck_path, 'r') as bottleneck_file:
-        bottleneck_string = bottleneck_file.read()
-      bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+      create_params = (sess, image_lists, None, None,
+                 image_dir, category, bottleneck_dir,
+                 jpeg_data_tensor, bottleneck_tensor, img_class, image)
+      (bottleneck_values, bottleneck_path) = get_or_create_bottleneck_and_path(create_params)
 
       # set ground_truth
       ground_truth = np.zeros(class_count, dtype=np.float32)

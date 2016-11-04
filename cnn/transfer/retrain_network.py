@@ -76,26 +76,6 @@ TRAINING_CATEGORY = 'training'
 VALIDATION_CATEGORY = 'validation'
 TESTING_CATEGORY = 'testing'
 
-def add_evaluation_step(result_tensor, ground_truth_tensor):
-  """Inserts the operations we need to evaluate the accuracy of our results.
-
-  Args:
-    result_tensor: The new final node that produces results.
-    ground_truth_tensor: The node we feed ground truth data
-    into.
-  Returns:
-    evaluation_step- step for model eveluation.
-  """
-  with tf.name_scope('accuracy'):
-    with tf.name_scope('correct_prediction'):
-      correct_prediction = tf.equal(tf.argmax(result_tensor, 1), \
-        tf.argmax(ground_truth_tensor, 1))
-    with tf.name_scope('accuracy'):
-      evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-    tf.scalar_summary('accuracy', evaluation_step)
-    
-  return evaluation_step
-
 def save_trained_parameters(sess, graph, keys):
   """Saves trained checkpoint
     Args:
@@ -121,13 +101,13 @@ def test_trained_network(sess, validation_parameters):
   
   (_, image_lists, _, _, _, bottleneck_tensor,
    jpeg_data_tensor, _, bottleneck_input,
-   ground_truth_input, keep_prob, evaluation_step, _) = validation_parameters
+   ground_truth_input, keep_prob, evaluation_step, prediction_step, _) = validation_parameters
   bottleneck_params = (sess, image_lists, flags.test_batch_size, TESTING_CATEGORY,
                        flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
                        bottleneck_tensor)
-  test_bottlenecks, test_ground_truth = bottleneck.get_random_cached_bottlenecks(bottleneck_params)
-  test_accuracy = sess.run(
-      evaluation_step,
+  test_bottlenecks, test_ground_truth, _ = bottleneck.get_val_test_bottlenecks(bottleneck_params)
+  test_accuracy, _ = sess.run(
+      [evaluation_step, prediction_step],
       feed_dict={bottleneck_input: test_bottlenecks,
                  ground_truth_input: test_ground_truth,
                  keep_prob: flags.keep_all_prob})
@@ -145,7 +125,7 @@ def iterate_and_train(sess, iteration_parameters):
    distorted_jpeg_data_tensor, distorted_image_tensor,
    resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
    train_step, bottleneck_input, ground_truth_input, keep_prob,
-   evaluation_step, cross_entropy) = iteration_parameters
+   evaluation_step, _, cross_entropy) = iteration_parameters
    
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
   (merged, train_writer, validation_writer) = logger.init_writer(sess)
@@ -164,30 +144,19 @@ def iterate_and_train(sess, iteration_parameters):
       bottleneck_params = (sess, image_lists, flags.train_batch_size, TRAINING_CATEGORY,
                            flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
       (train_bottlenecks, train_ground_truth) = bottleneck.get_random_cached_bottlenecks(bottleneck_params)
-    # Feed the bottlenecks and ground truth into the graph, and run a training
-    # step. Capture training summaries for TensorBoard with the `merged` op.
-    train_summary, _ = sess.run([merged, train_step],
-             feed_dict={bottleneck_input: train_bottlenecks,
-                        ground_truth_input: train_ground_truth,
-                        keep_prob: flags.keep_prob})
-    train_writer.add_summary(train_summary, i)
-    
     # Every so often, print out how well the graph is training.
     is_last_step = (i + 1 == flags.how_many_training_steps)
     if (i % flags.eval_step_interval) == 0 or is_last_step:
-      validation_summary, train_accuracy, cross_entropy_value = sess.run(
-          [merged, evaluation_step, cross_entropy],
+      train_accuracy, cross_entropy_value = sess.run(
+          [evaluation_step, cross_entropy],
           feed_dict={bottleneck_input: train_bottlenecks,
                      ground_truth_input: train_ground_truth,
                      keep_prob: flags.keep_prob})
-      validation_writer.add_summary(validation_summary, i)
-      print('%s: Step %d: Train accuracy = %.1f%%' % (datetime.now(), i,
-                                                      train_accuracy * 100))
-      print('%s: Step %d: Cross entropy = %f' % (datetime.now(), i,
-                                                 cross_entropy_value))
+      print('%s: Step %d: Train accuracy = %.1f%%' % (datetime.now(), i, train_accuracy * 100))
+      print('%s: Step %d: Cross entropy = %f' % (datetime.now(), i, cross_entropy_value))
       bottleneck_params = (sess, image_lists, flags.validation_batch_size, VALIDATION_CATEGORY,
-                     flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
-      validation_bottlenecks, validation_ground_truth = (bottleneck.get_random_cached_bottlenecks(bottleneck_params))
+                           flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
+      validation_bottlenecks, validation_ground_truth, _ = (bottleneck.get_val_test_bottlenecks(bottleneck_params))
       # Run a validation step and capture training summaries for TensorBoard
       # with the `merged` op.
       validation_summary, validation_accuracy = sess.run(
@@ -198,6 +167,15 @@ def iterate_and_train(sess, iteration_parameters):
       validation_writer.add_summary(validation_summary, i)
       print('%s: Step %d: Validation accuracy = %.1f%%' % 
             (datetime.now(), i, validation_accuracy * 100))
+    else:
+      # Feed the bottlenecks and ground truth into the graph, and run a training
+      # step. Capture training summaries for TensorBoard with the `merged` op.
+      train_summary, _ = sess.run([merged, train_step],
+               feed_dict={bottleneck_input: train_bottlenecks,
+                          ground_truth_input: train_ground_truth,
+                          keep_prob: flags.keep_prob})
+      train_writer.add_summary(train_summary, i)
+      
 
 def prepare_parameters(tr_file):
   """Prepares training parameters
@@ -280,13 +258,14 @@ def prepare_iteration_parameters(prepared_parameters):
   # Set up all our weights to their initial default values.
   prepare_session(sess)
   # Create the operations we need to evaluate the accuracy of our new layer.
-  evaluation_step = add_evaluation_step(final_tensor, ground_truth_input)
+  evaluation_step = config.add_evaluation_step(final_tensor, ground_truth_input)
+  prediction_step = config.add_prediction_step(final_tensor)
 
   return (sess, graph, (do_distort_images, image_lists,
                           distorted_jpeg_data_tensor, distorted_image_tensor,
                           resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
                           train_step, bottleneck_input, ground_truth_input, keep_prob,
-                          evaluation_step, cross_entropy))
+                          evaluation_step, prediction_step, cross_entropy))
 
 def validate_test_and_save(sess, graph, validation_parameters):
   """Validates and / or tests network
@@ -297,7 +276,7 @@ def validate_test_and_save(sess, graph, validation_parameters):
                               for validation
   """
   
-  (_, image_lists, _, _, _, _, _, _, _, _, _, _, _) = validation_parameters
+  (_, image_lists, _, _, _, _, _, _, _, _, _, _, _, _) = validation_parameters
   test_trained_network(sess, validation_parameters)
   # Write out the trained graph and labels with the weights stored as constants.
   save_trained_parameters(sess, graph, image_lists.keys())

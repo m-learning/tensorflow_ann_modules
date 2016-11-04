@@ -141,23 +141,22 @@ def get_image_path(path_parameters):
   
   return full_path
 
-def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
-                        category):
+def get_bottleneck_path(path_parameters):
   """"Returns a path to a bottleneck file for a label at the given index.
 
   Args:
-    image_lists: Dictionary of training images for each label.
-    label_name: Label string we want to get an image for.
-    index: Integer offset of the image we want. This will be moduloed by the
-    available number of images for the label, so it can be arbitrarily large.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    category: Name string of set to pull images from - training, testing, or
-    validation.
+    path_parameters - triple of:
+      image_lists: Dictionary of training images for each label.
+      label_name: Label string we want to get an image for.
+      index: Integer offset of the image we want. This will be moduloed by the
+      available number of images for the label, so it can be arbitrarily large.
+      bottleneck_dir: Folder string holding cached files of bottleneck values.
+      category: Name string of set to pull images from - training, testing, or
+      validation.
 
   Returns:
     File system path string to an image that meets the requested parameters.
   """
-  path_parameters = (image_lists, label_name, index, bottleneck_dir, category)
   image_path = get_image_path(path_parameters)
   bottleneck_path = image_path + '.txt'
   
