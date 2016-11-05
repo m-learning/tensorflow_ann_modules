@@ -55,7 +55,7 @@ def variable_summaries(var, name):
 def network_layer(layer_params):
   """Generates fully connected network layer
     Args:
-      layer_paras - layer parameters
+      layer_params - layer parameters
     Returns:
       preactivations - pre activation tensor
       activations - activation tensor
@@ -83,7 +83,7 @@ def network_layer(layer_params):
 def full_network_layer(full_layer_params):
   """Generates fully connected network layer
     Args:
-      layer_paras - layer parameters (dimensions, activation function etc)
+      layer_params - layer parameters (dimensions, activation function etc)
     Returns:
       preactivations - pre activation tensor
       activations - activation tensor

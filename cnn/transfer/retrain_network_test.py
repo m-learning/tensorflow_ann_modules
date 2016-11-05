@@ -27,10 +27,10 @@ from __future__ import print_function
 
 from tensorflow.python.framework import test_util
 
-from  cnn.transfer import graph_config
+from  cnn.transfer import graph_config as graphc
 from cnn.transfer import dataset_config as dataset
 import  cnn.transfer.distort_config as distort
-import cnn.transfer.network_config as config
+import cnn.transfer.network_config as network
 import tensorflow as tf
 
 
@@ -80,16 +80,16 @@ class ImageRetrainingTest(test_util.TensorFlowTestCase):
     with tf.Graph().as_default():
       with tf.Session() as sess:
         bottleneck = tf.placeholder(
-            tf.float32, [1, graph_config.BOTTLENECK_TENSOR_SIZE],
-            name=graph_config.BOTTLENECK_TENSOR_NAME.split(':')[0])
-        config.add_final_training_ops(5, 'final', bottleneck)
+            tf.float32, [1, graphc.BOTTLENECK_TENSOR_SIZE],
+            name=graphc.BOTTLENECK_TENSOR_NAME.split(':')[0])
+        network.add_final_training_ops(5, 'final', bottleneck)
         self.assertIsNotNone(sess.graph.get_tensor_by_name('final:0'))
 
   def testAddEvaluationStep(self):
     with tf.Graph().as_default():
       final = tf.placeholder(tf.float32, [1], name='final')
       gt = tf.placeholder(tf.float32, [1], name='gt')
-      self.assertIsNotNone(config.add_evaluation_step(final, gt))
+      self.assertIsNotNone(network.add_evaluation_step(final, gt))
 
 if __name__ == '__main__':
   tf.test.main()

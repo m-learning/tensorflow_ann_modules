@@ -83,7 +83,7 @@ def list_layer_values(values, layer_name):
 def list_layers(sess, layer_name):
   """List All network layers
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
       layer_name - name of layer to list
     Returns:
       result - retrieved layer by key

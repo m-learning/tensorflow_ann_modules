@@ -10,8 +10,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import cnn.transfer.training_flags as flags
 import argparse
+
+import cnn.transfer.training_flags as flags
 import numpy as np
 import tensorflow as tf
 
@@ -28,7 +29,7 @@ class retrained_recognizer(object):
     self.path_funct = self.tr_file.get_or_init_test_dir
     
   def create_graph(self, model_path):
-    """Creates a graph from saved GraphDef file and returns a saver.
+    """Creates a graph from saved GraphDef file.
       Args:
         model_path - path to graph model
     """

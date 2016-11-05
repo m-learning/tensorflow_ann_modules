@@ -105,7 +105,7 @@ def test_trained_network(sess, validation_parameters):
   bottleneck_params = (sess, image_lists, flags.test_batch_size, TESTING_CATEGORY,
                        flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
                        bottleneck_tensor)
-  test_bottlenecks, test_ground_truth, _ = bottleneck.get_val_test_bottlenecks(bottleneck_params)
+  (test_bottlenecks, test_ground_truth, _) = bottleneck.get_val_test_bottlenecks(bottleneck_params)
   test_accuracy, _ = sess.run(
       [evaluation_step, prediction_step],
       feed_dict={bottleneck_input: test_bottlenecks,
