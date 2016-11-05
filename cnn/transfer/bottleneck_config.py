@@ -67,11 +67,9 @@ def get_or_create_bottleneck_and_path(create_params):
     Numpy array of values produced by the bottleneck layer for the image.
   """
   (sess, image_lists, label_name, index, image_dir, category, bottleneck_dir,
-   jpeg_data_tensor, bottleneck_tensor, img_class, image) = create_params
-  if label_name is None:
-    label_lists = image_lists[img_class]
-  else:
-    label_lists = image_lists[label_name]
+   jpeg_data_tensor, bottleneck_tensor, image) = create_params
+
+  label_lists = image_lists[label_name]
   sub_dir = label_lists['dir']
   sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
   file_utils.ensure_dir_exists(sub_dir_path)
@@ -162,7 +160,7 @@ def cache_bottlenecks(cache_params):
       for index, unused_base_name in enumerate(category_list):
         create_params = (sess, image_lists, label_name, index,
                          image_dir, category, bottleneck_dir,
-                         jpeg_data_tensor, bottleneck_tensor, None, None)
+                         jpeg_data_tensor, bottleneck_tensor, None)
         get_or_create_bottleneck(create_params)
         how_many_bottlenecks += 1
         if how_many_bottlenecks % 100 == 0:
@@ -201,7 +199,7 @@ def get_random_cached_bottlenecks(bottleneck_params):
     image_index = random.randrange(MAX_NUM_IMAGES_PER_CLASS + 1)
     create_params = (sess, image_lists, label_name, image_index,
                  image_dir, category, bottleneck_dir,
-                 jpeg_data_tensor, bottleneck_tensor, None, None)
+                 jpeg_data_tensor, bottleneck_tensor, None)
     bottleneck = get_or_create_bottleneck(create_params)
     ground_truth = np.zeros(class_count, dtype=np.float32)
     ground_truth[label_index] = 1.0
@@ -247,9 +245,9 @@ def get_val_test_bottlenecks(bottleneck_params):
 
     for image in image_lists[img_class][category]:
       # get bottleneck and img_path
-      create_params = (sess, image_lists, None, None,
+      create_params = (sess, image_lists, img_class, None,
                  image_dir, category, bottleneck_dir,
-                 jpeg_data_tensor, bottleneck_tensor, img_class, image)
+                 jpeg_data_tensor, bottleneck_tensor, image)
       (bottleneck_values, bottleneck_path) = get_or_create_bottleneck_and_path(create_params)
 
       # set ground_truth

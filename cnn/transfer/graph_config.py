@@ -110,8 +110,6 @@ def get_layer(layer_name):
                 and various tensors we'll be manipulating.
   """
   
-  net_layer = None
-  
   with tf.Session() as sess:
     model_filename = init_model_file_name()
     with gfile.FastGFile(model_filename, 'rb') as f:
@@ -122,6 +120,7 @@ def get_layer(layer_name):
         net_layer = list_layers(sess, layer_name)
         print(net_layer)
       except Exception:
+        net_layer = None
         print('Error occurred')
         traceback.print_exc()
   

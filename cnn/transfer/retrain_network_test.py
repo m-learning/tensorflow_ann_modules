@@ -29,7 +29,6 @@ from tensorflow.python.framework import test_util
 
 from  cnn.transfer import graph_config
 from cnn.transfer import dataset_config as dataset
-from cnn.transfer import retrain_network as retrain
 import  cnn.transfer.distort_config as distort
 import cnn.transfer.network_config as config
 import tensorflow as tf
@@ -90,7 +89,7 @@ class ImageRetrainingTest(test_util.TensorFlowTestCase):
     with tf.Graph().as_default():
       final = tf.placeholder(tf.float32, [1], name='final')
       gt = tf.placeholder(tf.float32, [1], name='gt')
-      self.assertIsNotNone(retrain.add_evaluation_step(final, gt))
+      self.assertIsNotNone(config.add_evaluation_step(final, gt))
 
 if __name__ == '__main__':
   tf.test.main()

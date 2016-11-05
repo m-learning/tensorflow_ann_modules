@@ -22,7 +22,7 @@ class layer_features(object):
     self.layer_name = 'import/' + layer_name
     
   def extract_layer(self, tr_file):
-    """Extracts network layer
+    """Extracts network layer from network
       Args:
         tr_file - training file manager
       Returns:

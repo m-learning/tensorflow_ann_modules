@@ -132,6 +132,8 @@ def iterate_and_train(sess, iteration_parameters):
   
   print('Dropout keep probability was set as - ', flags.keep_prob)
   # Run the training for as many cycles as requested on the command line.
+  validation_bottlenecks = None
+  validation_ground_truth = None
   for i in range(flags.how_many_training_steps):
     # Get a catch of input bottleneck values, either calculated fresh every time
     # with distortions applied, or from the cache stored on disk.
@@ -156,9 +158,9 @@ def iterate_and_train(sess, iteration_parameters):
       print('%s: Step %d: Cross entropy = %f' % (datetime.now(), i, cross_entropy_value))
       bottleneck_params = (sess, image_lists, flags.validation_batch_size, VALIDATION_CATEGORY,
                            flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
-      validation_bottlenecks, validation_ground_truth, _ = (bottleneck.get_val_test_bottlenecks(bottleneck_params))
-      # Run a validation step and capture training summaries for TensorBoard
-      # with the `merged` op.
+      if validation_bottlenecks is None or validation_ground_truth is None:
+        (validation_bottlenecks, validation_ground_truth, _) = bottleneck.get_val_test_bottlenecks(bottleneck_params)
+      # Run a validation step and capture training summaries for TensorBoard with the `merged` op.
       validation_summary, validation_accuracy = sess.run(
           [merged, evaluation_step],
           feed_dict={bottleneck_input: validation_bottlenecks,
