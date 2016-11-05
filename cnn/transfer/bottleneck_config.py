@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import os
 import random
+
 from tensorflow.python.platform import gfile
 
 from cnn.transfer.dataset_config import MAX_NUM_IMAGES_PER_CLASS
@@ -32,7 +33,7 @@ def run_bottleneck_on_image(bottleneck_params):
       bottleneck_tensor: Layer before the final softmax.
 
   Returns:
-    Numpy array of bottleneck values.
+    bottleneck_values - numpy array of bottleneck values.
   """
   (sess, image_data, image_data_tensor, bottleneck_tensor) = bottleneck_params
   bottleneck_values = sess.run(bottleneck_tensor,

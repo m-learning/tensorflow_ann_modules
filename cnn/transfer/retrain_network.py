@@ -56,6 +56,7 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
+
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
@@ -79,7 +80,7 @@ TESTING_CATEGORY = 'testing'
 def save_trained_parameters(sess, graph, keys):
   """Saves trained checkpoint
     Args:
-     sess - TensorFlow session
+     sess - current TensorFlow session
      graph - Inception-V3 graph
      keys - keys to save checkpoint
   """
@@ -94,7 +95,7 @@ def save_trained_parameters(sess, graph, keys):
 def test_trained_network(sess, validation_parameters):
   """Tests trained network on test set
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
       validation_parameters - parameters for test 
       and validation
   """
@@ -117,7 +118,7 @@ def test_trained_network(sess, validation_parameters):
 def iterate_and_train(sess, iteration_parameters):
   """Trains network with additional parameters
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
       iteration_parameters - additional training parameters
   """
   
@@ -217,7 +218,7 @@ def prepare_session(sess):
   """Prepares session for training, validation 
     and test steps
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
     """
   init = tf.initialize_all_variables()
   sess.run(init)
@@ -228,7 +229,7 @@ def prepare_iteration_parameters(prepared_parameters):
       prepared_parameters - prepared training 
       parameters
     Returns:
-      sess - TensorFlow session
+      sess - current TensorFlow session
       graph - network graph
       do_distort_images - distort flag
       image_lists - training images list
@@ -272,7 +273,7 @@ def prepare_iteration_parameters(prepared_parameters):
 def validate_test_and_save(sess, graph, validation_parameters):
   """Validates and / or tests network
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
       graph - network graph
       validation_parameters - prepared parameters 
                               for validation

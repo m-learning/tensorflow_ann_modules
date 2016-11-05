@@ -14,6 +14,8 @@ from  cnn.transfer import graph_config
 import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
+# Final layer name
+FINAL_LAYER_NAME = 'final_training_ops'
 
 def weight_variable(shape):
   """Create a weight variable with appropriate initialization
@@ -55,13 +57,12 @@ def variable_summaries(var, name):
 def network_layer(layer_params):
   """Generates fully connected network layer
     Args:
-      layer_params - layer parameters
+      layer_params - layer parameters (input, dimensions, layer name)
     Returns:
       preactivations - pre activation tensor
-      activations - activation tensor
       keep_prob - placeholder for "dropout" keep probability parameter
   """
-  (input_tensor, input_dim, output_dim, layer_name) = layer_params
+  (input_tensor, input_dim, output_dim, layer_name, _, _) = layer_params
   with tf.name_scope(layer_name):
     with tf.name_scope('weights'):
       layer_weights = weight_variable([input_dim, output_dim])
@@ -80,7 +81,7 @@ def network_layer(layer_params):
   
   return (preactivations, keep_prob)
     
-def full_network_layer(full_layer_params):
+def full_network_layer(layer_params):
   """Generates fully connected network layer
     Args:
       layer_params - layer parameters (dimensions, activation function etc)
@@ -89,10 +90,8 @@ def full_network_layer(full_layer_params):
       activations - activation tensor
       keep_prob - placeholder for "dropout" keep probability parameter
   """
-  (input_tensor, input_dim, output_dim, layer_name,
-   activation_name, activation_function) = full_layer_params
-  layer_params = (input_tensor, input_dim, output_dim, layer_name)
   (preactivations, keep_prob) = network_layer(layer_params)
+  (_, _, _, _, activation_name, activation_function) = layer_params
   activations = activation_function(preactivations, name=activation_name)
   tf.histogram_summary(activation_name + '/activations', activations)
   
@@ -127,9 +126,8 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
                                         name='GroundTruthInput')
   # Organizing the following ops as `final_training_ops` so they're easier
   # to see in TensorBoard
-  layer_name = 'final_training_ops'
   layer_params = (bottleneck_input, graph_config.BOTTLENECK_TENSOR_SIZE,
-                  class_count, layer_name, final_tensor_name, tf.nn.softmax)
+                  class_count, FINAL_LAYER_NAME, final_tensor_name, tf.nn.softmax)
   (logits, final_tensor, keep_prob) = full_network_layer(layer_params)
 
   with tf.name_scope('cross_entropy'):
@@ -154,7 +152,7 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
     ground_truth_tensor: The node we feed ground truth data
     into.
   Returns:
-    evaluation_step- step for model eveluation.
+    evaluation_step - step for model evaluation.
   """
   with tf.name_scope('accuracy'):
     with tf.name_scope('correct_prediction'):

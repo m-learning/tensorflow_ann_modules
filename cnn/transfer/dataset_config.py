@@ -155,7 +155,7 @@ def get_bottleneck_path(path_parameters):
       validation.
 
   Returns:
-    File system path string to an image that meets the requested parameters.
+    bottleneck_path - file system path string to an image that meets the requested parameters.
   """
   image_path = get_image_path(path_parameters)
   bottleneck_path = image_path + '.txt'
