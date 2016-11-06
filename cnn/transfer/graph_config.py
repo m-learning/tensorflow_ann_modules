@@ -11,8 +11,9 @@ from __future__ import division
 from __future__ import print_function
 
 import os.path
-from tensorflow.python.platform import gfile
 import traceback
+
+from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags as flags
 import tensorflow as tf
@@ -32,6 +33,9 @@ MODEL_INPUT_HEIGHT = 299  # Input image height
 MODEL_INPUT_DEPTH = 3
 JPEG_DATA_TENSOR_NAME = 'DecodeJpeg/contents:0'
 RESIZED_INPUT_TENSOR_NAME = 'ResizeBilinear:0'
+
+# Final layer name
+FINAL_LAYER_NAME = 'final_training_ops'
 
 def init_model_file_name():
   """Initializes serialized model graph file 

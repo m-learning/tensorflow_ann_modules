@@ -10,12 +10,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from  cnn.transfer import graph_config
+from  cnn.transfer import graph_config as gconf
 import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
-# Final layer name
-FINAL_LAYER_NAME = 'final_training_ops'
 
 def weight_variable(shape):
   """Create a weight variable with appropriate initialization
@@ -80,7 +78,7 @@ def network_layer(layer_params):
       tf.histogram_summary(layer_name + '/pre_activations', preactivations)
   
   return (preactivations, keep_prob)
-    
+
 def full_network_layer(layer_params):
   """Generates fully connected network layer
     Args:
@@ -96,6 +94,23 @@ def full_network_layer(layer_params):
   tf.histogram_summary(activation_name + '/activations', activations)
   
   return (preactivations, activations, keep_prob)
+
+def add_final_layer(bottleneck_input, class_count, final_tensor_name):
+  """Adds final layer for training and classification to Inception-V3 model
+    Args:
+      bottleneck_input - input tensor
+      class_count - classification categories
+      final_tensor_name - final layer name
+    Returns:
+      preactivations - pre activation tensor
+      activations - activation tensor
+      keep_prob - placeholder for "dropout" keep probability parameter
+  """
+  layer_params = (bottleneck_input, gconf.BOTTLENECK_TENSOR_SIZE, class_count,
+                  gconf.FINAL_LAYER_NAME, final_tensor_name, tf.nn.softmax)
+  (logits, final_tensor, keep_prob) = full_network_layer(layer_params)
+  
+  return (logits, final_tensor, keep_prob)
 
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   """Adds a new softmax and fully-connected layer for training.
@@ -119,16 +134,16 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
   """
   with tf.name_scope('input'):
     bottleneck_input = tf.placeholder_with_default(
-        bottleneck_tensor, shape=[None, graph_config.BOTTLENECK_TENSOR_SIZE],
+        bottleneck_tensor, shape=[None, gconf.BOTTLENECK_TENSOR_SIZE],
         name='BottleneckInputPlaceholder')
 
     ground_truth_input = tf.placeholder(tf.float32, [None, class_count],
                                         name='GroundTruthInput')
   # Organizing the following ops as `final_training_ops` so they're easier
   # to see in TensorBoard
-  layer_params = (bottleneck_input, graph_config.BOTTLENECK_TENSOR_SIZE,
-                  class_count, FINAL_LAYER_NAME, final_tensor_name, tf.nn.softmax)
-  (logits, final_tensor, keep_prob) = full_network_layer(layer_params)
+  (logits, final_tensor, keep_prob) = add_final_layer(bottleneck_input,
+                                                      class_count,
+                                                      final_tensor_name)
 
   with tf.name_scope('cross_entropy'):
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(

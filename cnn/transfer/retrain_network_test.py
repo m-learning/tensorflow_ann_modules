@@ -27,7 +27,7 @@ from __future__ import print_function
 
 from tensorflow.python.framework import test_util
 
-from  cnn.transfer import graph_config as graphc
+from  cnn.transfer import graph_config as gcong
 from cnn.transfer import dataset_config as dataset
 import  cnn.transfer.distort_config as distort
 import cnn.transfer.network_config as network
@@ -80,8 +80,8 @@ class ImageRetrainingTest(test_util.TensorFlowTestCase):
     with tf.Graph().as_default():
       with tf.Session() as sess:
         bottleneck = tf.placeholder(
-            tf.float32, [1, graphc.BOTTLENECK_TENSOR_SIZE],
-            name=graphc.BOTTLENECK_TENSOR_NAME.split(':')[0])
+            tf.float32, [1, gcong.BOTTLENECK_TENSOR_SIZE],
+            name=gcong.BOTTLENECK_TENSOR_NAME.split(':')[0])
         network.add_final_training_ops(5, 'final', bottleneck)
         self.assertIsNotNone(sess.graph.get_tensor_by_name('final:0'))
 

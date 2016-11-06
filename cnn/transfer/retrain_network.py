@@ -60,7 +60,7 @@ from datetime import datetime
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
-from  cnn.transfer import graph_config
+from  cnn.transfer import graph_config as gconf
 from cnn.transfer import dataset_config as dataset
 import cnn.transfer.board_logger as logger
 import  cnn.transfer.bottleneck_config as bottleneck
@@ -196,8 +196,7 @@ def prepare_parameters(tr_file):
   config.init_flags_and_files(tr_file)
   # Set up the pre-trained graph.
   dataset.maybe_download_and_extract()
-  graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (
-      graph_config.create_inception_graph())
+  (graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor) = gconf.create_inception_graph()
 
   # Look at the folder structure, and create lists of all the images.
   image_lists = dataset.create_image_lists(flags.image_dir, flags.testing_percentage,

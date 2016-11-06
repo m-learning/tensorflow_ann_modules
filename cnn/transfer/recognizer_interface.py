@@ -12,15 +12,15 @@ from __future__ import print_function
 
 import argparse
 
+import cnn.transfer.graph_config as gconf
 import cnn.transfer.training_flags as flags
-import cnn.transfer.network_config as network
 import numpy as np
 import tensorflow as tf
 
 
 RESULT_KEY = 'final_result:0'
 DECODE_KEY = 'DecodeJpeg/contents:0'
-DROPOUT_KEY = network.FINAL_LAYER_NAME + '/dropout/Placeholder:0'
+DROPOUT_KEY = gconf.FINAL_LAYER_NAME + '/dropout/Placeholder:0'
 
 class retrained_recognizer(object):
   """Class to run recognition by trained network"""
