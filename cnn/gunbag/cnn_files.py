@@ -42,7 +42,6 @@ class training_file(cnn_file_utils):
         dst_dir - destination directory
         img_type - image type
     """
-    
     i = 0
     scan_persons_dir = os.path.join(src_dir, img_type)
     for pr in glob.glob(scan_persons_dir):

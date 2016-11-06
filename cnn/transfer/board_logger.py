@@ -19,7 +19,7 @@ def init_log_directories(sess):
   """Initializes training and validation board 
      logger directories
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
     Returns:
       training_sum_dir - training summaries directory
       validatn_sum_dir - validation summaries directory
@@ -37,7 +37,7 @@ def init_log_directories(sess):
 def init_writer(sess):
   """Initialized training and validation board logger
     Args:
-      sess - TensorFlow session
+      sess - current TensorFlow session
     Returns:
       merged - summaries merger
       train_writer - train log writer

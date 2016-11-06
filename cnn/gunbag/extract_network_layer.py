@@ -21,7 +21,7 @@ def extract_net_main(_):
   
   tr_files = training_file()
   features = layer_features('pool_3:0')
-  features.extract_layer(tr_files)
+  features.layer_extractor(tr_files)
   
   
 if __name__ == '__main__':

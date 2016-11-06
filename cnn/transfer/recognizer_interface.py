@@ -55,7 +55,7 @@ class retrained_recognizer(object):
   def predict_answer(self, sess, image_parameter):
     """Runs prediction on trained / fine tuned network
       Args:
-        sess - TensorFlow session
+        sess - current TensorFlow session
         image_parameter - image for prediction
       Returns:
         predictions - recognition result on image
@@ -75,7 +75,7 @@ class retrained_recognizer(object):
   def recognize_image(self, sess, image_parameter):
     """Runs and refines prediction on trained / fine tuned network
       Args:
-        sess - TensorFlow session
+        sess - current TensorFlow session
         image_parameter - image for prediction
       Returns:
         answer - refined top recognition result on image

@@ -60,11 +60,10 @@ def create_inception_graph():
               BOTTLENECK_TENSOR_NAME, JPEG_DATA_TENSOR_NAME,
               RESIZED_INPUT_TENSOR_NAME]))
   
-  # Graph components
   return (sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
 
 def list_layer_values(values, layer_name):
-  """List All network layers
+  """List all network layers
     Args:
       values - layers to filter
       layer_name - name of layer to list
@@ -84,6 +83,19 @@ def list_layer_values(values, layer_name):
     
   return result
 
+def list_from_layer_op(layer_op, layer_name):
+  """Lists all network layers
+    Args:
+      layer_op - layer operations
+      layer_name - layer name
+    Returns:
+      result - retrieved layer by key
+  """
+  values = layer_op.values
+  result = list_layer_values(values(), layer_name)
+  
+  return result
+  
 def list_layers(sess, layer_name):
   """List All network layers
     Args:
@@ -92,14 +104,12 @@ def list_layers(sess, layer_name):
     Returns:
       result - retrieved layer by key
   """
-  
   result = None
   
   layer_ops = sess.graph.get_operations()
   print(layer_ops)
   for layer_op in layer_ops:
-    values = layer_op.values()
-    result = list_layer_values(values, layer_name)
+    result = list_from_layer_op(layer_op, layer_name)
     if result is not None:
       break
   
@@ -129,4 +139,3 @@ def get_layer(layer_name):
         traceback.print_exc()
   
   return net_layer
-        
