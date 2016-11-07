@@ -1,8 +1,8 @@
-# '''
-# Created on Oct 10, 2016
-# Test classes for VGG network
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Oct 10, 2016
+Test classes for VGG network
+@author: Levan Tsinadze
+"""
 
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
