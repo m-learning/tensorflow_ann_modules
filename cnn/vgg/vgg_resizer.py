@@ -3,6 +3,10 @@ Created on Oct 19, 2016
 Image size utility for VGG networks 
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from cnn.utils.image_resizing import image_resizer
 
 

@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 from PIL import Image
 
@@ -40,9 +41,9 @@ class vgg_interface(object):
     top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
 
     names = imagenet.create_readable_names_for_imagenet_labels()
-    print top_k
+    print(top_k)
     for node_id in top_k:
-      print node_id
+      print(node_id)
       print((str(node_id), predictions[node_id], names[node_id]))
   
   # Run model in an other way
@@ -77,10 +78,10 @@ class vgg_interface(object):
           end_interface = general_network.interface_function(inputs,
                                                              num_classes=1000,
                                                              is_training=False)
-          print image_path
-          print self.checkpoint_dir
+          print(image_path)
+          print(self.checkpoint_dir)
           
-          print end_interface
+          print(end_interface)
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables(general_network.network_name))
           with tf.Session() as sess:
@@ -106,10 +107,10 @@ class vgg_interface(object):
           end_interface = general_network.interface_function(inputs,
                                                              num_classes=1000,
                                                              is_training=False)
-          print resized_path
-          print self.checkpoint_dir
+          print(resized_path)
+          print(self.checkpoint_dir)
           
-          print end_interface
+          print(end_interface)
           init_fn = slim.assign_from_checkpoint_fn(self.checkpoint_dir,
                                                    slim.get_model_variables(general_network.network_name))
           with tf.Session() as sess:
@@ -121,8 +122,8 @@ class vgg_interface(object):
               test_image = preprocess_image(test_image, height, width)
       
               logits, predictions = sess.run([test_image, end_interface])
-              print logits
-              print predictions
+              print(logits)
+              print(predictions)
               self.print_answer(predictions)
   
   # Runs image classifier

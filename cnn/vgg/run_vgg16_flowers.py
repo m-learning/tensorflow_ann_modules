@@ -6,6 +6,7 @@
 
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 from PIL import Image
 
@@ -75,8 +76,8 @@ class vgg_interface(network_interface):
       im = im.reshape(-1, height, width, 3)
       predict_values, logit_values = sess.run([end_points[general_network.layer_key], logits],
                                               feed_dict={input_tensor: im})
-      print (np.max(predict_values), np.max(logit_values))
-      print (np.argmax(predict_values), np.argmax(logit_values))
+      print(np.max(predict_values), np.max(logit_values))
+      print(np.argmax(predict_values), np.argmax(logit_values))
       self.print_answer(predict_values)
               
 if __name__ == '__main__':

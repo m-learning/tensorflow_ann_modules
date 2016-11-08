@@ -43,7 +43,7 @@ class network_interface(object):
     top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
     labels = self.generate_labels()
     for node_id in top_k:
-      print node_id
+      print(node_id)
       human_string = labels[node_id]
       score = predictions[node_id]
       print('%s (score = %.5f)' % (human_string, score))
