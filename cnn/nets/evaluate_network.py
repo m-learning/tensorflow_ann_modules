@@ -29,8 +29,8 @@ from __future__ import print_function
 import math
 
 from cnn.datasets import dataset_factory
-import cnn.nets.evaluation_parameters as FLAGS
 from cnn.nets import nets_factory
+import cnn.nets.evaluation_parameters as FLAGS
 from cnn.preprocessing import preprocessing_factory
 import tensorflow as tf
 

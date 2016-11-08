@@ -18,8 +18,8 @@ SEED = 66478  # Set to None for random seed.
 class vgg_wights:
   """Class to initialize and hols VGG weights and biases"""
   
-  def __init__(self):
-    pass
+  def __init__(self, num_classes):
+    self.num_classes = num_classes
   
   def init_weight(self, shape):
     """Initializes weight variable for shape
@@ -56,9 +56,9 @@ class vgg_wights:
     self.conv5_w11 = self.init_weight([3, 3, 512, 512])
     self.conv5_w12 = self.init_weight([3, 3, 512, 512])
     self.conv5_w13 = self.init_weight([3, 3, 512, 512])
-    self.fc1_w14 = self.init_weight([3, 3, 512, 512])
-    self.fc2_w15 = self.init_weight([3, 3, 512, 512])
-    self.fc3_w16 = self.init_weight([3, 3, 512, 512])
+    self.fc1_w14 = self.init_weight([4096, 4096])
+    self.fc2_w15 = self.init_weight([4096, 4096])
+    self.fc3_w16 = self.init_weight([4096, self.num_classes])
   
   
   def init_biases(self):
@@ -77,9 +77,9 @@ class vgg_wights:
     self.conv5_b11 = self.init_bias([512])
     self.conv5_b12 = self.init_bias([512])
     self.conv5_b13 = self.init_bias([512])
-    self.fc1_b14 = self.init_bias([256])
-    self.fc2_b15 = self.init_bias([256])
-    self.fc3_b16 = self.init_bias([256])
+    self.fc1_b14 = self.init_bias([4096])
+    self.fc2_b15 = self.init_bias([4096])
+    self.fc3_b16 = self.init_bias([self.num_classes])
 
 def conv2d(x, W, b, name):
   """Generates convolutional layer
@@ -119,27 +119,34 @@ def fc(x, W, b, name, activation=tf.nn.relu):
     net = activation(net)
   return net
 
-def vgg16(x):
+def vgg16(x, num_classes, keep_prob=0.5, is_training=True):
   """Full VGG16 network"""
   
   net = x
-  weights = vgg_wights()
-  net = conv2d(net, weights.conv1_w1, weights.conv1_b1, 'conv1')
-  net = conv2d(net, weights.conv1_w2, weights.conv1_b2, 'conv1')
+  weights = vgg_wights(num_classes)
+  net = conv2d(net, weights.conv1_w1, weights.conv1_b1, 'conv1_1')
+  net = conv2d(net, weights.conv1_w2, weights.conv1_b2, 'conv1_2')
   net = max_pool(net, 'max_pool1')
-  net = conv2d(net, weights.conv2_w3, weights.conv2_b3, 'conv2')
-  net = conv2d(net, weights.conv2_w4, weights.conv2_b4, 'conv2')
+  net = conv2d(net, weights.conv2_w3, weights.conv2_b3, 'conv2_1')
+  net = conv2d(net, weights.conv2_w4, weights.conv2_b4, 'conv2_2')
   net = max_pool(net, 'max_pool2')
-  net = conv2d(net, weights.conv3_w5, weights.conv3_b5, 'conv3')
-  net = conv2d(net, weights.conv3_w6, weights.conv3_b6, 'conv3')
-  net = conv2d(net, weights.conv3_w7, weights.conv3_b7, 'conv3')
+  net = conv2d(net, weights.conv3_w5, weights.conv3_b5, 'conv3_1')
+  net = conv2d(net, weights.conv3_w6, weights.conv3_b6, 'conv3_2')
+  net = conv2d(net, weights.conv3_w7, weights.conv3_b7, 'conv3_3')
   net = max_pool(net, 'max_pool3')
-  net = conv2d(net, weights.conv4_w8, weights.conv4_b8, 'conv4')
-  net = conv2d(net, weights.conv4_w9, weights.conv4_b9, 'conv4')
-  net = conv2d(net, weights.conv4_w10, weights.conv4_b10, 'conv4')
+  net = conv2d(net, weights.conv4_w8, weights.conv4_b8, 'conv4_1')
+  net = conv2d(net, weights.conv4_w9, weights.conv4_b9, 'conv4_2')
+  net = conv2d(net, weights.conv4_w10, weights.conv4_b10, 'conv4_3')
   net = max_pool(net, 'max_pool4')
-  net = conv2d(net, weights.conv5_w11, weights.conv5_b11, 'conv5')
-  net = conv2d(net, weights.conv5_w12, weights.conv5_b12, 'conv5')
-  net = conv2d(net, weights.conv5_w13, weights.conv5_b13, 'conv5')
+  net = conv2d(net, weights.conv5_w11, weights.conv5_b11, 'conv5_1')
+  net = conv2d(net, weights.conv5_w12, weights.conv5_b12, 'conv5_2')
+  net = conv2d(net, weights.conv5_w13, weights.conv5_b13, 'conv5_3')
   net = max_pool(net, 'max_pool5')
+  net = fc(net, weights.fc1_w14, weights.fc1_b14, 'fc1')
+  net = fc(net, weights.fc2_w15, weights.fc2_b15, 'fc2')
+  if is_training:
+    net = tf.nn.dropout(net, keep_prob, 'dropout')
+  logits = fc(net, weights.fc3_w16, weights.fc3_b16, 'fc3', tf.nn.softmax)
+  
+  return logits
   

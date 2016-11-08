@@ -11,10 +11,10 @@ import os
 import sys
 import tarfile
 
-import cnn.nets.evaluation_parameters as EVAL_FLAGS
-import cnn.nets.training_parameters as FLAGS
 import cnn.nets.evaluate_network as eval_network
+import cnn.nets.evaluation_parameters as EVAL_FLAGS
 import cnn.nets.retrain_network as train_network
+import cnn.nets.training_parameters as FLAGS
 from six.moves import urllib
 
 
