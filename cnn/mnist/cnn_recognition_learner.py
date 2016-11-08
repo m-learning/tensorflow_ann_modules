@@ -38,7 +38,6 @@ class cnn_learner(object):
       Returns:
         mnist - data set
     """
-    
     self.tr_files = training_file()
     data_path = self.tr_files.get_data_directory()
     mnist = input_data.read_data_sets(data_path, one_hot=True)

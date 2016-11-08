@@ -12,46 +12,89 @@ import tensorflow as tf
 
 
 SAME_PADDING = 'SAME'
+STDDEV = 0.1
+SEED = 66478  # Set to None for random seed.
 
-def init_weights():
-  """Initializes weights for VGG model
-    Returns:
-      weights - dictionary for weights
-  """
+class vgg_wights:
+  """Class to initialize and hols VGG weights and biases"""
   
-  weights = {
-    'conv1_wc1': tf.Variable(tf.random_normal([5, 5, 1, 64])),
-    'conv1_wc2': tf.Variable(tf.random_normal([5, 5, 64, 64])),
-    'conv2_wc3': tf.Variable(tf.random_normal([5, 5, 46, 128])),
-    'conv2_wc4': tf.Variable(tf.random_normal([5, 5, 128, 128])),
-    'conv3_wc5': tf.Variable(tf.random_normal([5, 5, 128, 256])),
-    'conv3_wc6': tf.Variable(tf.random_normal([5, 5, 256, 256])),
-    'conv3_wc7': tf.Variable(tf.random_normal([5, 5, 256, 256])),
-    'conv4_wc7': tf.Variable(tf.random_normal([5, 5, 256, 512])),
-    'conv4_wc7': tf.Variable(tf.random_normal([5, 5, 512, 512])),
-    'conv4_wc7': tf.Variable(tf.random_normal([5, 5, 512, 512])),
-    'conv5_wc7': tf.Variable(tf.random_normal([5, 5, 512, 512])),
-    'conv5_wc7': tf.Variable(tf.random_normal([5, 5, 512, 512])),
-    'conv5_wc7': tf.Variable(tf.random_normal([5, 5, 512, 512])),
-  }
+  def __init__(self):
+    pass
   
-  return weights
+  def init_weight(self, shape):
+    """Initializes weight variable for shape
+      Args:
+        shape - weight tensor shape
+      Returns:
+        weight tensor
+    """
+    return tf.Variable(tf.truncated_normal(shape), stddev=STDDEV, seed=SEED, dtype=tf.float32)
+  
+  def init_bias(self, shape):
+    """Initializes bias variable for shape
+      Args:
+        shape - bias tensor shape
+      Returns:
+        bias tensor
+    """
+    return tf.Variable(tf.constant(0.0, shape=shape, dtype=tf.float32),
+                                 trainable=True, name='biases')
 
-def conv2d(input_data):
+  def init_weights(self):
+    """Initializes weights for VGG model
+    """
+    self.conv1_w1 = self.init_weight([3, 3, 1, 64])
+    self.conv1_w2 = self.init_weight([3, 3, 64, 64])
+    self.conv2_w3 = self.init_weight([3, 3, 46, 128])
+    self.conv2_w4 = self.init_weight([3, 3, 128, 128])
+    self.conv3_w5 = self.init_weightl([3, 3, 128, 256])
+    self.conv3_w6 = self.init_weight([3, 3, 256, 256])
+    self.conv3_w7 = self.init_weight([3, 3, 256, 256])
+    self.conv4_w8 = self.init_weight([3, 3, 256, 512])
+    self.conv4_w9 = self.init_weight([3, 3, 512, 512])
+    self.conv4_w10 = self.init_weight([3, 3, 512, 512])
+    self.conv5_w11 = self.init_weight([3, 3, 512, 512])
+    self.conv5_w12 = self.init_weight([3, 3, 512, 512])
+    self.conv5_w13 = self.init_weight([3, 3, 512, 512])
+    self.fc1_w14 = self.init_weight([3, 3, 512, 512])
+    self.fc2_w15 = self.init_weight([3, 3, 512, 512])
+    self.fc3_w16 = self.init_weight([3, 3, 512, 512])
+  
+  
+  def init_biases(self):
+    """Initializes biases for VGG model
+    """
+    self.conv1_b1 = self.init_bias([64])
+    self.conv1_b2 = self.init_bias([64])
+    self.conv2_b3 = self.init_bias([128])
+    self.conv2_b4 = self.init_bias([128])
+    self.conv3_b5 = self.init_bias([256])
+    self.conv3_b6 = self.init_bias([256])
+    self.conv3_b7 = self.init_bias([256])
+    self.conv4_b8 = self.init_bias([512])
+    self.conv4_b9 = self.init_bias([512])
+    self.conv4_b10 = self.init_bias([512])
+    self.conv5_b11 = self.init_bias([512])
+    self.conv5_b12 = self.init_bias([512])
+    self.conv5_b13 = self.init_bias([512])
+    self.fc1_b14 = self.init_bias([256])
+    self.fc2_b15 = self.init_bias([256])
+    self.fc3_b16 = self.init_bias([256])
+
+def conv2d(x, W, b, name):
   """Generates convolutional layer
     Args:
       input_data - convolution parameters
     Returns:
       net - convolutional layer with activation
   """
-  (x, W, b, name) = input_data
   net = x
   with tf.get_default_graph().name_scope(name):
-    net = tf.nn.conv2d(net, W, filter, strides=[1, 3, 3, 1], padding=SAME_PADDING)
+    net = tf.nn.conv2d(net, W, filter, strides=[1, 1, 1, 1], padding=SAME_PADDING)
     net = tf.nn.bias_add(net, b)
     net = tf.nn.relu(net)
     
-    return net
+  return net
   
 def max_pool(x, name, k=2):
   
@@ -59,3 +102,44 @@ def max_pool(x, name, k=2):
   with tf.get_default_graph().name_scope(name):
     net = tf.nn.max_pool(net, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding=SAME_PADDING)
   return net
+
+def fc(x, W, b, name, activation=tf.nn.relu):
+  """Fully connected layer for VGG module
+    Args:
+      x - input
+      W - weights tensor
+      b - biases
+    Returns:
+      net - fully connected layer with activation
+  """
+  net = x
+  with tf.get_default_graph().name_scope(name):
+    net = tf.matmul(net, W)
+    net = tf.nn.bias_add(net, b)
+    net = activation(net)
+  return net
+
+def vgg16(x):
+  """Full VGG16 network"""
+  
+  net = x
+  weights = vgg_wights()
+  net = conv2d(net, weights.conv1_w1, weights.conv1_b1, 'conv1')
+  net = conv2d(net, weights.conv1_w2, weights.conv1_b2, 'conv1')
+  net = max_pool(net, 'max_pool1')
+  net = conv2d(net, weights.conv2_w3, weights.conv2_b3, 'conv2')
+  net = conv2d(net, weights.conv2_w4, weights.conv2_b4, 'conv2')
+  net = max_pool(net, 'max_pool2')
+  net = conv2d(net, weights.conv3_w5, weights.conv3_b5, 'conv3')
+  net = conv2d(net, weights.conv3_w6, weights.conv3_b6, 'conv3')
+  net = conv2d(net, weights.conv3_w7, weights.conv3_b7, 'conv3')
+  net = max_pool(net, 'max_pool3')
+  net = conv2d(net, weights.conv4_w8, weights.conv4_b8, 'conv4')
+  net = conv2d(net, weights.conv4_w9, weights.conv4_b9, 'conv4')
+  net = conv2d(net, weights.conv4_w10, weights.conv4_b10, 'conv4')
+  net = max_pool(net, 'max_pool4')
+  net = conv2d(net, weights.conv5_w11, weights.conv5_b11, 'conv5')
+  net = conv2d(net, weights.conv5_w12, weights.conv5_b12, 'conv5')
+  net = conv2d(net, weights.conv5_w13, weights.conv5_b13, 'conv5')
+  net = max_pool(net, 'max_pool5')
+  
