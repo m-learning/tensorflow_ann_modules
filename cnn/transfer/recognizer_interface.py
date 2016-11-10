@@ -52,6 +52,18 @@ class retrained_recognizer(object):
         score = predictions[node_id]
         print('%s (score = %.5f)' % (human_string, score))
         
+  def init_image_tensor(self, image_data):
+    """Inizializes image tensor for recognition
+      Args:
+        image_data - binary image
+      Returns:
+        image_tensor - tensor to feed recognition layer
+    """
+    image_tensor = {DECODE_KEY: image_data,
+                    DROPOUT_KEY: flags.keep_all_prob}
+    return image_tensor
+    
+        
   def predict_answer(self, sess, image_parameter):
     """Runs prediction on trained / fine tuned network
       Args:
@@ -64,8 +76,7 @@ class retrained_recognizer(object):
     (image_data, _) = image_parameter
     softmax_tensor = sess.graph.get_tensor_by_name(RESULT_KEY)
     # Runs recognition thru net
-    image_tensor = {DECODE_KEY: image_data,
-                    DROPOUT_KEY: flags.keep_all_prob}
+    image_tensor = self.init_image_tensor(image_data)
     predictions = sess.run(softmax_tensor, image_tensor)
     # Decorates predictions
     predictions = np.squeeze(predictions)

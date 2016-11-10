@@ -161,7 +161,6 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
   """Inserts the operations we need to evaluate the accuracy of our results.
-
   Args:
     result_tensor: The new final node that produces results.
     ground_truth_tensor: The node we feed ground truth data

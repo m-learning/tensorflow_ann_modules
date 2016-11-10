@@ -140,16 +140,14 @@ def cache_bottlenecks(cache_params):
   values, and save them off.
 
   Args:
-    sess: The current active TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    jpeg_data_tensor: Input tensor for jpeg data from file.
-    bottleneck_tensor: The penultimate output layer of the graph.
-
-  Returns:
-    Nothing.
+    cache_params - tuple of -
+      scache_paramsess: The current active TensorFlow Session.
+      image_lists: Dictionary of training images for each label.
+      image_dir: Root folder string of the subfolders containing the training
+      images.
+      bottleneck_dir: Folder string holding cached files of bottleneck values.
+      jpeg_data_tensor: Input tensor for jpeg data from file.
+      bottleneck_tensor: The penultimate output layer of the graph.
   """
   (sess, image_lists, image_dir, bottleneck_dir,
    jpeg_data_tensor, bottleneck_tensor) = cache_params
@@ -175,16 +173,17 @@ def get_random_cached_bottlenecks(bottleneck_params):
   images from the specified category.
 
   Args:
-    sess: Current TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    how_many: The number of bottleneck values to return.
-    category: Name string of which set to pull from - training, testing, or
-    validation.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    jpeg_data_tensor: The layer to feed jpeg image data into.
-    bottleneck_tensor: The bottleneck output layer of the CNN graph.
+    bottleneck_params - tuple of - 
+      sess: Current TensorFlow Session.
+      image_lists: Dictionary of training images for each label.
+      how_many: The number of bottleneck values to return.
+      category: Name string of which set to pull from - training, testing, or
+      validation.
+      bottleneck_dir: Folder string holding cached files of bottleneck values.
+      image_dir: Root folder string of the subfolders containing the training
+      images.
+      jpeg_data_tensor: The layer to feed jpeg image data into.
+      bottleneck_tensor: The bottleneck output layer of the CNN graph.
 
   Returns:
     List of bottleneck arrays and their corresponding ground truths.
@@ -215,16 +214,17 @@ def get_val_test_bottlenecks(bottleneck_params):
   bottleneck values directly from disk for images. It picks a random set of
   images from the specified category.
   Args:
-    sess: Current TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    how_many: The number of bottleneck values to return.
-    category: Name string of which set to pull from - training, testing, or
-    validation.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    jpeg_data_tensor: The layer to feed jpeg image data into.
-    bottleneck_tensor: The bottleneck output layer of the CNN graph.
+    bottleneck_params - tuple of - 
+      sess: Current TensorFlow Session.
+      image_lists: Dictionary of training images for each label.
+      how_many: The number of bottleneck values to return.
+      category: Name string of which set to pull from - training, testing, or
+      validation.
+      bottleneck_dir: Folder string holding cached files of bottleneck values.
+      image_dir: Root folder string of the subfolders containing the training
+      images.
+      jpeg_data_tensor: The layer to feed jpeg image data into.
+      bottleneck_tensor: The bottleneck output layer of the CNN graph.
   Returns:
     List of bottleneck arrays and their corresponding ground truths 
     and image paths.
@@ -271,17 +271,18 @@ def get_random_distorted_bottlenecks(bottleneck_params):
   bottleneck results for each.
 
   Args:
-    sess: Current TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    how_many: The integer number of bottleneck values to return.
-    category: Name string of which set of images to fetch - training, testing,
-    or validation.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    input_jpeg_tensor: The input layer we feed the image data to.
-    distorted_image: The output node of the distortion graph.
-    resized_input_tensor: The input node of the recognition graph.
-    bottleneck_tensor: The bottleneck output layer of the CNN graph.
+    bottleneck_params - tuple of - 
+      sess: Current TensorFlow Session.
+      image_lists: Dictionary of training images for each label.
+      how_many: The integer number of bottleneck values to return.
+      category: Name string of which set of images to fetch - training, testing,
+      or validation.
+      image_dir: Root folder string of the subfolders containing the training
+      images.
+      input_jpeg_tensor: The input layer we feed the image data to.
+      distorted_image: The output node of the distortion graph.
+      resized_input_tensor: The input node of the recognition graph.
+      bottleneck_tensor: The bottleneck output layer of the CNN graph.
 
   Returns:
     List of bottleneck arrays and their corresponding ground truths.

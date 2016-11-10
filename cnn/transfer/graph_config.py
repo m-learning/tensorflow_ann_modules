@@ -27,6 +27,7 @@ import tensorflow as tf
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 # pylint: enable=line-too-long
 BOTTLENECK_TENSOR_NAME = 'pool_3/_reshape:0'
+BOTTLENECK_FEATURE_TENSOR_NAME = 'pool_3:0'
 BOTTLENECK_TENSOR_SIZE = 2048
 MODEL_INPUT_WIDTH = 299  # Input image width
 MODEL_INPUT_HEIGHT = 299  # Input image height
