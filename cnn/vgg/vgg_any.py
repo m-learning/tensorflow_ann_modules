@@ -8,6 +8,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+# import numpy as np
 import tensorflow as tf
 
 
@@ -142,6 +143,7 @@ def vgg16(x, num_classes, keep_prob=0.5, is_training=True):
   net = conv2d(net, weights.conv5_w12, weights.conv5_b12, 'conv5_2')
   net = conv2d(net, weights.conv5_w13, weights.conv5_b13, 'conv5_3')
   net = max_pool(net, 'max_pool5')
+  # shape = int(np.prod(net.get_shape()[1:]))
   net = fc(net, weights.fc1_w14, weights.fc1_b14, 'fc1')
   net = fc(net, weights.fc2_w15, weights.fc2_b15, 'fc2')
   if is_training:
