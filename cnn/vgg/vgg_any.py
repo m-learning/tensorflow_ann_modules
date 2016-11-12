@@ -8,13 +8,16 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-# import numpy as np
 import tensorflow as tf
 
 
+# import numpy as np
 SAME_PADDING = 'SAME'
 STDDEV = 0.1
 SEED = 66478  # Set to None for random seed.
+
+BIASES_NAME = 'biases'
+WEIGHTS_NAME = 'weights'
 
 class vgg_wights:
   """Class to initialize and hols VGG weights and biases"""
@@ -29,7 +32,8 @@ class vgg_wights:
       Returns:
         weight tensor
     """
-    return tf.Variable(tf.truncated_normal(shape), stddev=STDDEV, seed=SEED, dtype=tf.float32)
+    return tf.Variable(tf.truncated_normal(shape), stddev=STDDEV, seed=SEED,
+                       dtype=tf.float32, name=WEIGHTS_NAME)
   
   def init_bias(self, shape):
     """Initializes bias variable for shape
@@ -39,7 +43,7 @@ class vgg_wights:
         bias tensor
     """
     return tf.Variable(tf.constant(0.0, shape=shape, dtype=tf.float32),
-                                 trainable=True, name='biases')
+                       trainable=True, name=BIASES_NAME)
 
   def init_weights(self):
     """Initializes weights for VGG model
@@ -102,6 +106,7 @@ def max_pool(x, name, k=2):
   net = x
   with tf.get_default_graph().name_scope(name):
     net = tf.nn.max_pool(net, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding=SAME_PADDING)
+  
   return net
 
 def fc(x, W, b, name, activation=tf.nn.relu):
@@ -118,6 +123,7 @@ def fc(x, W, b, name, activation=tf.nn.relu):
     net = tf.matmul(net, W)
     net = tf.nn.bias_add(net, b)
     net = activation(net)
+  
   return net
 
 def vgg16(x, num_classes, keep_prob=0.5, is_training=True):

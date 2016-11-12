@@ -87,7 +87,7 @@ def _set_training_flags(tr_files):
     Args:
       tr_files - training files manager
   """
-
+  
   global prnt_dir, image_dir, output_graph, \
          output_labels, model_dir, bottleneck_dir
   # Training data and cache directories
@@ -99,7 +99,7 @@ def _set_training_flags(tr_files):
   # File-system cache locations.
   model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
                                   # imagenet_synset_to_human_label_map.txt, and
-                                  # imagenet_2012_challenge_label_map_proto.pbtxt
+  # imagenet_2012_challenge_label_map_proto.pbtxt
   bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
 
 def retrieve_args(argument_flags):
