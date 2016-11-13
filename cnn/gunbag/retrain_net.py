@@ -61,7 +61,7 @@ import tensorflow as tf
 
 
 def retrain_net_main(_):
-  """Retrains Inception custom data set"""
+  """Retrains Inception-V3 on custom data set"""
   
   tr_files = training_file()
   flags.parse_and_retrieve(tr_files)

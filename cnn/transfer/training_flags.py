@@ -144,7 +144,7 @@ def retrieve_args(argument_flags, tr_files):
   _set_training_flags(tr_files)
   if argument_flags.bottleneck_dir:
     bottleneck_dir = argument_flags.bottleneck_dir
-    print('Bottleneck path was set - ' , output_labels)
+    print('Bottleneck path was set - ' , bottleneck_dir)
   else:
     bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
     
