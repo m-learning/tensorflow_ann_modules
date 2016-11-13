@@ -121,14 +121,16 @@ def retrieve_args(argument_flags, tr_files):
   global image_dir, output_graph, output_labels, bottleneck_dir
   if argument_flags.image_dir:
     image_dir = argument_flags.image_dir
+    file_utils.ensure_dir_exists(image_dir)
     print('Image directory was set - ' , image_dir)
   else:
     image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
     
   if argument_flags.output_graph:
+    file_utils.ensure_dir_exists(argument_flags.output_graph)
     output_graph = tr_files.join_path(argument_flags.output_graph,
                                       file_utils.WEIGHTS_FILE)
-    output_labels = tr_files.join_path(output_graph,
+    output_labels = tr_files.join_path(argument_flags.output_graph,
                                        file_utils.LABELS_FILE)
     print('Output graph path was set - ' , output_graph)
     print('Output labels path was set - ' , output_labels)
@@ -142,6 +144,7 @@ def retrieve_args(argument_flags, tr_files):
   _set_training_flags(tr_files)
   if argument_flags.bottleneck_dir:
     bottleneck_dir = argument_flags.bottleneck_dir
+    print('Bottleneck path was set - ' , output_labels)
   else:
     bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
     

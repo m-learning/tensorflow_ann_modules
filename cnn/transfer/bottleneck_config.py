@@ -285,7 +285,8 @@ def get_random_distorted_bottlenecks(bottleneck_params):
       bottleneck_tensor: The bottleneck output layer of the CNN graph.
 
   Returns:
-    List of bottleneck arrays and their corresponding ground truths.
+    (bottlenecks, ground_truths) - list of bottleneck arrays and their 
+                                   corresponding ground truths.
   """
   bottlenecks = []
   ground_truths = []

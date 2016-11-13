@@ -14,6 +14,7 @@ from cnn.transfer import graph_config as gconf
 import numpy as np
 import tensorflow as tf
 
+
 def extract_features(sess, flattened_tensor, image_data):
   """Extracts features from passed image data
     Args:
@@ -31,7 +32,6 @@ def extract_features(sess, flattened_tensor, image_data):
   
   return features
   
-
 def feature_extractor(image_paths, verbose=True):
   """Extracts features by Inception-V3 from image
     Args:

@@ -19,10 +19,6 @@ import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 
-# These are all parameters that are tied to the particular model architecture
-# we're using for Inception v3. These include things like tensor names and their
-# sizes. If you want to adapt this script to work with another model, you will
-# need to update these to reflect the values in the network you're using.
 # pylint: disable=line-too-long
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 # pylint: enable=line-too-long
