@@ -1,8 +1,6 @@
 """
-Created on Jun 21, 2016
-
-Files for training data
-
+Created on Nov 13, 2016
+Transfer learning files manager
 @author: Levan Tsinadze
 """
 
@@ -12,20 +10,16 @@ from __future__ import print_function
 
 import glob
 import os
-import shutil
 
 from cnn.utils.file_utils import cnn_file_utils
 
-
-# Files and directory constant parameters
-DATASET_DIR = '/home/levan-lev/Documents/ann/gunbag'
 
 class training_file(cnn_file_utils):
   """Files and directories for parameters (trained), 
      training, validation and test"""
   
   def __init__(self, image_resizer=None):
-    super(training_file, self).__init__('gunbag', image_resizer=image_resizer)
+    super(training_file, self).__init__('transfer', image_resizer=image_resizer)
   
   def get_dataset_dir(self):
     """Method to get data set directory
@@ -51,24 +45,7 @@ class training_file(cnn_file_utils):
         self.read_and_write(pr, n_im)
         os.remove(pr)
       i += 1
-  
-  def get_dataset_jpg_dir(self, dest_directory, zip_ref):
-    """Gets training training set
-      Args:
-        dest_directory - destination directory
-        zip_ref - archive file reference
-      Returns:
-        dataset_dir - dataset directory
-    """
     
-    dataset_dir = os.path.join(dest_directory , DATASET_DIR)
-    
-    if os.path.exists(dataset_dir):
-      shutil.rmtree(dataset_dir, ignore_errors=True)
-    zip_ref.extractall(dest_directory)
-    
-    return dataset_dir
-  
   def get_or_init_training_set(self):
     """Gets or generates training set"""
     self.get_or_init_files_path()

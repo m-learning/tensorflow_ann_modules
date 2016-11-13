@@ -12,6 +12,8 @@ from __future__ import print_function
 
 import argparse
 
+from cnn.utils import file_utils
+
 
 # Defines training process directories
 IMAGENET_DIR = 'imagenet'
@@ -88,21 +90,14 @@ def _set_training_flags(tr_files):
       tr_files - training files manager
   """
   
-  global prnt_dir, image_dir, output_graph, \
-         output_labels, model_dir, bottleneck_dir
+  global prnt_dir, model_dir
   # Training data and cache directories
   prnt_dir = tr_files.get_data_general_directory()
   # Input and output file flags.
-  image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
-  output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
-  output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
-  # File-system cache locations.
+  
   model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
-                                  # imagenet_synset_to_human_label_map.txt, and
-  # imagenet_2012_challenge_label_map_proto.pbtxt
-  bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)  # Path to cache bottleneck layer values as files
 
-def retrieve_args(argument_flags):
+def retrieve_args(argument_flags, tr_files):
   """Adds configuration from command line arguments
     Args:
      arg_parser - runtime parameters parser
@@ -119,20 +114,54 @@ def retrieve_args(argument_flags):
       keep_prob = (argument_flags.keep_prob / _factor_for_keep_prob)
     else:
       keep_prob = argument_flags.keep_prob
+  
+  global image_dir, output_graph, output_labels, bottleneck_dir
+  if argument_flags.image_dir:
+    image_dir = argument_flags.image_dir
+    print('Image directory was set - ' , image_dir)
+  else:
+    image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
+    
+  if argument_flags.output_graph:
+    output_graph = tr_files.join_path(argument_flags.output_graph,
+                                      file_utils.WEIGHTS_FILE)
+    output_labels = tr_files.join_path(output_graph,
+                                       file_utils.LABELS_FILE)
+    print('Output graph path was set - ' , output_graph)
+    print('Output labels path was set - ' , output_labels)
+  else:
+    output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
+    output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
+  
+  # File-system cache locations.
+  if argument_flags.bottleneck_dir:
+    bottleneck_dir = argument_flags.bottleneck_dir
+  else:
+    bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
+    
       
 
-def parse_and_retrieve():
+def parse_and_retrieve(tr_files=None):
   """Retrieves command line arguments"""
   
   arg_parser = argparse.ArgumentParser()
   arg_parser.add_argument('--training_steps',
-                          help='Number of training iterations',
-                          type=int)
+                          type=int,
+                          help='Number of training iterations')
   arg_parser.add_argument('--keep_prob',
-                          help='Dropout keep probability',
-                          type=float) 
+                          type=float,
+                          help='Dropout keep probability') 
+  arg_parser.add_argument('--image_dir',
+                          type=str,
+                          help='Path to folders of labeled images.')
+  arg_parser.add_argument('--output_graph',
+                          type=str,
+                          help='Where to save the trained graph.')
+  arg_parser.add_argument('--bottleneck_dir',
+                          type=str,
+                          help='Path to cache bottleneck layer values as files.')
   (argument_flags, _) = arg_parser.parse_known_args()
-  retrieve_args(argument_flags)
+  retrieve_args(argument_flags, tr_files)
 
 def init_flaged_data(tr_files):
   """Generates and initializes flags for 

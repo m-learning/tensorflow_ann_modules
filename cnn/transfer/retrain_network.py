@@ -185,11 +185,12 @@ def prepare_parameters(tr_file):
     Args:
       tr_file - file management utility
     Returns:
-      graph - network graph
-      bottleneck_tensor - bottleneck as tensor
-      jpeg_data_tensor - image as tensor
-      resized_image_tensor - resized image as tensor
-      image_lists - training images
+      tuple of -
+        graph - network graph
+        bottleneck_tensor - bottleneck as tensor
+        jpeg_data_tensor - image as tensor
+        resized_image_tensor - resized image as tensor
+        image_lists - training images
   """
   
   # Configures training flags 

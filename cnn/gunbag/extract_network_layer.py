@@ -11,7 +11,7 @@ from __future__ import division
 from __future__ import print_function
 
 from cnn.gunbag.cnn_files import training_file
-from cnn.transfer.extract_layer import layer_features
+from cnn.transfer.layer_extractor import layer_features
 import tensorflow as tf
 
 

@@ -28,7 +28,9 @@ class training_file(cnn_file_utils):
      training, validation and test"""
   
   def __init__(self, image_resizer=None):
-    super(training_file, self).__init__('flowers', image_resizer)
+    super(training_file, self).__init__('flowers',
+                                        path_to_training_photos='flower_photos',
+                                        image_resizer=image_resizer)
     
   def get_dataset_dir(self):
     """Method to get data set directory

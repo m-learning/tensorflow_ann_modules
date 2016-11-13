@@ -31,7 +31,7 @@ TRAINIG_ZIP_FOLDER = 'training_arch'
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
 PATH_FOR_EVALUATION = 'eval_data'
-PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
+PATH_FOR_TRAINING_PHOTOS = 'training_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
 
@@ -148,8 +148,9 @@ class files_and_path_utils(object):
 class cnn_file_utils(files_and_path_utils):
   """Utility class for training and testing files and directories"""
   
-  def __init__(self, parent_cnn_dir, image_resizer=None):
-    super(cnn_file_utils, self).__init__(parent_cnn_dir)
+  def __init__(self, parent_cnn_dir, path_to_training_photos=None, image_resizer=None):
+    super(cnn_file_utils, self).__init__(parent_cnn_dir,
+                                         path_to_training_photos=path_to_training_photos)
     self.image_resizer = image_resizer
     
   def read_image(self, pr):
