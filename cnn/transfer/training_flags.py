@@ -117,12 +117,13 @@ def retrieve_args(argument_flags, tr_files):
       keep_prob = (argument_flags.keep_prob / _factor_for_keep_prob)
     else:
       keep_prob = argument_flags.keep_prob
+      print('Dropout keep probability was set as - ', keep_prob)
   
   global image_dir, output_graph, output_labels, bottleneck_dir
   if argument_flags.image_dir:
     image_dir = argument_flags.image_dir
     file_utils.ensure_dir_exists(image_dir)
-    print('Image directory was set - ' , image_dir)
+    print('Image directory was set as - ' , image_dir)
   else:
     image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
     
@@ -132,8 +133,8 @@ def retrieve_args(argument_flags, tr_files):
                                       file_utils.WEIGHTS_FILE)
     output_labels = tr_files.join_path(argument_flags.output_graph,
                                        file_utils.LABELS_FILE)
-    print('Output graph path was set - ' , output_graph)
-    print('Output labels path was set - ' , output_labels)
+    print('Output graph path was set as - ' , output_graph)
+    print('Output labels path was set as - ' , output_labels)
   else:
     output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
     output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
@@ -144,7 +145,7 @@ def retrieve_args(argument_flags, tr_files):
   _set_training_flags(tr_files)
   if argument_flags.bottleneck_dir:
     bottleneck_dir = argument_flags.bottleneck_dir
-    print('Bottleneck path was set - ' , bottleneck_dir)
+    print('Bottleneck path was set as - ' , bottleneck_dir)
   else:
     bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
     

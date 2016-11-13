@@ -131,7 +131,6 @@ def iterate_and_train(sess, iteration_parameters):
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
   (merged, train_writer, validation_writer) = logger.init_writer(sess)
   
-  print('Dropout keep probability was set as - ', flags.keep_prob)
   # Run the training for as many cycles as requested on the command line.
   validation_bottlenecks = None
   validation_ground_truth = None

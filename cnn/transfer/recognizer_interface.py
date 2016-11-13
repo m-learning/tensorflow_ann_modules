@@ -19,7 +19,7 @@ import tensorflow as tf
 
 
 RESULT_KEY = 'final_result:0'
-DECODE_KEY = 'DecodeJpeg/contents:0'
+DECODE_KEY = gconf.JPEG_DATA_TENSOR_NAME
 DROPOUT_KEY = gconf.FINAL_LAYER_NAME + '/dropout/Placeholder:0'
 
 class retrained_recognizer(object):

@@ -57,8 +57,9 @@ def network_layer(layer_params):
     Args:
       layer_params - layer parameters (input, dimensions, layer name)
     Returns:
-      preactivations - pre activation tensor
-      keep_prob - placeholder for "dropout" keep probability parameter
+      tuple of - 
+        preactivations - pre activation tensor
+        keep_prob - placeholder for "dropout" keep probability parameter
   """
   (input_tensor, input_dim, output_dim, layer_name, _, _) = layer_params
   with tf.name_scope(layer_name):

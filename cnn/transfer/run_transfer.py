@@ -1,6 +1,6 @@
 """
 Created on Nov 13, 2016
-Runs transfer learning for Inception-V3 model
+Runs transfer learning for Inception-V3 model on custom data set
 @author: Levan Tsinadze
 """
 
