@@ -84,18 +84,21 @@ bottleneck_dir = None  # Path to cache bottleneck layer values as files
 
 _factor_for_keep_prob = 100
 
+_training_flags_to_set = True
+
 def _set_training_flags(tr_files):
   """Initializes flags for training
     Args:
       tr_files - training files manager
   """
-  
-  global prnt_dir, model_dir
-  # Training data and cache directories
-  prnt_dir = tr_files.get_data_general_directory()
-  # Input and output file flags.
-  
-  model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
+  global _training_flags_to_set
+  if _training_flags_to_set is None or _training_flags_to_set:
+    global prnt_dir, model_dir
+    # Training data and cache directories
+    prnt_dir = tr_files.get_data_general_directory()
+    # Input and output file flags.
+    model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
+    _training_flags_to_set = False
 
 def retrieve_args(argument_flags, tr_files):
   """Adds configuration from command line arguments
@@ -134,6 +137,9 @@ def retrieve_args(argument_flags, tr_files):
     output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
   
   # File-system cache locations.
+  global _training_flags_to_set
+  _training_flags_to_set = True
+  _set_training_flags(tr_files)
   if argument_flags.bottleneck_dir:
     bottleneck_dir = argument_flags.bottleneck_dir
   else:
