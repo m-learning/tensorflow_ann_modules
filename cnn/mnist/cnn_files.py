@@ -11,6 +11,7 @@ from __future__ import print_function
 
 import os
 
+from cnn.utils import file_utils
 from cnn.utils.file_utils import files_and_path_utils
 
 
@@ -54,9 +55,7 @@ class training_file(files_and_path_utils):
     """
       
     current_dir = self.join_path(self.get_current, self.path_to_cnn_directory, PATH_FOR_PARAMETERS)
-    
-    if not os.path.exists(current_dir):
-        os.makedirs(current_dir)
+    file_utils.ensure_dir_exists(current_dir)
     
     return current_dir
   

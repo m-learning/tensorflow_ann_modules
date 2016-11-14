@@ -11,7 +11,7 @@ from __future__ import print_function
 from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 from cnn.mnist.cnn_files import training_file
 from cnn.mnist.cnn_input_reader import read_input_file
-from cnn.mnist.cnn_methods import cnn_functions
+from cnn.mnist.cnn_network import cnn_functions
 import tensorflow as tf
 
 

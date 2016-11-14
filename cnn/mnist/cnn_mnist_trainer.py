@@ -11,7 +11,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 from cnn.mnist import cnn_parameters
 from cnn.mnist.cnn_files import training_file
-from cnn.mnist.cnn_methods import cnn_functions
+from cnn.mnist.cnn_network import cnn_functions
 from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 import tensorflow as tf
 

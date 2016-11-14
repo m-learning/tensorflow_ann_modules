@@ -10,7 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 from cnn.mnist.cnn_parameters import cnn_weights
-import cnn.mnist.cnn_parameters as pr
+from cnn.mnist import cnn_parameters as pr
 import tensorflow as tf
 
 
@@ -23,6 +23,7 @@ class cnn_functions(object):
     # tf Graph input
     self.x = tf.placeholder(tf.float32, [None, pr.N_INPUT])
     self.y = tf.placeholder(tf.float32, [None, pr.N_CLASSES])
+    self.weights = cnn_weights()
     self.keep_prob = tf.placeholder(tf.float32)  # dropout (keep probability)
 
   def conv2d(self, x, W, b, strides=1):
@@ -48,7 +49,7 @@ class cnn_functions(object):
     return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1],
                           padding=STRIDE)
     
-  def conv_layers(self, x, weights):
+  def conv_layers(self):
     """Convolutional network interface
       Args:
         x - input tensor
@@ -58,16 +59,15 @@ class cnn_functions(object):
         out - output from network
     """  
     
-    x = tf.reshape(x, shape=[-1, 28, 28, 1])
-
-    conv1 = self.conv2d(x, weights.wc1, weights.bc1)
+    reshaped = tf.reshape(self.x, shape=[-1, 28, 28, 1])
+    conv1 = self.conv2d(reshaped, self.weights.wc1, self.weights.bc1)
     conv1 = self.maxpool2d(conv1, k=2)
-    conv2 = self.conv2d(conv1, weights.wc2, weights.bc2)
+    conv2 = self.conv2d(conv1, self.weights.wc2, self.weights.bc2)
     conv2 = self.maxpool2d(conv2, k=2)
     
     return conv2
   
-  def conv_net(self, x, weights, dropout):
+  def conv_net(self):
     """Full network interface
       Args:
         x - input tensor
@@ -78,18 +78,18 @@ class cnn_functions(object):
     """
   
     # Reshape input picture
-    conv_n = self.conv_layers(x, weights)
+    conv_n = self.conv_layers()
 
     # Fully connected layer
     # Reshape conv2 output to fit fully connected layer input
-    fc1_pr = tf.reshape(conv_n, [-1, weights.wd1.get_shape().as_list()[0]])
-    fc1_z = tf.add(tf.matmul(fc1_pr, weights.wd1), weights.bd1)
+    fc1_pr = tf.reshape(conv_n, [-1, self.weights.wd1.get_shape().as_list()[0]])
+    fc1_z = tf.add(tf.matmul(fc1_pr, self.weights.wd1), self.weights.bd1)
     fc1 = tf.nn.relu(fc1_z)
     # Apply Dropout
-    drop = tf.nn.dropout(fc1, dropout)
+    drop = tf.nn.dropout(fc1, self.keep_prob)
 
     # Output, class prediction
-    out = tf.add(tf.matmul(drop, weights.out), weights.out)
+    out = tf.add(tf.matmul(drop, self.weights.wout), self.weights.bout)
     
     return out
   
@@ -98,9 +98,8 @@ class cnn_functions(object):
       Returns: prediction, correct prediction, accuracy
     """
       
-    weights = cnn_weights()
     # Construct model
-    pred = self.conv_net(self.x, weights, self.keep_prob)
+    pred = self.conv_net()
     
     # Evaluate model
     correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(self.y, 1))
