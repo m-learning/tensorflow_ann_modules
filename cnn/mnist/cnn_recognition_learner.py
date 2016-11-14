@@ -12,6 +12,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 from cnn.mnist import cnn_parameters
 from cnn.mnist.cnn_files import training_file
 from cnn.mnist.cnn_methods import cnn_functions
+from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 import tensorflow as tf
 
 
@@ -26,10 +27,10 @@ class cnn_learner(object):
     
   def __init__(self):
     
-    self.cnn_fnc = cnn_functions()
-    (self.pred, self.correct_pred, self.accuracy) = self.cnn_fnc.cnn_pred()
+    self.network = cnn_functions()
+    (self.pred, self.correct_pred, self.accuracy) = self.network.cnn_pred()
     # Define loss and optimizer
-    self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.pred, self.cnn_fnc.y))
+    self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.pred, self.network.y))
     self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.cost)
       
   # Initializes and gets training data
@@ -62,13 +63,13 @@ class cnn_learner(object):
         while step * batch_size < training_iters:
             batch_x, batch_y = mnist.train.next_batch(batch_size)
             # Run optimization op (backprop)
-            sess.run(self.optimizer, feed_dict={self.cnn_fnc.x: batch_x, self.cnn_fnc.y: batch_y,
-                                           self.cnn_fnc.keep_prob: cnn_parameters.CNN_DROPOUT})
+            sess.run(self.optimizer, feed_dict={self.network.x: batch_x, self.network.y: batch_y,
+                                                self.network.keep_prob: cnn_parameters.CNN_DROPOUT})
             if step % display_step == 0:
                 # Calculate batch loss and accuracy
-                loss, acc = sess.run([self.cost, self.accuracy], feed_dict={self.cnn_fnc.x: batch_x,
-                                                                  self.cnn_fnc.y: batch_y,
-                                                                  self.cnn_fnc.keep_prob: 1.})
+                loss, acc = sess.run([self.cost, self.accuracy], feed_dict={self.network.x: batch_x,
+                                                                  self.network.y: batch_y,
+                                                                  self.network.keep_prob: KEEP_FULL_PROB})
                 print("Iter " + str(step * batch_size) + ", Minibatch Loss= " + \
                       "{:.6f}".format(loss) + ", Training Accuracy= " + \
                       "{:.5f}".format(acc))
@@ -79,15 +80,15 @@ class cnn_learner(object):
     
         # Calculate accuracy for 256 mnist test images
         print ("Testing Accuracy:", \
-            sess.run(self.accuracy, feed_dict={self.cnn_fnc.x: mnist.test.images[:256],
-                                          self.cnn_fnc.y: mnist.test.labels[:256],
-                                          self.cnn_fnc.keep_prob: 1.}))
+            sess.run(self.accuracy, feed_dict={self.network.x: mnist.test.images[:256],
+                                               self.network.y: mnist.test.labels[:256],
+                                               self.network.keep_prob: KEEP_FULL_PROB}))
                 
 def main():
   """Runs training with graph initialization"""
   with tf.Graph().as_default():
-      lrn = cnn_learner()
-      lrn.traint()
+      learner = cnn_learner()
+      learner.traint()
     
 if __name__ == '__main__':
   main()   
