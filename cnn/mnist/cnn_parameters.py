@@ -38,26 +38,21 @@ class cnn_weights(object):
     self._bd1 = tf.Variable(tf.random_normal([1024]))
     self._b_out = tf.Variable(tf.random_normal([N_CLASSES]))
     
-    # Store layers weights
-    self.weights = {
-        # 5x5 conv, 1 input, 32 outputs
-        'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
-        # 5x5 conv, 32 inputs, 64 outputs
-        'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
-        # fully connected, 7*7*64 inputs, 1024 outputs
-        'wd1': tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
-        # 1024 inputs, 10 outputs (class prediction)
-        'out': tf.Variable(tf.random_normal([1024, N_CLASSES]))
-    }
-      
-    # Store layers biases
-    self.biases = {
-        'bc1': tf.Variable(tf.random_normal([32])),
-        'bc2': tf.Variable(tf.random_normal([64])),
-        'bd1': tf.Variable(tf.random_normal([1024])),
-        'out': tf.Variable(tf.random_normal([N_CLASSES]))
-    }
-
+  def init_weight(self, shape, wdc):
+    """Initializes weight with decay
+      Args:
+        shape - weight tensor shape
+        wdc - weights decay
+      Returns:
+        weight - initialized weight variable
+    """
+    
+    weight = tf.Variable(tf.random_normal(shape))
+    weight_decay = tf.mul(tf.nn.l2_loss(weight), wdc, name='weight_loss')
+    tf.add_to_collection('losses', weight_decay)
+    
+    return weight
+    
   @property
   def wc1(self):
     return self._wc1

@@ -22,6 +22,8 @@ training_iters = 200000
 batch_size = 128
 display_step = 10
 
+DECAY = 5e-4
+
 class cnn_learner(object):
   """Training methods"""
     
@@ -31,6 +33,8 @@ class cnn_learner(object):
     (self.pred, self.correct_pred, self.accuracy) = self.network.cnn_pred()
     # Define loss and optimizer
     self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.pred, self.network.y))
+    regularizers = self.network.regularizer()
+    self.cost += DECAY * regularizers
     self.optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.cost)
       
   # Initializes and gets training data

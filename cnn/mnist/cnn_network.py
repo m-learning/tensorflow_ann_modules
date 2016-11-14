@@ -93,6 +93,17 @@ class cnn_functions(object):
     
     return out
   
+  def regularizer(self):
+    """Generates L2 regularization for fully connected layers
+      Returns:
+        regularizers - regularization functions
+    """
+    
+    # L2 regularization for the fully connected parameters.
+    regularizers = (tf.nn.l2_loss(self.weights.wd1) + tf.nn.l2_loss(self.weights.bd1) + 
+                    tf.nn.l2_loss(self.weights.wout) + tf.nn.l2_loss(self.weights.bout))
+    return regularizers
+  
   def cnn_pred(self):
     """Prediction function for network interface
       Returns: prediction, correct prediction, accuracy
