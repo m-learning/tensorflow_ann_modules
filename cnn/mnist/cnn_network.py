@@ -9,8 +9,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cnn.mnist.cnn_parameters import cnn_weights
 from cnn.mnist import cnn_parameters as pr
+from cnn.mnist.cnn_parameters import cnn_weights
 import tensorflow as tf
 
 
@@ -19,11 +19,14 @@ STRIDE = 'SAME'
 class cnn_functions(object):
   """CNN network for MNIST classification"""
     
-  def __init__(self):
+  def __init__(self, decay=None, for_training=True):
     # tf Graph input
     self.x = tf.placeholder(tf.float32, [None, pr.N_INPUT])
     self.y = tf.placeholder(tf.float32, [None, pr.N_CLASSES])
     self.weights = cnn_weights()
+    if decay is not None:
+      self.weights.init_weights(wdc=decay)
+    self.for_trainign = for_training
     self.keep_prob = tf.placeholder(tf.float32)  # dropout (keep probability)
 
   def conv2d(self, x, W, b, strides=1):
@@ -78,18 +81,19 @@ class cnn_functions(object):
     """
   
     # Reshape input picture
-    conv_n = self.conv_layers()
+    net = self.conv_layers()
 
     # Fully connected layer
     # Reshape conv2 output to fit fully connected layer input
-    fc1_pr = tf.reshape(conv_n, [-1, self.weights.wd1.get_shape().as_list()[0]])
-    fc1_z = tf.add(tf.matmul(fc1_pr, self.weights.wd1), self.weights.bd1)
-    fc1 = tf.nn.relu(fc1_z)
+    net = tf.reshape(net, [-1, self.weights.wd1.get_shape().as_list()[0]])
+    net = tf.add(tf.matmul(net, self.weights.wd1), self.weights.bd1)
+    net = tf.nn.relu(net)
     # Apply Dropout
-    drop = tf.nn.dropout(fc1, self.keep_prob)
+    if self.for_training:
+      net = tf.nn.dropout(net, self.keep_prob)
 
     # Output, class prediction
-    out = tf.add(tf.matmul(drop, self.weights.wout), self.weights.bout)
+    out = tf.add(tf.matmul(net, self.weights.wout), self.weights.bout)
     
     return out
   

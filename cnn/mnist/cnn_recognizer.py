@@ -36,8 +36,8 @@ class image_recognizer(object):
         Recognized digit
     """
   
-    cnn_network = cnn_functions()
-    pred = cnn_network.conv2d
+    network = cnn_functions()
+    pred = network.conv2d
     
     # Evaluate model
     recognize_image = tf.argmax(pred, 1)
