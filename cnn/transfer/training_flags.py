@@ -19,10 +19,16 @@ from cnn.utils import file_utils
 IMAGENET_DIR = 'imagenet'
 BOTTLENECK_DIR = 'bottleneck'
 
+# Key for weight decays
+LOSSES = 'losses'
+
 # Keep probability for "dropout" layers
 keep_prob = 0.5
 
 keep_all_prob = 1.0
+
+# L2 regularization weight decay
+weight_decay = 0.00004
 
 # Details of the training configuration.
 how_many_training_steps = 25000  # How many training steps to run before ending
@@ -77,6 +83,9 @@ model_dir = None  # Path to classify_image_graph_def.pb, """
                                 # imagenet_synset_to_human_label_map.txt, and
                                 # imagenet_2012_challenge_label_map_proto.pbtxt
 bottleneck_dir = None  # Path to cache bottleneck layer values as files
+
+
+is_training = True
 
 ###########################
 # Encapsulated parameters #

@@ -21,8 +21,8 @@ from cnn.utils.file_utils import cnn_file_utils
 DATASET_DIR = '/home/levan-lev/Documents/ann/gunbag'
 
 class training_file(cnn_file_utils):
-  """Files and directories for parameters (trained), 
-     training, validation and test"""
+  """Files and directories for (trained), 
+     training, validation and test parameters"""
   
   def __init__(self, image_resizer=None):
     super(training_file, self).__init__('gunbag', image_resizer=image_resizer)

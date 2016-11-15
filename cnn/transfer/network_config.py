@@ -15,6 +15,15 @@ import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 
+def regularize_weighs(weights):
+  """Adds L2 regularization to weights
+    Args:
+      weights - weighs for regularization
+  """
+  if flags.is_training:
+    weight_decay = tf.mul(tf.nn.l2_loss(weights), flags.weight_decay, name='weight_loss')
+    tf.add_to_collection(flags.LOSSES, weight_decay)
+
 def weight_variable(shape):
   """Create a weight variable with appropriate initialization
     Args:
@@ -23,7 +32,10 @@ def weight_variable(shape):
       variable placeholder
   """
   initial = tf.truncated_normal(shape, stddev=0.001)
-  return tf.Variable(initial, name='final_weights')
+  weights = tf.Variable(initial, name='final_weights')
+  regularize_weighs(weights)
+  
+  return weights
 
 def bias_variable(shape):
   """Create a bias variable with appropriate initialization
@@ -151,13 +163,15 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
       logits, ground_truth_input)
     with tf.name_scope('total'):
       cross_entropy_mean = tf.reduce_mean(cross_entropy)
-    tf.scalar_summary('cross entropy', cross_entropy_mean)
+      tf.add_to_collection(flags.LOSSES, cross_entropy_mean)
+      total_loss = tf.add_n(tf.get_collection(flags.LOSSES), name='total_loss')
+    tf.scalar_summary('cross entropy', total_loss)
 
   with tf.name_scope('train'):
     train_step = tf.train.GradientDescentOptimizer(
-      flags.learning_rate).minimize(cross_entropy_mean)
+      flags.learning_rate).minimize(total_loss)
 
-  return (train_step, cross_entropy_mean, bottleneck_input,
+  return (train_step, cross_entropy_mean, total_loss, bottleneck_input,
           ground_truth_input, final_tensor, keep_prob)
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):

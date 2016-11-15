@@ -24,8 +24,8 @@ from six.moves import urllib
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
 
 class training_file(cnn_file_utils):
-  """Files and directories for parameters (trained), 
-     training, validation and test"""
+  """Files and directories for (trained), 
+     training, validation and test parameters"""
   
   def __init__(self, image_resizer=None):
     super(training_file, self).__init__('flowers',

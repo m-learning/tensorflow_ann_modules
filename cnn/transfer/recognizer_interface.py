@@ -32,7 +32,7 @@ class retrained_recognizer(object):
   def create_graph(self, model_path):
     """Creates a graph from saved GraphDef file.
       Args:
-        model_path - path to graph model
+        model_path - path to graph model file
     """
     
     with tf.gfile.FastGFile(model_path, 'rb') as f:

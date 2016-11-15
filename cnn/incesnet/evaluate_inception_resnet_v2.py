@@ -1,10 +1,10 @@
-# '''
-# Created on Sep 14, 2016
-#
-# Evaluation fof inception ResNet v2 implementation
-#
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Sep 14, 2016
+
+Evaluation of inception ResNet v2 implementation
+ 
+@author: Levan Tsinadze
+"""
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #

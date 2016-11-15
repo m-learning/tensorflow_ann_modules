@@ -46,8 +46,8 @@ PEDESTRIAN_IMG_DIR = 'PNGImages'
 PERSONS_JPEG_DIR = 'JPEGImages'
 
 class training_file(cnn_file_utils):
-  """Files and directories for parameters (trained), 
-     training, validation and test"""
+  """Files and directories for (trained), 
+     training, validation and test parameters"""
      
   def __init__(self, image_resizer=None):
     super(training_file, self).__init__('flomen',

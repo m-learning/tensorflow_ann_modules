@@ -102,7 +102,7 @@ def test_trained_network(sess, validation_parameters):
   
   (_, image_lists, _, _, _, bottleneck_tensor,
    jpeg_data_tensor, _, bottleneck_input,
-   ground_truth_input, keep_prob, evaluation_step, prediction_step, _) = validation_parameters
+   ground_truth_input, keep_prob, evaluation_step, prediction_step, _, _) = validation_parameters
   bottleneck_params = (sess, image_lists, flags.test_batch_size, TESTING_CATEGORY,
                        flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
                        bottleneck_tensor)
@@ -126,7 +126,7 @@ def iterate_and_train(sess, iteration_parameters):
    distorted_jpeg_data_tensor, distorted_image_tensor,
    resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
    train_step, bottleneck_input, ground_truth_input, keep_prob,
-   evaluation_step, _, cross_entropy) = iteration_parameters
+   evaluation_step, _, cross_entropy, _) = iteration_parameters
    
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
   (merged, train_writer, validation_writer) = logger.init_writer(sess)
@@ -253,7 +253,7 @@ def prepare_iteration_parameters(prepared_parameters):
    distorted_jpeg_data_tensor, distorted_image_tensor) = distort.distort_images(prepared_parameters)
   # Add the new layer that we'll be training.
   num_classes = len(image_lists.keys())  # Calculates number of output classes
-  (train_step, cross_entropy, bottleneck_input,
+  (train_step, cross_entropy, total_loss, bottleneck_input,
    ground_truth_input, final_tensor, keep_prob) = config.add_final_training_ops(num_classes,
                                                               flags.final_tensor_name,
                                                               bottleneck_tensor)
@@ -267,7 +267,7 @@ def prepare_iteration_parameters(prepared_parameters):
                           distorted_jpeg_data_tensor, distorted_image_tensor,
                           resized_image_tensor, bottleneck_tensor, jpeg_data_tensor,
                           train_step, bottleneck_input, ground_truth_input, keep_prob,
-                          evaluation_step, prediction_step, cross_entropy))
+                          evaluation_step, prediction_step, cross_entropy, total_loss))
 
 def validate_test_and_save(sess, graph, validation_parameters):
   """Validates and / or tests network
@@ -278,7 +278,7 @@ def validate_test_and_save(sess, graph, validation_parameters):
                               for validation
   """
   
-  (_, image_lists, _, _, _, _, _, _, _, _, _, _, _, _) = validation_parameters
+  (_, image_lists, _, _, _, _, _, _, _, _, _, _, _, _, _) = validation_parameters
   test_trained_network(sess, validation_parameters)
   # Write out the trained graph and labels with the weights stored as constants.
   save_trained_parameters(sess, graph, image_lists.keys())
