@@ -60,7 +60,6 @@ class cnn_learner(object):
     parameters_path = self.tr_files.get_or_init_files_path()
     # Launch the graph
     with tf.Session() as sess:
-        
         sess.run(init)
         step = 1
         # Keep training until reach max iterations

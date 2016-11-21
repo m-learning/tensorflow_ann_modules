@@ -8,6 +8,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
 import glob
 import imghdr
 import os
@@ -15,6 +16,7 @@ import sys
 import traceback
 
 from cnn.utils.pillow_resizing import pillow_resizer
+from cnn.utils import file_utils
 
 
 try:
@@ -45,11 +47,12 @@ class image_indexer(object):
 class image_converter(object):
   """Utility class for image manipulation"""
   
-  def __init__(self, from_parent, to_dir, prefx):
+  def __init__(self, from_parent, to_dir, prefx, rotate_pos=[]):
     self.from_parent = from_parent
     self.to_dir = to_dir
     self.prefx = prefx
     self.resizer = pillow_resizer(IMAGE_SIZE)
+    self.rotate_pos = rotate_pos
     
   def convert_image(self, im):
     """Converts PNG images to JPG format
@@ -71,6 +74,7 @@ class image_converter(object):
         im - saved image
     """
     fl_name = self.prefx + '_' + 'cnvrt_data_' + str(i) + '.jpg'
+    file_utils.ensure_dir_exists(self.to_dir)
     n_im = os.path.join(self.to_dir, fl_name)
     if os.path.exists(n_im):
       os.remove(n_im)
@@ -164,31 +168,74 @@ class image_converter(object):
     for from_dir in from_dirs:
       scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')
       print(scan_dir)
-      indexer = image_indexer((30, 45, 60, 90, -30, -45, -60, -90))
+      indexer = image_indexer(self.rotate_pos)
       for pr in glob.glob(scan_dir):
         im = self.write_file_quietly(pr, indexer.i)
         indexer.incr_indexer()
         rotate_params = (pr, im, indexer)
         self.rotate_and_write(rotate_params)
         
-if __name__ == '__main__':
+
+def run_image_processing(argument_flags):
+  """Runs image processing
+    Args:
+      argument_flags - Command line arguments
+  """
   
-  call_args = sys.argv
-  from_dirs = call_args[1]
-  to_dir = call_args[2]
-  prefx = call_args[3]
+  from_dirs = argument_flags.src_dir
+  to_dir = argument_flags.dst_dir
+  prefx = argument_flags.file_prefix
+  if argument_flags.rotate_pos:
+    rotate_pos = argument_flags.rotate_pos.split('/')
+  else:
+    rotate_pos = []
   
-  if len(call_args) > 4:
-    resize_image = True
+  if argument_flags.resize_images:
+      resize_image = argument_flags.resize_images
   
-  if len(call_args) > 5:
-    verbose_error = True
-    
-  from_dirs_list = os.listdir(from_dirs)
-  print(from_dirs)
-  print(from_dirs_list)
-  print(to_dir)
-  print(prefx)
+  if argument_flags.log_errors:
+    verbose_error = argument_flags.log_errors
   
-  converter = image_converter(from_dirs, to_dir, prefx)
+  converter = image_converter(from_dirs, to_dir, prefx, rotate_pos=rotate_pos)
   converter.migrate_images()
+      
+
+def read_arguments_and_run():
+  """Retrieves command line arguments for image processing"""
+  
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--src_dir',
+                          type=str,
+                          help='Source directory.')
+  arg_parser.add_argument('--dst_dir',
+                          type=str,
+                          help='Destination directory.') 
+  arg_parser.add_argument('--file_prefix',
+                          type=str,
+                          default='trn_',
+                          help='Converted file prefix.') 
+  arg_parser.add_argument('--resize_images',
+                          type=bool,
+                          default=True,
+                          help='Resize images.')
+  
+  arg_parser.add_argument('--image_size',
+                          type=int,
+                          default=IMAGE_SIZE,
+                          help='Images Size.')
+  
+  arg_parser.add_argument('--log_errors',
+                          type=bool,
+                          default=False,
+                          help='Log errors.')
+  arg_parser.add_argument('--rotate_pos',
+                          type=str,
+                          help='Rotate images (--rotate_pos 30/-30/45/-45).')
+  (argument_flags, _) = arg_parser.parse_known_args()
+  run_image_processing(argument_flags)
+
+        
+if __name__ == '__main__':
+  """Converts images for training data set"""
+  
+  read_arguments_and_run()

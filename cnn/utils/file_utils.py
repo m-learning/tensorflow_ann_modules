@@ -222,8 +222,11 @@ class cnn_file_utils(files_and_path_utils):
     
     return current_dir
 
-  # Initializes trained files path
   def get_or_init_files_path(self):
+    """Initializes trained files path
+      Returns:
+        Trained graph and labels path
+    """
     return self.join_path(self.init_files_directory, WEIGHTS_FILE)
       
   def get_or_init_labels_path(self):
@@ -233,8 +236,11 @@ class cnn_file_utils(files_and_path_utils):
     """
     return self.join_path(self.init_files_directory, LABELS_FILE)
 
-  # Gets directory for test images
   def get_or_init_test_dir(self):
+    """Gets directory for test images
+      Returns:
+        current_dir - test images directory
+    """
     
     current_dir = self.join_path(self.get_data_general_directory, TEST_IMAGES_DIR)
     
@@ -243,10 +249,16 @@ class cnn_file_utils(files_and_path_utils):
     
     return current_dir
     
-  # Gets or initializes test image
   def get_or_init_test_path(self):
+    """Gets or initializes test image
+      Returns:
+        Test image path
+    """
     return self.join_path(self.get_or_init_test_dir, TEST_IMAGE_NAME)
   
-  # Gets / initializes evaluation directory
   def get_or_init_eval_path(self):
+    """Gets / initializes evaluation directory
+      Returns:
+        Evaluation diractory path
+    """
     return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_EVALUATION)

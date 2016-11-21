@@ -20,7 +20,6 @@ class cnn_functions(object):
   """CNN network for MNIST classification"""
     
   def __init__(self, decay=None, for_training=True):
-    # tf Graph input
     self.x = tf.placeholder(tf.float32, [None, pr.N_INPUT])
     self.y = tf.placeholder(tf.float32, [None, pr.N_CLASSES])
     self.weights = cnn_weights()
