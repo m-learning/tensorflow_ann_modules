@@ -12,11 +12,10 @@ import argparse
 import glob
 import imghdr
 import os
-import sys
 import traceback
 
-from cnn.utils.pillow_resizing import pillow_resizer
 from cnn.utils import file_utils
+from cnn.utils.pillow_resizing import pillow_resizer
 
 
 try:
@@ -25,7 +24,6 @@ except ImportError:
   print("Importing Image from PIL threw exception")
   import Image
 
-resize_image = False
 verbose_error = None
 
 IMAGE_RGB_FORMAT = 'RGB'
@@ -47,12 +45,21 @@ class image_indexer(object):
 class image_converter(object):
   """Utility class for image manipulation"""
   
-  def __init__(self, from_parent, to_dir, prefx, rotate_pos=[]):
+  def __init__(self, from_parent, to_dir, prefx,
+               rotate_pos=[],
+               add_extensions=True,
+               image_extensions=['jpg', 'png'],
+               resize_image=True,
+               image_size=IMAGE_SIZE):
     self.from_parent = from_parent
     self.to_dir = to_dir
     self.prefx = prefx
     self.resizer = pillow_resizer(IMAGE_SIZE)
     self.rotate_pos = rotate_pos
+    self.add_extensions = add_extensions
+    self.image_extensions = image_extensions
+    self.resize_image = resize_image
+    self.image_size = image_size
     
   def convert_image(self, im):
     """Converts PNG images to JPG format
@@ -95,7 +102,7 @@ class image_converter(object):
         img - resized image
     """
     
-    if resize_image:
+    if self.resize_image:
       img = self.resizer.resize_thumbnail(im)
     else:
       img = im
@@ -156,9 +163,31 @@ class image_converter(object):
     rotate_angles = indexer.rotate_angles
     if im is not None and rotate_angles is not None:
       for ang in rotate_angles:
-        im_r = im.rotate(ang, expand=True)
+        if type(ang) is str:
+          ang_int = int(ang)
+        else:
+          ang_int = ang
+        im_r = im.rotate(ang_int, expand=True)
         self.resize_and_write(pr, indexer.i, im_r)
         indexer.incr_indexer()
+        
+  def add_extension_to_images(self, raw_path, parent_dir_path=None):
+    """Adds extensions to files
+      Args:
+        dir_path - directory to scan
+    """
+    
+    if os.path.isdir(raw_path):
+      file_names = os.listdir(raw_path)
+      for file_name in file_names:
+        self.add_extension_to_images(file_name, parent_dir_path=raw_path)
+    else:
+      full_file_path = os.path.join(parent_dir_path, raw_path)
+      ext = os.path.splitext(full_file_path)[-1].lower()
+      if not ext:
+        file_name_with_ext = full_file_path + '.jpg'
+        os.rename(full_file_path, file_name_with_ext)
+    
     
   def migrate_images(self):
     """Converts and migrates images from one 
@@ -166,14 +195,19 @@ class image_converter(object):
     
     from_dirs = os.listdir(self.from_parent)
     for from_dir in from_dirs:
-      scan_dir = os.path.join(self.from_parent, from_dir, '*.jpg')
-      print(scan_dir)
-      indexer = image_indexer(self.rotate_pos)
-      for pr in glob.glob(scan_dir):
-        im = self.write_file_quietly(pr, indexer.i)
-        indexer.incr_indexer()
-        rotate_params = (pr, im, indexer)
-        self.rotate_and_write(rotate_params)
+      if self.add_extensions:
+        full_file_path = os.path.join(self.from_parent, from_dir)
+        self.add_extension_to_images(full_file_path)
+      for ext in self.image_extensions:
+        scan_ext = '*.' + ext
+        scan_dir = os.path.join(self.from_parent, from_dir, scan_ext)
+        print(scan_dir)
+        indexer = image_indexer(self.rotate_pos)
+        for pr in glob.glob(scan_dir):
+          im = self.write_file_quietly(pr, indexer.i)
+          indexer.incr_indexer()
+          rotate_params = (pr, im, indexer)
+          self.rotate_and_write(rotate_params)
         
 
 def run_image_processing(argument_flags):
@@ -186,17 +220,26 @@ def run_image_processing(argument_flags):
   to_dir = argument_flags.dst_dir
   prefx = argument_flags.file_prefix
   if argument_flags.rotate_pos:
-    rotate_pos = argument_flags.rotate_pos.split('/')
+    rotate_pos = argument_flags.rotate_pos.split('|')
   else:
     rotate_pos = []
+    
+  add_extensions = argument_flags.add_extensions
   
-  if argument_flags.resize_images:
-      resize_image = argument_flags.resize_images
+  resize_image = argument_flags.resize_images
+  image_size = argument_flags.image_size
+      
+  image_extensions = argument_flags.image_extensions.split('-')
   
   if argument_flags.log_errors:
     verbose_error = argument_flags.log_errors
   
-  converter = image_converter(from_dirs, to_dir, prefx, rotate_pos=rotate_pos)
+  converter = image_converter(from_dirs, to_dir, prefx,
+                              rotate_pos=rotate_pos,
+                              add_extensions=add_extensions,
+                              image_extensions=image_extensions,
+                              resize_image=resize_image,
+                              image_size=image_size)
   converter.migrate_images()
       
 
@@ -228,9 +271,21 @@ def read_arguments_and_run():
                           type=bool,
                           default=False,
                           help='Log errors.')
+  
+  arg_parser.add_argument('--add_extensions',
+                          type=bool,
+                          default=True,
+                          help='Adds extensions to images.')
+  
+  arg_parser.add_argument('--image_extensions',
+                          type=str,
+                          default='jpg-png',
+                          help='Image extensions to filter.')
+  
   arg_parser.add_argument('--rotate_pos',
                           type=str,
-                          help='Rotate images (--rotate_pos 30/-30/45/-45).')
+                          default='30|-30|45|-45|180|90|-90|95|-95',
+                          help='Rotate images (--rotate_pos 30|-30|45|-45).')
   (argument_flags, _) = arg_parser.parse_known_args()
   run_image_processing(argument_flags)
 

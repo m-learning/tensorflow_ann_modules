@@ -13,7 +13,7 @@ from __future__ import print_function
 import argparse
 
 import cnn.transfer.graph_config as gconf
-import cnn.transfer.training_flags as flags
+import cnn.utils.cnn_flags_utils as flags
 import numpy as np
 import tensorflow as tf
 
@@ -60,7 +60,7 @@ class retrained_recognizer(object):
         image_tensor - tensor to feed recognition layer
     """
     image_tensor = {DECODE_KEY: image_data,
-                    DROPOUT_KEY: flags.keep_all_prob}
+                    DROPOUT_KEY: flags.KEEP_FULL_PROB}
     return image_tensor
     
         

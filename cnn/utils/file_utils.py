@@ -201,19 +201,25 @@ class cnn_file_utils(files_and_path_utils):
   def get_training_directory(self):
     return self.join_path(self.get_data_general_directory, PATH_FOR_TRAINING)
 
-  # Gets directory for training set and parameters
   def get_data_directory(self):
+    """Gets directory for training set and parameters
+      Returns:
+        directory for training set and parameters
+    """
     return self.join_path(self.get_training_directory, self.path_to_training_photos)
   
-  # Gets or creates directory for training set and parameters
   def get_or_init_data_directory(self):
+    """Creates directory for training set and parameters"""
     
     dir_path = self.get_data_directory()
     if not os.path.exists(dir_path):
       os.makedirs(dir_path)
   
-  # Gets or creates directory for trained parameters
   def init_files_directory(self):
+    """Gets or creates directory for trained parameters
+      Returns:
+        current_dir - directory for trained parameters
+    """
       
     current_dir = self.join_path(self.get_data_general_directory, PATH_FOR_PARAMETERS)
     

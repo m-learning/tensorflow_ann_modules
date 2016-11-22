@@ -56,7 +56,6 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
-
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
@@ -67,6 +66,7 @@ import  cnn.transfer.bottleneck_config as bottleneck
 import  cnn.transfer.distort_config as distort
 import cnn.transfer.network_config as config
 import cnn.transfer.training_flags as flags
+import cnn.utils.cnn_flags_utils as consts
 import tensorflow as tf
 
 
@@ -111,10 +111,9 @@ def test_trained_network(sess, validation_parameters):
       [evaluation_step, prediction_step],
       feed_dict={bottleneck_input: test_bottlenecks,
                  ground_truth_input: test_ground_truth,
-                 keep_prob: flags.keep_all_prob})
+                 keep_prob: consts.KEEP_FULL_PROB})
   print('Final test accuracy = %.1f%%' % (test_accuracy * 100))
   
-
 def iterate_and_train(sess, iteration_parameters):
   """Trains network with additional parameters
     Args:
@@ -141,7 +140,7 @@ def iterate_and_train(sess, iteration_parameters):
       bottleneck_params = (sess, image_lists, flags.train_batch_size, TRAINING_CATEGORY,
                            flags.image_dir, distorted_jpeg_data_tensor,
                            distorted_image_tensor, resized_image_tensor, bottleneck_tensor)
-      train_bottlenecks, train_ground_truth = bottleneck.get_random_distorted_bottlenecks(bottleneck_params)
+      (train_bottlenecks, train_ground_truth) = bottleneck.get_random_distorted_bottlenecks(bottleneck_params)
     else:
       bottleneck_params = (sess, image_lists, flags.train_batch_size, TRAINING_CATEGORY,
                            flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
@@ -149,30 +148,29 @@ def iterate_and_train(sess, iteration_parameters):
     # Every so often, print out how well the graph is training.
     is_last_step = (i + 1 == flags.how_many_training_steps)
     if (i % flags.eval_step_interval) == 0 or is_last_step:
-      train_accuracy, cross_entropy_value = sess.run(
+      (train_accuracy, cross_entropy_value) = sess.run(
           [evaluation_step, cross_entropy],
           feed_dict={bottleneck_input: train_bottlenecks,
                      ground_truth_input: train_ground_truth,
                      keep_prob: flags.keep_prob})
       print('%s: Step %d: Train accuracy = %.1f%%' % (datetime.now(), i, train_accuracy * 100))
       print('%s: Step %d: Cross entropy = %f' % (datetime.now(), i, cross_entropy_value))
-      bottleneck_params = (sess, image_lists, flags.validation_batch_size, VALIDATION_CATEGORY,
-                           flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
       if validation_bottlenecks is None or validation_ground_truth is None:
+        bottleneck_params = (sess, image_lists, flags.validation_batch_size, VALIDATION_CATEGORY,
+                             flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor, bottleneck_tensor)
         (validation_bottlenecks, validation_ground_truth, _) = bottleneck.get_val_test_bottlenecks(bottleneck_params)
       # Run a validation step and capture training summaries for TensorBoard with the `merged` op.
-      validation_summary, validation_accuracy = sess.run(
+      (validation_summary, validation_accuracy) = sess.run(
           [merged, evaluation_step],
           feed_dict={bottleneck_input: validation_bottlenecks,
                      ground_truth_input: validation_ground_truth,
-                     keep_prob: flags.keep_all_prob})
+                     keep_prob: consts.KEEP_FULL_PROB})
       validation_writer.add_summary(validation_summary, i)
-      print('%s: Step %d: Validation accuracy = %.1f%%' % 
-            (datetime.now(), i, validation_accuracy * 100))
+      print('%s: Step %d: Validation accuracy = %.1f%%' % (datetime.now(), i, validation_accuracy * 100))
     else:
       # Feed the bottlenecks and ground truth into the graph, and run a training
       # step. Capture training summaries for TensorBoard with the `merged` op.
-      train_summary, _ = sess.run([merged, train_step],
+      (train_summary, _) = sess.run([merged, train_step],
                feed_dict={bottleneck_input: train_bottlenecks,
                           ground_truth_input: train_ground_truth,
                           keep_prob: flags.keep_prob})
@@ -225,8 +223,7 @@ def prepare_session(sess):
 def prepare_iteration_parameters(prepared_parameters):
   """Prepares parameters for training iterations
     Args:
-      prepared_parameters - prepared training 
-      parameters
+      prepared_parameters - prepared parameters tuple for training 
     Returns:
       sess - current TensorFlow session
       graph - network graph

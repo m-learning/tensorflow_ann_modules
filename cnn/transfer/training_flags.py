@@ -25,8 +25,6 @@ LOSSES = 'losses'
 # Keep probability for "dropout" layers
 keep_prob = 0.5
 
-keep_all_prob = 1.0
-
 # L2 regularization weight decay
 weight_decay = 0.00004
 
@@ -106,7 +104,7 @@ def _set_training_flags(tr_files):
     # Training data and cache directories
     prnt_dir = tr_files.get_data_general_directory()
     # Input and output file flags.
-    model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb, """
+    model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb
     _training_flags_to_set = False
 
 def retrieve_args(argument_flags, tr_files):
@@ -157,9 +155,7 @@ def retrieve_args(argument_flags, tr_files):
     print('Bottleneck path was set as - ' , bottleneck_dir)
   else:
     bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
-    
-      
-
+          
 def parse_and_retrieve(tr_files=None):
   """Retrieves command line arguments"""
   
