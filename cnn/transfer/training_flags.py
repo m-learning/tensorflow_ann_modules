@@ -157,7 +157,10 @@ def retrieve_args(argument_flags, tr_files):
     bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
           
 def parse_and_retrieve(tr_files=None):
-  """Retrieves command line arguments"""
+  """Retrieves command line arguments
+    Args:
+      tr_files - File utility object for training data preparation
+  """
   
   arg_parser = argparse.ArgumentParser()
   arg_parser.add_argument('--training_steps',
@@ -182,7 +185,7 @@ def init_flaged_data(tr_files):
   """Generates and initializes flags for 
     training and testing
     Args:
-      tr_files - trainign files management utility
+      tr_files - Training files management utility
     Returns:
       training_flags configured instance
   """

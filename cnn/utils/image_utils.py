@@ -35,17 +35,26 @@ class image_indexer(object):
   """Image parameters for indexing"""
   
   def __init__(self, rotate_angles):
-    self.rotate_angles = rotate_angles
-    self.i = 0
+    self._rotate_angles = rotate_angles
+    self._index = 0
     
   def incr_indexer(self):
     """Increments image index"""
-    self.i += 1
+    self._index += 1
+  
+  @property
+  def curr_index(self):
+    return self._index
+  
+  @property
+  def rotate_angles(self):
+    return self._rotate_angles
 
 class image_converter(object):
   """Utility class for image manipulation"""
   
   def __init__(self, from_parent, to_dir, prefx,
+               rotate_image=True,
                rotate_pos=[],
                add_extensions=True,
                image_extensions=['jpg', 'png'],
@@ -55,11 +64,13 @@ class image_converter(object):
     self.to_dir = to_dir
     self.prefx = prefx
     self.resizer = pillow_resizer(IMAGE_SIZE)
+    self.rotate_image = rotate_image
     self.rotate_pos = rotate_pos
     self.add_extensions = add_extensions
     self.image_extensions = image_extensions
     self.resize_image = resize_image
     self.image_size = image_size
+    self.indexer = image_indexer(self.rotate_pos)
     
   def convert_image(self, im):
     """Converts PNG images to JPG format
@@ -72,7 +83,7 @@ class image_converter(object):
     return jpg_im
     
   
-  def write_file(self, pr, i, jpg_im=None):
+  def write_file(self, pr, jpg_im=None):
     """Converts and writes file
       Args:
         pr - path for source file
@@ -80,7 +91,7 @@ class image_converter(object):
       Returns:
         im - saved image
     """
-    fl_name = self.prefx + '_' + 'cnvrt_data_' + str(i) + '.jpg'
+    fl_name = self.prefx + '_' + 'cnvrt_data_' + str(self.indexer.curr_index) + '.jpg'
     file_utils.ensure_dir_exists(self.to_dir)
     n_im = os.path.join(self.to_dir, fl_name)
     if os.path.exists(n_im):
@@ -89,7 +100,7 @@ class image_converter(object):
       im = Image.open(pr)
     else:
       im = jpg_im
-    print(im)
+    print(pr, im, n_im)
     im.save(n_im)
     
     return im
@@ -109,7 +120,7 @@ class image_converter(object):
     
     return img
     
-  def write_file_quietly(self, pr, i):
+  def write_file_quietly(self, pr):
     """Converts and writes file and logs errors
       Args:
         pr - path for source file
@@ -123,11 +134,11 @@ class image_converter(object):
       im = Image.open(pr)
       if file_type in ('jpg:', 'jpeg', 'JPG:', 'JPEG'):
         img = self.resize_if_nedded(im)
-        saved_im = self.write_file(pr, i, img)
+        saved_im = self.write_file(pr, img)
       elif file_type in ('png', 'PNG'):
         jpg_im = self.convert_image(im)
         img = self.resize_if_nedded(jpg_im)
-        saved_im = self.write_file(pr, i, img)
+        saved_im = self.write_file(pr, img)
         print("Image is converted" , pr , "\n")
       else:
         print('incorrect file type - ', file_type)
@@ -142,7 +153,7 @@ class image_converter(object):
         
     return saved_im
   
-  def resize_and_write(self, pr, i, im):
+  def resize_and_write(self, pr, im):
     """Resizes and saves image
       Args:
         pr - source image
@@ -150,7 +161,7 @@ class image_converter(object):
         im - image to resize and save
     """
     img = self.resize_if_nedded(im)
-    self.write_file(pr, i, img)
+    self.write_file(pr, img)
     
   def rotate_and_write(self, rotate_params):
     """Rotates and writes images in destination directory
@@ -158,18 +169,22 @@ class image_converter(object):
         rotate_params - rotation parameters
     """
     
-    (pr, im, indexer) = rotate_params
+    (pr, im) = rotate_params
     
-    rotate_angles = indexer.rotate_angles
-    if im is not None and rotate_angles is not None:
-      for ang in rotate_angles:
-        if type(ang) is str:
-          ang_int = int(ang)
-        else:
-          ang_int = ang
-        im_r = im.rotate(ang_int, expand=True)
-        self.resize_and_write(pr, indexer.i, im_r)
-        indexer.incr_indexer()
+    rotate_angles = self.indexer.rotate_angles
+    if im is not None: 
+      if self.rotate_image and rotate_angles is not None:
+        for ang in rotate_angles:
+          if type(ang) is str:
+            ang_int = int(ang)
+          else:
+            ang_int = ang
+          im_r = im.rotate(ang_int, expand=True)
+          self.resize_and_write(pr, im_r)
+          self.indexer.incr_indexer()
+      else:
+        self.resize_and_write(pr, im)
+        self.indexer.incr_indexer()
         
   def add_extension_to_images(self, raw_path, parent_dir_path=None):
     """Adds extensions to files
@@ -202,11 +217,10 @@ class image_converter(object):
         scan_ext = '*.' + ext
         scan_dir = os.path.join(self.from_parent, from_dir, scan_ext)
         print(scan_dir)
-        indexer = image_indexer(self.rotate_pos)
         for pr in glob.glob(scan_dir):
-          im = self.write_file_quietly(pr, indexer.i)
-          indexer.incr_indexer()
-          rotate_params = (pr, im, indexer)
+          im = self.write_file_quietly(pr)
+          self.indexer.incr_indexer()
+          rotate_params = (pr, im)
           self.rotate_and_write(rotate_params)
         
 
@@ -219,6 +233,7 @@ def run_image_processing(argument_flags):
   from_dirs = argument_flags.src_dir
   to_dir = argument_flags.dst_dir
   prefx = argument_flags.file_prefix
+  rotate_image = argument_flags.rotate_images
   if argument_flags.rotate_pos:
     rotate_pos = argument_flags.rotate_pos.split('|')
   else:
@@ -235,6 +250,7 @@ def run_image_processing(argument_flags):
     verbose_error = argument_flags.log_errors
   
   converter = image_converter(from_dirs, to_dir, prefx,
+                              rotate_image=rotate_image,
                               rotate_pos=rotate_pos,
                               add_extensions=add_extensions,
                               image_extensions=image_extensions,
@@ -281,6 +297,17 @@ def read_arguments_and_run():
                           type=str,
                           default='jpg-png',
                           help='Image extensions to filter.')
+  
+  arg_parser.add_argument('--rotate_images',
+                          dest='rotate_images',
+                          action='store_true',
+                          help='Rotate images flag')
+  
+  arg_parser.add_argument('--not_rotate_images',
+                          dest='rotate_images',
+                          action='store_false',
+                          help='Rotate images flag')   
+  
   
   arg_parser.add_argument('--rotate_pos',
                           type=str,

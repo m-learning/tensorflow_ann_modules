@@ -100,9 +100,9 @@ def test_trained_network(sess, validation_parameters):
       and validation
   """
   
-  (_, image_lists, _, _, _, bottleneck_tensor,
-   jpeg_data_tensor, _, bottleneck_input,
-   ground_truth_input, keep_prob, evaluation_step, prediction_step, _, _) = validation_parameters
+  (_, image_lists, _, _, _, bottleneck_tensor, jpeg_data_tensor, _,
+   bottleneck_input, ground_truth_input, keep_prob, evaluation_step,
+   prediction_step, _, _) = validation_parameters
   bottleneck_params = (sess, image_lists, flags.test_batch_size, TESTING_CATEGORY,
                        flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
                        bottleneck_tensor)

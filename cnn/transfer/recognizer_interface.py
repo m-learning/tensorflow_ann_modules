@@ -114,8 +114,8 @@ class retrained_recognizer(object):
     """
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--image_path',
-                            help='Image path for recognition',
-                            type=str)
+                            type=str,
+                            help='Image path for recognition')
     (cmd_arguments, _) = arg_parser.parse_known_args()
     if cmd_arguments.image_path:
       test_image_path = self.tr_file.join_path(self.path_funct, cmd_arguments.image_path)
