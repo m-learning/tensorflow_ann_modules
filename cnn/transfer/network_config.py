@@ -115,9 +115,10 @@ def add_final_layer(bottleneck_input, class_count, final_tensor_name):
       class_count - classification categories
       final_tensor_name - final layer name
     Returns:
-      preactivations - pre activation tensor
-      activations - activation tensor
-      keep_prob - placeholder for "dropout" keep probability parameter
+      tuple of - 
+        preactivations - pre activation tensor
+        activations - activation tensor
+        keep_prob - placeholder for "dropout" keep probability parameter
   """
   layer_params = (bottleneck_input, gconf.BOTTLENECK_TENSOR_SIZE, class_count,
                   gconf.FINAL_LAYER_NAME, final_tensor_name, tf.nn.softmax)

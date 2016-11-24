@@ -22,5 +22,5 @@ def retrain_net_main(_):
   retrainer.retrain_net(tr_files)
   
 if __name__ == '__main__':
-  """Runs training and test iterations"""
+  """Runs training iterations and test process"""
   tf.app.run(retrain_net_main)

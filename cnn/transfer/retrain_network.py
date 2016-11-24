@@ -244,7 +244,6 @@ def prepare_iteration_parameters(prepared_parameters):
   
   (graph, bottleneck_tensor, jpeg_data_tensor,
    resized_image_tensor, image_lists) = prepared_parameters
-
   # See if the command-line flags mean we're applying any distortions.
   (sess, do_distort_images,
    distorted_jpeg_data_tensor, distorted_image_tensor) = distort.distort_images(prepared_parameters)

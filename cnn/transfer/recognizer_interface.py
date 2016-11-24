@@ -107,8 +107,6 @@ class retrained_recognizer(object):
   
   def init_image_path(self):
     """Initializes image path to recognize
-      Args:
-        sys_params - runtime parameters
       Returns:
         image file full path
     """
@@ -126,8 +124,6 @@ class retrained_recognizer(object):
   
   def run_inference_on_image(self):
     """Runs network interface on image
-      Args:
-        sys_parameters - parameters
       Returns:
         answer - top predicted data
     """
