@@ -58,6 +58,7 @@ class image_converter(object):
                rotate_pos=[],
                add_extensions=True,
                image_extensions=['jpg', 'png'],
+               change_extensions=['gif'],
                resize_image=True,
                image_size=IMAGE_SIZE):
     self.from_parent = from_parent
@@ -68,9 +69,11 @@ class image_converter(object):
     self.rotate_pos = rotate_pos
     self.add_extensions = add_extensions
     self.image_extensions = image_extensions
+    self.change_extensions = change_extensions
     self.resize_image = resize_image
     self.image_size = image_size
     self.indexer = image_indexer(self.rotate_pos)
+    self.converted_paths = set()
     
   def convert_image(self, im):
     """Converts PNG images to JPG format
@@ -199,7 +202,7 @@ class image_converter(object):
     else:
       full_file_path = os.path.join(parent_dir_path, raw_path)
       ext = os.path.splitext(full_file_path)[-1].lower()
-      if not ext:
+      if not ext or (self.change_extensions is not None and ext in self.change_extensions):
         file_name_with_ext = full_file_path + '.jpg'
         os.rename(full_file_path, file_name_with_ext)
     
@@ -218,10 +221,14 @@ class image_converter(object):
         scan_dir = os.path.join(self.from_parent, from_dir, scan_ext)
         print(scan_dir)
         for pr in glob.glob(scan_dir):
-          im = self.write_file_quietly(pr)
-          self.indexer.incr_indexer()
-          rotate_params = (pr, im)
-          self.rotate_and_write(rotate_params)
+          if pr not in self.converted_paths:
+            im = self.write_file_quietly(pr)
+            self.indexer.incr_indexer()
+            rotate_params = (pr, im)
+            if self.rotate_image:
+              self.rotate_and_write(rotate_params)
+              self.converted_paths.add(pr)
+          
         
 
 def run_image_processing(argument_flags):
@@ -245,6 +252,7 @@ def run_image_processing(argument_flags):
   image_size = argument_flags.image_size
       
   image_extensions = argument_flags.image_extensions.split('-')
+  change_extensions = argument_flags.change_ext.split('-')
   
   if argument_flags.log_errors:
     verbose_error = argument_flags.log_errors
@@ -254,6 +262,7 @@ def run_image_processing(argument_flags):
                               rotate_pos=rotate_pos,
                               add_extensions=add_extensions,
                               image_extensions=image_extensions,
+                              change_extensions=change_extensions,
                               resize_image=resize_image,
                               image_size=image_size)
   converter.migrate_images()
@@ -313,6 +322,11 @@ def read_arguments_and_run():
                           type=str,
                           default='30|-30|45|-45|180|90|-90|95|-95',
                           help='Rotate images (--rotate_pos 30|-30|45|-45).')
+  
+  arg_parser.add_argument('--change_ext',
+                          type=str,
+                          default='gif-GIF',
+                          help='Change extension to JPG flag')
   (argument_flags, _) = arg_parser.parse_known_args()
   run_image_processing(argument_flags)
 

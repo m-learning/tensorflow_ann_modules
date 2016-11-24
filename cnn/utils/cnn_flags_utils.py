@@ -9,5 +9,5 @@ from __future__ import division
 from __future__ import print_function
 
 
-# Default dropout keep probability for Inception models
+# Default "dropout" keep probability for Inception models
 KEEP_FULL_PROB = 1.0

@@ -107,7 +107,7 @@ def test_trained_network(sess, validation_parameters):
                        flags.bottleneck_dir, flags.image_dir, jpeg_data_tensor,
                        bottleneck_tensor)
   (test_bottlenecks, test_ground_truth, _) = bottleneck.get_val_test_bottlenecks(bottleneck_params)
-  test_accuracy, _ = sess.run(
+  (test_accuracy, _) = sess.run(
       [evaluation_step, prediction_step],
       feed_dict={bottleneck_input: test_bottlenecks,
                  ground_truth_input: test_ground_truth,
@@ -290,7 +290,6 @@ def retrain_valid_net(prepared_parameters):
   (sess, graph, iteration_parameters) = prepare_iteration_parameters(prepared_parameters)
   # Run the training for as many cycles as requested on the command line.
   iterate_and_train(sess, iteration_parameters)
-
   # We've completed all our training, so run a final test evaluation on
   # some new images we haven't used before.
   validate_test_and_save(sess, graph, iteration_parameters)

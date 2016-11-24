@@ -98,7 +98,6 @@ def _set_training_flags(tr_files):
     Args:
       tr_files - training files manager
   """
-  global _training_flags_to_set
   if _training_flags_to_set is None or _training_flags_to_set:
     global prnt_dir, model_dir
     # Training data and cache directories
