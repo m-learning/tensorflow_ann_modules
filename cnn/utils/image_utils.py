@@ -60,6 +60,8 @@ class image_converter(object):
                image_extensions=['jpg', 'png'],
                change_extensions=['gif'],
                resize_image=True,
+               box_image=False,
+               box_sizes=[],
                image_size=IMAGE_SIZE):
     self.from_parent = from_parent
     self.to_dir = to_dir
@@ -72,6 +74,8 @@ class image_converter(object):
     self.change_extensions = change_extensions
     self.resize_image = resize_image
     self.image_size = image_size
+    self.box_image = box_image
+    self.box_sizes = box_sizes
     self.indexer = image_indexer(self.rotate_pos)
     self.converted_paths = set()
     
@@ -117,7 +121,17 @@ class image_converter(object):
     """
     
     if self.resize_image:
-      img = self.resizer.resize_thumbnail(im)
+      if self.box_image:
+        [x, y] = im.size
+        left = (x - x / 5) / 2
+        top = (y - y / 3.5) / 2
+        right = x
+        bottom = (y + y / 2.6) / 2
+        box = [left, top, right, bottom]
+        im_to_write = im.crop(box)
+      else:
+        im_to_write = im
+      img = self.resizer.resize_thumbnail(im_to_write)
     else:
       img = im
     
@@ -227,7 +241,7 @@ class image_converter(object):
             rotate_params = (pr, im)
             if self.rotate_image:
               self.rotate_and_write(rotate_params)
-              self.converted_paths.add(pr)
+          self.converted_paths.add(pr)
           
         
 
@@ -257,6 +271,14 @@ def run_image_processing(argument_flags):
   if argument_flags.log_errors:
     verbose_error = argument_flags.log_errors
   
+  if argument_flags.box_images and argument_flags.box_sizes:
+    box_image = True
+    sizes = argument_flags.box_sizes.split('-')
+    box_sizes = [int(sizes[0]), int(sizes[1])]
+  else:
+    box_image = False
+    box_sizes = []
+  
   converter = image_converter(from_dirs, to_dir, prefx,
                               rotate_image=rotate_image,
                               rotate_pos=rotate_pos,
@@ -264,6 +286,8 @@ def run_image_processing(argument_flags):
                               image_extensions=image_extensions,
                               change_extensions=change_extensions,
                               resize_image=resize_image,
+                              box_image=box_image,
+                              box_sizes=box_sizes,
                               image_size=image_size)
   converter.migrate_images()
       
@@ -285,6 +309,18 @@ def read_arguments_and_run():
   arg_parser.add_argument('--resize_images',
                           type=bool,
                           default=True,
+                          help='Resize images.')
+  arg_parser.add_argument('--box_images',
+                          dest='box_images',
+                          action='store_true',
+                          help='Crop images.')
+  arg_parser.add_argument('--not_box_images',
+                          dest='box_images',
+                          action='store_false',
+                          help='Do not Crop images.')
+  arg_parser.add_argument('--box_sizes',
+                          type=str,
+                          default='2-2',
                           help='Resize images.')
   
   arg_parser.add_argument('--image_size',

@@ -26,7 +26,6 @@ try:
 except ImportError:
   print("Importing Image from PIL threw exception")
   import Image
-# import Image
 
 
 # Files and directory constant parameters
