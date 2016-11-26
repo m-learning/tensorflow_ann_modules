@@ -14,7 +14,6 @@ import os.path
 import re
 import sys
 import tarfile
-
 from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags as flags
@@ -117,7 +116,6 @@ def get_image_path(path_parameters):
     images.
     category: Name string of set to pull images from - training, testing, or
     validation.
-
   Returns:
     File system path string to an image that meets the requested parameters.
 
@@ -150,7 +148,6 @@ def get_bottleneck_path(path_parameters):
       bottleneck_dir: Folder string holding cached files of bottleneck values.
       category: Name string of set to pull images from - training, testing, or
       validation.
-
   Returns:
     bottleneck_path - file system path string to an image that meets the requested parameters.
   """

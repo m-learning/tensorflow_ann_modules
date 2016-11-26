@@ -12,7 +12,6 @@ from __future__ import print_function
 
 import os
 import random
-
 from tensorflow.python.platform import gfile
 
 from cnn.transfer.dataset_config import MAX_NUM_IMAGES_PER_CLASS
@@ -31,7 +30,6 @@ def run_bottleneck_on_image(bottleneck_params):
       image_data: Numpy array of image data.
       image_data_tensor: Input data layer in the graph.
       bottleneck_tensor: Layer before the final softmax.
-
   Returns:
     bottleneck_values - numpy array of bottleneck values.
   """
@@ -62,7 +60,6 @@ def get_or_create_bottleneck_and_path(create_params):
       bottleneck_dir: Folder string holding cached files of bottleneck values.
       jpeg_data_tensor: The tensor to feed loaded jpeg data into.
       bottleneck_tensor: The output tensor for the bottleneck values.
-
   Returns:
     String - bottleneck path
     Numpy array of values produced by the bottleneck layer for the image.
@@ -122,7 +119,6 @@ def get_or_create_bottleneck(create_params):
       bottleneck_dir: Folder string holding cached files of bottleneck values.
       jpeg_data_tensor: The tensor to feed loaded jpeg data into.
       bottleneck_tensor: The output tensor for the bottleneck values.
-
   Returns:
     Numpy array of values produced by the bottleneck layer for the image.
   """
@@ -184,7 +180,6 @@ def get_random_cached_bottlenecks(bottleneck_params):
       images.
       jpeg_data_tensor: The layer to feed jpeg image data into.
       bottleneck_tensor: The bottleneck output layer of the CNN graph.
-
   Returns:
     List of bottleneck arrays and their corresponding ground truths.
   """
@@ -283,7 +278,6 @@ def get_random_distorted_bottlenecks(bottleneck_params):
       distorted_image: The output node of the distortion graph.
       resized_input_tensor: The input node of the recognition graph.
       bottleneck_tensor: The bottleneck output layer of the CNN graph.
-
   Returns:
     (bottlenecks, ground_truths) - list of bottleneck arrays and their 
                                    corresponding ground truths.

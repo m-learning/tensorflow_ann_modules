@@ -28,7 +28,6 @@ def should_distort_images(flip_left_right, random_crop, random_scale,
     crop box.
     random_scale: Integer percentage of how much to vary the scale by.
     random_brightness: Integer range to randomly multiply the pixel values by.
-
   Returns:
     Boolean value indicating whether any distortions should be applied.
   """
@@ -84,7 +83,6 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
     random_scale: Integer percentage of how much to vary the scale by.
     random_brightness: Integer range to randomly multiply the pixel values by.
     graph.
-
   Returns:
     The jpeg input layer and the distorted result tensor.
   """

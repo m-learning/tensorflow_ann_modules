@@ -111,6 +111,27 @@ class image_converter(object):
     im.save(n_im)
     
     return im
+  
+  def crop_image(self, im):
+    """Validates if flag set crops passed image
+      Args:
+        im - image to crop
+      Return:
+        cropped_image - cropped image
+    """
+    
+    if self.box_image:
+      [x, y] = im.size
+      left = (x - x / 5) / 2
+      top = (y - y / 3.5) / 2
+      right = x
+      bottom = (y + y / 2.6) / 2
+      box = [left, top, right, bottom]
+      cropped_image = im.crop(box)
+    else:
+      cropped_image = im
+      
+    return cropped_image
     
   def resize_if_nedded(self, im):
     """Resizes passed image if configured
@@ -120,18 +141,9 @@ class image_converter(object):
         img - resized image
     """
     
+    im_to_write = self.crop_image(im)
     if self.resize_image:
-      if self.box_image:
-        [x, y] = im.size
-        left = (x - x / 5) / 2
-        top = (y - y / 3.5) / 2
-        right = x
-        bottom = (y + y / 2.6) / 2
-        box = [left, top, right, bottom]
-        im_to_write = im.crop(box)
-      else:
-        im_to_write = im
-      img = self.resizer.resize_thumbnail(im_to_write)
+      img = self.resizer.resize_full(im_to_write)
     else:
       img = im
     
