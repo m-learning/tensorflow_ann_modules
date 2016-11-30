@@ -71,12 +71,9 @@ def list_layer_values(values, layer_name):
   result = None
   
   for value in values:
-    print(type(value))
-    print(value._op.name)
     print(value.name)
     if value.name == layer_name:
       result = value
-    print(value)
     
   return result
 
@@ -104,7 +101,6 @@ def list_layers(sess, layer_name):
   result = None
   
   layer_ops = sess.graph.get_operations()
-  print(layer_ops)
   for layer_op in layer_ops:
     result = list_from_layer_op(layer_op, layer_name)
     if result is not None:
@@ -129,7 +125,6 @@ def get_layer(layer_name):
       tf.import_graph_def(graph_def)
       try:
         net_layer = list_layers(sess, layer_name)
-        print(net_layer)
       except Exception:
         net_layer = None
         print('Error occurred')

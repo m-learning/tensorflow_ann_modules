@@ -26,8 +26,8 @@ class retrained_recognizer(object):
   """Class to run recognition by trained network"""
   
   def __init__(self, training_file_const):
-    self.tr_file = training_file_const()
-    self.path_funct = self.tr_file.get_or_init_test_dir
+    self._files = training_file_const()
+    self.path_funct = self._files.get_or_init_test_dir
     
   def create_graph(self, model_path):
     """Creates a graph from saved GraphDef file.
@@ -116,9 +116,9 @@ class retrained_recognizer(object):
                             help='Image path for recognition')
     (cmd_arguments, _) = arg_parser.parse_known_args()
     if cmd_arguments.image_path:
-      test_image_path = self.tr_file.join_path(self.path_funct, cmd_arguments.image_path)
+      test_image_path = self._files.join_path(self.path_funct, cmd_arguments.image_path)
     else:
-      test_image_path = self.tr_file.get_or_init_test_path()
+      test_image_path = self._files.get_or_init_test_path()
       
     return test_image_path
   
@@ -133,11 +133,11 @@ class retrained_recognizer(object):
       # Reads image to recognize
       image_data = tf.gfile.FastGFile(test_image_path, 'rb').read()
       # Creates graph from saved GraphDef
-      model_path = self.tr_file.get_or_init_files_path()
+      model_path = self._files.get_or_init_files_path()
       # Initializes and loads netural network
       self.create_graph(model_path)
       # initializes labels path
-      labels_path = self.tr_file.get_or_init_labels_path()
+      labels_path = self._files.get_or_init_labels_path()
       image_parameter = (image_data, labels_path)
       with tf.Session() as sess:
         answer = self.recognize_image(sess, image_parameter)

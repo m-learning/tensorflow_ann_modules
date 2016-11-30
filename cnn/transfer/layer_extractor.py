@@ -11,8 +11,8 @@ from __future__ import division
 from __future__ import print_function
 
 from cnn.transfer.dataset_config import maybe_download_and_extract
-import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.network_config as flags
+import  cnn.transfer.graph_config as gconfig
+import cnn.transfer.network_config as config
 
 
 class layer_features(object):
@@ -30,8 +30,8 @@ class layer_features(object):
                     and various tensors we'll be manipulating.
     """
     
-    flags.init_flags_only(tr_file)
+    config.init_flags_only(tr_file)
     maybe_download_and_extract()
-    net_layer = graph_config.get_layer(self.layer_name)
+    net_layer = gconfig.get_layer(self.layer_name)
     
     return net_layer
