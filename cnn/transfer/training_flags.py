@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import argparse
 
+from cnn.utils import cnn_flags_utils as conts
 from cnn.utils import file_utils
 
 
@@ -89,8 +90,6 @@ is_training = True
 # Encapsulated parameters #
 ###########################
 
-_factor_for_keep_prob = 100
-
 _training_flags_to_set = True
 
 def _set_training_flags(tr_files):
@@ -121,10 +120,15 @@ def retrieve_args(argument_flags, tr_files):
   if argument_flags.keep_prob:
     global keep_prob
     if argument_flags.keep_prob > 1:
-      keep_prob = (argument_flags.keep_prob / _factor_for_keep_prob)
+      keep_prob = (argument_flags.keep_prob / conts.FACTOR_FOR_KEEP_PROB)
     else:
       keep_prob = argument_flags.keep_prob
-      print('Dropout keep probability was set as - ', keep_prob)
+    print('Dropout keep probability was set as - ', keep_prob)
+  
+  if argument_flags.learning_rate:
+    global learning_rate
+    learning_rate = argument_flags.learning_rate
+    print('Learning rate set as - ', learning_rate)
   
   global image_dir, output_graph, output_labels, bottleneck_dir
   if argument_flags.image_dir:
@@ -168,7 +172,10 @@ def parse_and_retrieve(tr_files=None):
                           help='Number of training iterations')
   arg_parser.add_argument('--keep_prob',
                           type=float,
-                          help='Dropout keep probability') 
+                          help='Dropout keep probability')
+  arg_parser.add_argument('--learning_rate',
+                          type=float,
+                          help='Learning rate') 
   arg_parser.add_argument('--image_dir',
                           type=str,
                           help='Path to folders of labeled images.')

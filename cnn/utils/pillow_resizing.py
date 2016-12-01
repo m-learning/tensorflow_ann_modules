@@ -25,7 +25,7 @@ class pillow_resizer(object):
   def resize_thumbnail(self, img):
     """Resizes passed image with "thumbnail" method
       Args: 
-        img = image
+        img - image
       Returns:
         resized image
     """
@@ -37,7 +37,7 @@ class pillow_resizer(object):
   def resize_cover(self, img):
     """Resizes passed image with "cover" method
       Args: 
-        img = image
+        img - image
       Returns:
         resized image
     """
@@ -60,7 +60,7 @@ class pillow_resizer(object):
   def resize_full(self, img):
     """Resizes passed image with "thumbnail" and "height" method
       Args: 
-        img = image
+        img - image
       Returns:
         resized image
     """

@@ -22,7 +22,7 @@ class image_resizer(object):
   def resize_image(self, im):
     """Resizes image for VGG network
     Args: 
-      im image to resize as tensor
+      im - image to resize as tensor
     Returns: 
       res_im - resized image as tensor
     """
@@ -40,7 +40,7 @@ class image_resizer(object):
   def read_and_resize(self, image_path):
     """Resizes image for VGG network
     Args: 
-      image_path path to image
+      image_path - path to image
     Returns: 
       res_im - resized image as tensor
     """
@@ -52,16 +52,16 @@ class image_resizer(object):
   def save_resized(self, im, write_path):
     """Saves image to specific path
     Args: 
-      im image
-      write_path path where to save image
+      im - image
+      write_path - path where to save image
     """
     cv2.imwrite(write_path, im)
     
   def read_resize_write(self, image_path, write_path):
     """Resizes image for VGG network
     Args: 
-      image_path path to image
-      write_path path to save resized image
+      image_path - path to image
+      write_path - path to save resized image
     """
     im = self.read_and_resize(image_path)
     self.save_resized(im, write_path)

@@ -10,8 +10,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import glob
 import os
 import types
+import argparse
 
 
 try:
@@ -268,3 +270,47 @@ class cnn_file_utils(files_and_path_utils):
         Evaluation diractory path
     """
     return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_EVALUATION)
+
+def rename_files(partt, name, dir_path):
+  """Renames files in directory
+    Args:
+      patt - file name pattern
+      name - new name
+      dir_path - path to directory
+  """
+  
+  scan_path = os.path.join(dir_path , '*.jpg')
+  for pr in glob.glob(scan_path):
+    file_base_name = os.path.basename(pr)
+    print(file_base_name)
+    if file_base_name.startswith(partt):
+      file_name = name + file_base_name
+      full_file_name = os.path.join(dir_path, file_name)
+      os.rename(pr, full_file_name)
+
+
+def read_arguments_and_run():
+  """Retrieves command line arguments for files processing"""
+  
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--src_dir',
+                          type=str,
+                          help='Source directory.')
+  arg_parser.add_argument('--pattern',
+                          type=str,
+                          help='File name pattern.') 
+  arg_parser.add_argument('--name',
+                          type=str,
+                          default='rnmd__',
+                          help='New file name prefix.')
+  (argument_flags, _) = arg_parser.parse_known_args()
+  if argument_flags.src_dir and argument_flags.pattern:
+    rename_files(argument_flags.pattern,
+                 argument_flags.name,
+                 argument_flags.src_dir)
+  
+    
+if __name__ == '__main__':
+  """Converts images for training data set"""
+  
+  read_arguments_and_run()
