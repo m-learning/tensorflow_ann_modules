@@ -288,7 +288,6 @@ def rename_files(partt, name, dir_path):
       full_file_name = os.path.join(dir_path, file_name)
       os.rename(pr, full_file_name)
 
-
 def read_arguments_and_run():
   """Retrieves command line arguments for files processing"""
   

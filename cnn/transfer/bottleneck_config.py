@@ -16,6 +16,7 @@ from tensorflow.python.platform import gfile
 
 from cnn.transfer.dataset_config import MAX_NUM_IMAGES_PER_CLASS
 import cnn.transfer.dataset_config as dataset 
+from cnn.utils import cnn_flags_utils as conts
 from cnn.utils import file_utils
 import numpy as np
 import tensorflow as tf
@@ -197,7 +198,7 @@ def get_random_cached_bottlenecks(bottleneck_params):
                  jpeg_data_tensor, bottleneck_tensor, None)
     bottleneck = get_or_create_bottleneck(create_params)
     ground_truth = np.zeros(class_count, dtype=np.float32)
-    ground_truth[label_index] = 1.0
+    ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
     
@@ -245,11 +246,9 @@ def get_val_test_bottlenecks(bottleneck_params):
                  image_dir, category, bottleneck_dir,
                  jpeg_data_tensor, bottleneck_tensor, image)
       (bottleneck_values, bottleneck_path) = get_or_create_bottleneck_and_path(create_params)
-
       # set ground_truth
       ground_truth = np.zeros(class_count, dtype=np.float32)
-      ground_truth[label_index] = 1.0
-
+      ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
       bottlenecks.append(bottleneck_values)
       ground_truths.append(ground_truth)
       img_paths.append(bottleneck_path)
@@ -306,7 +305,7 @@ def get_random_distorted_bottlenecks(bottleneck_params):
                          resized_input_tensor, bottleneck_tensor)
     bottleneck = run_bottleneck_on_image(bottleneck_params)
     ground_truth = np.zeros(class_count, dtype=np.float32)
-    ground_truth[label_index] = 1.0
+    ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
     bottlenecks.append(bottleneck)
     ground_truths.append(ground_truth)
   

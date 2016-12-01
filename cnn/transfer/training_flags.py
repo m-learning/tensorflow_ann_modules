@@ -128,7 +128,7 @@ def retrieve_args(argument_flags, tr_files):
   if argument_flags.learning_rate:
     global learning_rate
     learning_rate = argument_flags.learning_rate
-    print('Learning rate set as - ', learning_rate)
+    print('Learning rate was set as - ', learning_rate)
   
   global image_dir, output_graph, output_labels, bottleneck_dir
   if argument_flags.image_dir:

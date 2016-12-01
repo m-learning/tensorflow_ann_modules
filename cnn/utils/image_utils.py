@@ -122,10 +122,10 @@ class image_converter(object):
     
     if self.box_image:
       [x, y] = im.size
-      left = (x - x / 5) / 2
-      top = (y - y / 3.5) / 2
-      right = x
-      bottom = (y + y / 2.6) / 2
+      left = (x - x / 10) / 2
+      top = (y - y / 20) / 2
+      right = (x + x / 1.5) / 2
+      bottom = (y + y / 4) / 2
       box = [left, top, right, bottom]
       cropped_image = im.crop(box)
     else:
