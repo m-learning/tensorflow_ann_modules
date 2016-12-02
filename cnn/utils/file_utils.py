@@ -10,10 +10,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
 import glob
 import os
 import types
-import argparse
 
 
 try:
@@ -170,16 +170,23 @@ class cnn_file_utils(files_and_path_utils):
       
     return im
   
-  # Writes image with or without resizing
   def write_image(self, im, n_im):
-    
+    """Writes image with or without resizing
+      Args:
+        im - image
+        n_im - new image
+    """
     if self.image_resizer is None:
       im.save(n_im)
     else:
       self.image_resizer.save_resized(im, n_im)
       
-  # Reads and saves (resized or not) image from one path to other
   def read_and_write(self, pr, n_im):
+    """Reads and saves (resized or not) image from one path to other
+      Args:
+        pr - parent directory path
+        n_im - new image
+    """
     
     if self.image_resizer is None:
       im = Image.open(pr)
@@ -187,20 +194,28 @@ class cnn_file_utils(files_and_path_utils):
     else:
       self.image_resizer.read_resize_write(pr, n_im)
   
-  # Gets or creates directories
   def get_data_general_directory(self):
+    """Gets or creates directories
+      Returns:
+        data directory
+    """
     return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
   
-  # Gets training set archives directory
   def get_archives_directory(self):
-    
+    """Gets training set archives directory
+      Args:
+        training archives directory pTH
+    """
     dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
-    if not os.path.exists(dest_directory):
-      os.mkdir(dest_directory) 
+    ensure_dir_exists(dest_directory)
+    
     return dest_directory
   
-  # Gets training data directory
   def get_training_directory(self):
+    """Gets training data directory
+    Returns:
+      training datas directory path
+    """
     return self.join_path(self.get_data_general_directory, PATH_FOR_TRAINING)
 
   def get_data_directory(self):
@@ -214,8 +229,7 @@ class cnn_file_utils(files_and_path_utils):
     """Creates directory for training set and parameters"""
     
     dir_path = self.get_data_directory()
-    if not os.path.exists(dir_path):
-      os.makedirs(dir_path)
+    ensure_dir_exists(dir_path)
   
   def init_files_directory(self):
     """Gets or creates directory for trained parameters
@@ -224,9 +238,7 @@ class cnn_file_utils(files_and_path_utils):
     """
       
     current_dir = self.join_path(self.get_data_general_directory, PATH_FOR_PARAMETERS)
-    
-    if not os.path.exists(current_dir):
-        os.makedirs(current_dir)
+    ensure_dir_exists(current_dir)
     
     return current_dir
 
@@ -251,9 +263,7 @@ class cnn_file_utils(files_and_path_utils):
     """
     
     current_dir = self.join_path(self.get_data_general_directory, TEST_IMAGES_DIR)
-    
-    if not os.path.exists(current_dir):
-      os.mkdir(current_dir)  
+    ensure_dir_exists(current_dir)
     
     return current_dir
     

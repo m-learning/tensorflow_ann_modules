@@ -10,6 +10,7 @@ from __future__ import print_function
 
 import cnn.vgg.vgg_any_flags as flags
 
+
 def train_vgg16():
   """Trains VGG16 model"""
   pass

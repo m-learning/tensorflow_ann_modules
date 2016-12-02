@@ -11,7 +11,6 @@ from __future__ import print_function
 import tensorflow as tf
 
 
-# import numpy as np
 SAME_PADDING = 'SAME'
 STDDEV = 0.1
 SEED = 66478  # Set to None for random seed.

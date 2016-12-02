@@ -14,8 +14,8 @@ from cnn.flomen.cnn_files import training_file as flomen_files
 from cnn.nets.run_network import network_interface
 import cnn.nets.run_network as general_network
 from cnn.preprocessing.vgg_preprocessing import preprocess_image
-import cnn.vgg.vgg as vgg
 from cnn.vgg import vgg_resizer
+import cnn.vgg.vgg as vgg
 from cnn.vgg.vgg_resizer import vgg_image_resizer
 import numpy as np
 import tensorflow as tf
