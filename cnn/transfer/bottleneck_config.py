@@ -24,7 +24,6 @@ import tensorflow as tf
 
 def run_bottleneck_on_image(bottleneck_params):
   """Runs inference on an image to extract the 'bottleneck' summary layer.
-
   Args:
     bottleneck_params - tuple containing
       sess: Current active TensorFlow Session.
@@ -102,10 +101,8 @@ def get_or_create_bottleneck_and_path(create_params):
 
 def get_or_create_bottleneck(create_params):
   """Retrieves or calculates bottleneck values for an image.
-
   If a cached version of the bottleneck data exists on-disk, return that,
   otherwise calculate the data and save it to disk for future use.
-
   Args:
     create_params - tuple to create bottleneck contains
       sess: The current active TensorFlow Session.

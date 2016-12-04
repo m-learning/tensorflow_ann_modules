@@ -78,7 +78,7 @@ VALIDATION_CATEGORY = 'validation'
 TESTING_CATEGORY = 'testing'
 
 def save_trained_parameters(sess, graph, keys):
-  """Saves trained checkpoint
+  """Write out the trained graph and labels with the weights stored as constants
     Args:
      sess - current TensorFlow session
      graph - Inception-V3 graph
@@ -225,21 +225,22 @@ def prepare_iteration_parameters(prepared_parameters):
     Args:
       prepared_parameters - prepared parameters tuple for training 
     Returns:
-      sess - current TensorFlow session
-      graph - network graph
-      do_distort_images - distort flag
-      image_lists - training images list
-      distorted_jpeg_data_tensor - distorted JPEG image 
-                                   as tensor
-      distorted_image_tensor - distorted image 
-                               as tensor
-      bottleneck_tensor - bottleneck layer tensor
-      jpeg_data_tensor - images for iteration
-      train_step - training step descriptor
-      bottleneck_input - input for bottleneck layer
-      ground_truth_input - label for input
-      evaluation_step - prepared step for evaluation
-      cross_entropy - result producer function                             
+      tuple of -
+        sess - current TensorFlow session
+        graph - network graph
+        do_distort_images - distort flag
+        image_lists - training images list
+        distorted_jpeg_data_tensor - distorted JPEG image 
+                                     as tensor
+        distorted_image_tensor - distorted image 
+                                 as tensor
+        bottleneck_tensor - bottleneck layer tensor
+        jpeg_data_tensor - images for iteration
+        train_step - training step descriptor
+        bottleneck_input - input for bottleneck layer
+        ground_truth_input - label for input
+        evaluation_step - prepared step for evaluation
+        cross_entropy - result producer function                             
   """
   
   (graph, bottleneck_tensor, jpeg_data_tensor,
@@ -276,7 +277,6 @@ def validate_test_and_save(sess, graph, validation_parameters):
   
   (_, image_lists, _, _, _, _, _, _, _, _, _, _, _, _, _) = validation_parameters
   test_trained_network(sess, validation_parameters)
-  # Write out the trained graph and labels with the weights stored as constants.
   save_trained_parameters(sess, graph, image_lists.keys())
 
 def retrain_valid_net(prepared_parameters):

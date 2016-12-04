@@ -15,6 +15,7 @@ import os
 import traceback
 
 from cnn.utils import file_utils
+from cnn.utils import color_utils
 from cnn.utils.pillow_resizing import pillow_resizer
 
 
@@ -108,9 +109,10 @@ class image_converter(object):
     else:
       im = jpg_im
     print(pr, im, n_im)
-    im.save(n_im)
+    md = color_utils.sharpen_edges(im)
+    md.save(n_im)
     
-    return im
+    return md
   
   def crop_image(self, im):
     """Validates if flag set crops passed image
@@ -133,7 +135,7 @@ class image_converter(object):
       
     return cropped_image
     
-  def resize_if_nedded(self, im):
+  def resize_if_needed(self, im):
     """Resizes passed image if configured
       Args:
         im - image
@@ -162,11 +164,11 @@ class image_converter(object):
       file_type = imghdr.what(pr)
       im = Image.open(pr)
       if file_type in ('jpg:', 'jpeg', 'JPG:', 'JPEG'):
-        img = self.resize_if_nedded(im)
+        img = self.resize_if_needed(im)
         saved_im = self.write_file(pr, img)
       elif file_type in ('png', 'PNG'):
         jpg_im = self.convert_image(im)
-        img = self.resize_if_nedded(jpg_im)
+        img = self.resize_if_needed(jpg_im)
         saved_im = self.write_file(pr, img)
         print("Image is converted" , pr , "\n")
       else:
@@ -189,7 +191,7 @@ class image_converter(object):
         i - index for file name suffix
         im - image to resize and save
     """
-    img = self.resize_if_nedded(im)
+    img = self.resize_if_needed(im)
     self.write_file(pr, img)
     
   def rotate_and_write(self, rotate_params):
@@ -364,7 +366,6 @@ def read_arguments_and_run():
                           dest='rotate_images',
                           action='store_false',
                           help='Rotate images flag')   
-  
   
   arg_parser.add_argument('--rotate_pos',
                           type=str,
