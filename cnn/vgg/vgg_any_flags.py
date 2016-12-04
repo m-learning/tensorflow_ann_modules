@@ -9,7 +9,7 @@ from __future__ import print_function
 
 import argparse
 
-
+# Command line argument flags
 trainign_flags = None
 
 def parse_and_retrieve():

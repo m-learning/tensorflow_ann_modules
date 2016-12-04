@@ -93,6 +93,7 @@ def conv2d(x, W, b, name):
       net - convolutional layer with activation
   """
   net = x
+  
   with tf.get_default_graph().name_scope(name):
     net = tf.nn.conv2d(net, W, filter, strides=[1, 1, 1, 1], padding=SAME_PADDING)
     net = tf.nn.bias_add(net, b)
@@ -103,6 +104,7 @@ def conv2d(x, W, b, name):
 def max_pool(x, name, k=2):
   
   net = x
+  
   with tf.get_default_graph().name_scope(name):
     net = tf.nn.max_pool(net, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding=SAME_PADDING)
   
@@ -118,6 +120,7 @@ def fc(x, W, b, name, activation=tf.nn.relu):
       net - fully connected layer with activation
   """
   net = x
+  
   with tf.get_default_graph().name_scope(name):
     net = tf.matmul(net, W)
     net = tf.nn.bias_add(net, b)

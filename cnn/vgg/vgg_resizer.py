@@ -14,9 +14,7 @@ vgg_dim = 224
 vgg_size = (vgg_dim, vgg_dim)
 
 class vgg_image_resizer(image_resizer):
-  """
-    Resizes image for VGG network
-  """
+  """Resizes image for VGG network"""
   
   def __init__(self):
     super(vgg_image_resizer, self).__init__(vgg_dim, vgg_dim)
