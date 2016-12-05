@@ -38,10 +38,8 @@ LABELS_FILENAME = 'labels.txt'
 
 def int64_feature(values):
   """Returns a TF-Feature of int64s.
-
   Args:
     values: A scalar or list of values.
-
   Returns:
     a TF-Feature.
   """
@@ -52,10 +50,8 @@ def int64_feature(values):
 
 def bytes_feature(values):
   """Returns a TF-Feature of bytes.
-
   Args:
     values: A string.
-
   Returns:
     a TF-Feature.
   """

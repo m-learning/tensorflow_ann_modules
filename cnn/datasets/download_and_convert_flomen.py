@@ -77,11 +77,9 @@ class ImageReader(object):
 
 def _get_filenames_and_classes(dataset_dir):
   """Returns a list of filenames and inferred class names.
-
   Args:
     dataset_dir: A directory containing a set of subdirectories representing
       class names. Each subdirectory should contain PNG or JPG encoded images.
-
   Returns:
     A list of image file paths, relative to `dataset_dir` and the list of
     subdirectories, representing class names.
@@ -112,7 +110,6 @@ def _get_dataset_filename(dataset_dir, split_name, shard_id):
 
 def _convert_dataset(split_name, filenames, class_names_to_ids, dataset_dir):
   """Converts the given filenames to a TFRecord dataset.
-
   Args:
     split_name: The name of the dataset, either 'train' or 'validation'.
     filenames: A list of absolute paths to png or jpg images.
@@ -158,7 +155,6 @@ def _convert_dataset(split_name, filenames, class_names_to_ids, dataset_dir):
 # Cleans temporary directories
 def _clean_up_temporary_files(dataset_dir):
   """Removes temporary files used to create the dataset.
-
   Args:
     dataset_dir: The directory where the temporary files are stored.
   """
@@ -166,8 +162,13 @@ def _clean_up_temporary_files(dataset_dir):
   if os.path.exists(tmp_dir):
     tf.gfile.DeleteRecursively(tmp_dir)
 
-# Validates if data set exists
 def _dataset_exists(dataset_dir):
+  """Validates if data set exist
+    Args:
+      dataset_dir - data set directory
+    Returns:
+      boolean value
+  """
   
   for split_name in ['train', 'validation']:
     for shard_id in range(_NUM_SHARDS):
@@ -180,7 +181,6 @@ def _dataset_exists(dataset_dir):
 # Download and convert flomen data set
 def run(dataset_dir, arch_dire=None):
   """Runs the download and conversion operation.
-
   Args:
     dataset_dir: The dataset directory where the dataset is stored.
   """

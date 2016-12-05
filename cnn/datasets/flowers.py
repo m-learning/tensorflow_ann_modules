@@ -49,7 +49,6 @@ _ITEMS_TO_DESCRIPTIONS = {
 # Generates training and evaluation sets for flowers and flomen
 def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
   """Gets a dataset tuple with instructions for reading cifar10.
-
   Args:
     split_name: A train/validation split name.
     dataset_dir: The base directory of the dataset sources.
@@ -57,10 +56,8 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
       It is assumed that the pattern contains a '%s' string so that the split
       name can be inserted.
     reader: The TensorFlow reader type.
-
   Returns:
     A `Dataset` namedtuple.
-
   Raises:
     ValueError: if `split_name` is not a valid train/validation split.
   """
