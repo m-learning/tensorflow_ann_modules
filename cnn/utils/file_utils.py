@@ -105,7 +105,7 @@ class files_and_path_utils(object):
       Args:
         path_inst - image path or function 
                     returning path
-        other_path - vavargs for other paths
+        other_path - varargs for other paths
                      or functions
       Returns:
         result - joined path
@@ -204,7 +204,7 @@ class cnn_file_utils(files_and_path_utils):
   def get_archives_directory(self):
     """Gets training set archives directory
       Args:
-        training archives directory pTH
+        training archives directory path
     """
     dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
     ensure_dir_exists(dest_directory)
@@ -214,7 +214,7 @@ class cnn_file_utils(files_and_path_utils):
   def get_training_directory(self):
     """Gets training data directory
     Returns:
-      training datas directory path
+      training data directory path
     """
     return self.join_path(self.get_data_general_directory, PATH_FOR_TRAINING)
 

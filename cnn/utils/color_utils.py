@@ -14,6 +14,8 @@ import argparse
 import os
 import glob
 
+from cnn.utils import image_color_refiner as refiner
+
 try:
   from PIL import Image, ImageFilter
 except ImportError:
@@ -89,7 +91,7 @@ def read_arguments_and_run():
                           help='Source file path.')
   arg_parser.add_argument('--src_dir',
                           type=str,
-                          help='Source directorye path.')
+                          help='Source directory path.')
   arg_parser.add_argument('--replace_images',
                           dest='replace_images',
                           action='store_true',
@@ -106,7 +108,9 @@ def read_arguments_and_run():
     scan_dir = os.path.join(argument_flags.src_dir, '*.jpg')
     for pr in glob.glob(scan_dir):
       im = Image.open(pr)
-      md = sharpen_edges(im)
+      #md = sharpen_edges(im)
+      md = im
+      refiner.color_refinement(md)
       md.save(pr)
       print(pr)
   

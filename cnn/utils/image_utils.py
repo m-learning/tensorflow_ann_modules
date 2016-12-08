@@ -16,6 +16,7 @@ import traceback
 
 from cnn.utils import file_utils
 from cnn.utils import color_utils
+from cnn.utils import image_color_refiner as refiner
 from cnn.utils.pillow_resizing import pillow_resizer
 
 
@@ -110,6 +111,7 @@ class image_converter(object):
       im = jpg_im
     print(pr, im, n_im)
     md = color_utils.sharpen_edges(im)
+    refiner.color_refinement(md)
     md.save(n_im)
     
     return md

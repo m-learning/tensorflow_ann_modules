@@ -1,6 +1,8 @@
 """
 Created on Nov 15, 2016
+
 Utility module for static flags
+
 @author: Levan Tsinadze
 """
 
