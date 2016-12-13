@@ -18,7 +18,7 @@ class image_recognizer(retrained_recognizer):
   """Recognizes image with trained neural networks"""
   
   def __init__(self):
-    super(image_recognizer, self).__init__(training_file)
+    super(image_recognizer, self).__init__(training_file_const=training_file)
 
 if __name__ == '__main__':
   """Runs image recognition"""
