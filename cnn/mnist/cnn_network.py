@@ -17,15 +17,15 @@ import tensorflow as tf
 STRIDE = 'SAME'
 
 class cnn_functions(object):
-  """CNN network for MNIST classification"""
+  """CNN network model for MNIST classification"""
     
   def __init__(self, decay=None, for_training=True):
     self.x = tf.placeholder(tf.float32, [None, pr.N_INPUT])
     self.y = tf.placeholder(tf.float32, [None, pr.N_CLASSES])
     self.weights = cnn_weights()
-    if decay is not None:
+    if decay:
       self.weights.init_weights(wdc=decay)
-    self.for_trainign = for_training
+    self.for_training = for_training
     self.keep_prob = tf.placeholder(tf.float32)  # dropout (keep probability)
 
   def conv2d(self, x, W, b, strides=1):

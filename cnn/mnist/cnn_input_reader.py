@@ -62,7 +62,6 @@ def read_input_file(image_file_path):
   """
     
   image_rec = np.zeros((1, n_input))
-      
   gray = cv2.imread(image_file_path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
   # rescale it
   gray = cv2.resize(255 - gray, (28, 28))

@@ -29,7 +29,7 @@ class cnn_learner(object):
     
   def __init__(self):
     
-    self.network = cnn_functions()
+    self.network = cnn_functions(decay=0.00001, for_training=True)
     (self.pred, self.correct_pred, self.accuracy) = self.network.cnn_pred()
     # Define loss and optimizer
     self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.pred, self.network.y))
@@ -89,6 +89,7 @@ class cnn_learner(object):
                 
 def main():
   """Runs training with graph initialization"""
+  
   with tf.Graph().as_default():
       learner = cnn_learner()
       learner.traint()
