@@ -1,6 +1,8 @@
 """
 Created on Nov 13, 2016
+
 Transfer learning files manager
+
 @author: Levan Tsinadze
 """
 

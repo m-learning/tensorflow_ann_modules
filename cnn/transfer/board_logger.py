@@ -1,6 +1,8 @@
 """
 Created on Oct 21, 2016
+
 Logs events to TensorBoard
+
 @author: Levan Tsinadze
 """
 

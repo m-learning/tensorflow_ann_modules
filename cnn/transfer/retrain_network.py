@@ -200,7 +200,8 @@ def prepare_parameters(tr_file):
   # Look at the folder structure, and create lists of all the images.
   image_lists = dataset.create_image_lists(flags.image_dir, flags.testing_percentage,
                                           flags.validation_percentage)
-  print(image_lists)
+  if flags.print_dataset:
+    print(image_lists)
   class_count = len(image_lists.keys())
   if class_count == 0:
     print('No valid folders of images found at ' + flags.image_dir)

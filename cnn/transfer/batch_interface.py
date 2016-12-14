@@ -67,7 +67,7 @@ class batch_recognizer(retrained_recognizer):
       Args:
         im - binary image
       Returns:
-        img - resized image
+        mdf - resized image
     """
     
     cropped_im = self.crop_image(im)

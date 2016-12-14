@@ -76,7 +76,7 @@ prnt_dir = None
 image_dir = None  # Path to folders of labeled images
 output_graph = None  # Where to save the trained graph
 output_labels = None  # Where to save the trained graph's labels
-
+print_dataset = None  # Flag to log dataset files array
 # File-system cache locations.
 model_dir = None  # Path to classify_image_graph_def.pb, """
                                 # imagenet_synset_to_human_label_map.txt, and
@@ -160,6 +160,10 @@ def retrieve_args(argument_flags, _files):
     print('Bottleneck path was set as - ' , bottleneck_dir)
   else:
     bottleneck_dir = _files.join_path(prnt_dir , BOTTLENECK_DIR)
+  
+  if argument_flags.print_dataset:
+    global print_dataset
+    print_dataset = True
           
 def parse_and_retrieve(tr_files=None):
   """Retrieves command line arguments
@@ -186,6 +190,14 @@ def parse_and_retrieve(tr_files=None):
   arg_parser.add_argument('--bottleneck_dir',
                           type=str,
                           help='Path to cache bottleneck layer values as files.')
+  arg_parser.add_argument('--print_dataset',
+                          dest='print_dataset',
+                          action='store_true',
+                          help='Prints data set file names and labels.')
+  arg_parser.add_argument('--not_print_dataset',
+                          dest='print_dataset',
+                          action='store_false',
+                          help='Do not print data set file names and labels.')
   (argument_flags, _) = arg_parser.parse_known_args()
   retrieve_args(argument_flags, tr_files)
 
