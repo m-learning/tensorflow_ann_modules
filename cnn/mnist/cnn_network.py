@@ -25,7 +25,7 @@ class cnn_functions(object):
     self.weights = cnn_weights()
     if decay:
       self.weights.init_weights(wdc=decay)
-    self.for_training = for_training
+    self._for_training = for_training
     self.keep_prob = tf.placeholder(tf.float32)  # dropout (keep probability)
 
   def conv2d(self, x, W, b, strides=1):
@@ -88,7 +88,7 @@ class cnn_functions(object):
     net = tf.add(tf.matmul(net, self.weights.wd1), self.weights.bd1)
     net = tf.nn.relu(net)
     # Apply Dropout
-    if self.for_training:
+    if self._for_training:
       net = tf.nn.dropout(net, self.keep_prob)
 
     # Output, class prediction
