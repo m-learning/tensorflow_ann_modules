@@ -48,7 +48,7 @@ class cnn_weights(object):
     """
     
     weight = tf.Variable(tf.random_normal(shape))
-    if wdc is not None:
+    if wdc:
       weight_decay = tf.mul(tf.nn.l2_loss(weight), wdc, name='weight_loss')
       tf.add_to_collection('losses', weight_decay)
     

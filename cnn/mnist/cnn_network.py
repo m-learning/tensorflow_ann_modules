@@ -109,7 +109,8 @@ class cnn_functions(object):
   
   def cnn_pred(self):
     """Prediction function for network interface
-      Returns: prediction, correct prediction, accuracy
+      Returns: 
+        tuple of - prediction, correct prediction, accuracy
     """
       
     # Construct model

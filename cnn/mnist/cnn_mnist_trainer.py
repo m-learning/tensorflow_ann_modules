@@ -50,9 +50,9 @@ class cnn_learner(object):
     return mnist
   
   def traint(self):
-    """Trains neural net"""
+    """Trains neural network"""
     # Initializing the variables
-    init = tf.initialize_all_variables()
+    init = tf.global_variables_initializer()
     # 'Saver' op to save and restore all the variables
     saver = tf.train.Saver()
     

@@ -23,7 +23,7 @@ n_input = 784  # MNIST data input (img shape: 28*28)
 def getBestShift(img):
   """Gets best shift for image
     Args:
-      im - image
+      img - image
     Returns:
       shiftx - shift by x
       shifty - shift by y
