@@ -106,10 +106,11 @@ def _set_training_flags(tr_files):
     model_dir = tr_files.join_path(prnt_dir, IMAGENET_DIR)  # Path to classify_image_graph_def.pb
     _training_flags_to_set = False
 
-def retrieve_args(argument_flags, tr_files):
+def retrieve_args(argument_flags, _files):
   """Adds configuration from command line arguments
     Args:
      arg_parser - runtime parameters parser
+     _files - files manager
   """
   
   if argument_flags.training_steps:
@@ -136,29 +137,29 @@ def retrieve_args(argument_flags, tr_files):
     file_utils.ensure_dir_exists(image_dir)
     print('Image directory was set as - ' , image_dir)
   else:
-    image_dir = tr_files.get_data_directory()  # Path to folders of labeled images
+    image_dir = _files.get_data_directory()  # Path to folders of labeled images
     
   if argument_flags.output_graph:
     file_utils.ensure_dir_exists(argument_flags.output_graph)
-    output_graph = tr_files.join_path(argument_flags.output_graph,
+    output_graph = _files.join_path(argument_flags.output_graph,
                                       file_utils.WEIGHTS_FILE)
-    output_labels = tr_files.join_path(argument_flags.output_graph,
+    output_labels = _files.join_path(argument_flags.output_graph,
                                        file_utils.LABELS_FILE)
     print('Output graph path was set as - ' , output_graph)
     print('Output labels path was set as - ' , output_labels)
   else:
-    output_graph = tr_files.get_or_init_files_path()  # Where to save the trained graph
-    output_labels = tr_files.get_or_init_labels_path()  # Where to save the trained graph's labels
+    output_graph = _files.get_or_init_files_path()  # Where to save the trained graph
+    output_labels = _files.get_or_init_labels_path()  # Where to save the trained graph's labels
   
   # File-system cache locations.
   global _training_flags_to_set
   _training_flags_to_set = True
-  _set_training_flags(tr_files)
+  _set_training_flags(_files)
   if argument_flags.bottleneck_dir:
     bottleneck_dir = argument_flags.bottleneck_dir
     print('Bottleneck path was set as - ' , bottleneck_dir)
   else:
-    bottleneck_dir = tr_files.join_path(prnt_dir , BOTTLENECK_DIR)
+    bottleneck_dir = _files.join_path(prnt_dir , BOTTLENECK_DIR)
           
 def parse_and_retrieve(tr_files=None):
   """Retrieves command line arguments

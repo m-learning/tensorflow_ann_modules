@@ -56,6 +56,7 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
+
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 
@@ -217,7 +218,7 @@ def prepare_session(sess):
     Args:
       sess - current TensorFlow session
     """
-  init = tf.initialize_all_variables()
+  init = tf.global_variables_initializer()
   sess.run(init)
 
 def prepare_iteration_parameters(prepared_parameters):
