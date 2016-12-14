@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import os
 import random
+
 from tensorflow.python.platform import gfile
 
 from cnn.transfer.dataset_config import MAX_NUM_IMAGES_PER_CLASS

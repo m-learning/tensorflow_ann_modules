@@ -57,9 +57,8 @@ def count_files(dir_name):
 
 def ensure_dir_exists(dir_name):
   """Makes sure the folder exists on disk.
-
-  Args:
-    dir_name: Path string to the folder we want to create.
+    Args:
+      dir_name: Path string to the folder we want to create.
   """
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)

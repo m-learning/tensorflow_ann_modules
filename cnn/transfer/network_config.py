@@ -59,10 +59,10 @@ def variable_summaries(var, name):
     tf.scalar_summary('mean/' + name, mean)
     with tf.name_scope('stddev'):
       stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
-    tf.scalar_summary('stddev/' + name, stddev)
-    tf.scalar_summary('max/' + name, tf.reduce_max(var))
-    tf.scalar_summary('min/' + name, tf.reduce_min(var))
-    tf.histogram_summary(name, var)
+    tf.summary.scalar('stddev/' + name, stddev)
+    tf.summary.scalar('max/' + name, tf.reduce_max(var))
+    tf.summary.scalar('min/' + name, tf.reduce_min(var))
+    tf.summary.histogram(name, var)
     
 def network_layer(layer_params):
   """Generates fully connected network layer
@@ -80,7 +80,7 @@ def network_layer(layer_params):
       variable_summaries(layer_weights, layer_name + '/weights')
     with tf.name_scope('dropout'):
       keep_prob = tf.placeholder(tf.float32)
-      tf.scalar_summary('dropout_keep_probability', keep_prob)
+      tf.summary.scalar('dropout_keep_probability', keep_prob)
       drop = tf.nn.dropout(input_tensor, keep_prob)
       variable_summaries(drop, layer_name + '/dropout')    
     with tf.name_scope('biases'):
@@ -88,7 +88,7 @@ def network_layer(layer_params):
       variable_summaries(layer_biases, layer_name + '/biases')
     with tf.name_scope('Wx_plus_b'):
       preactivations = tf.matmul(drop, layer_weights) + layer_biases
-      tf.histogram_summary(layer_name + '/pre_activations', preactivations)
+      tf.summary.histogram(layer_name + '/pre_activations', preactivations)
   
   return (preactivations, keep_prob)
 
@@ -104,7 +104,7 @@ def full_network_layer(layer_params):
   (preactivations, keep_prob) = network_layer(layer_params)
   (_, _, _, _, activation_name, activation_function) = layer_params
   activations = activation_function(preactivations, name=activation_name)
-  tf.histogram_summary(activation_name + '/activations', activations)
+  tf.summary.histogram(activation_name + '/activations', activations)
   
   return (preactivations, activations, keep_prob)
 
@@ -166,7 +166,7 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor):
       cross_entropy_mean = tf.reduce_mean(cross_entropy)
       tf.add_to_collection(flags.LOSSES, cross_entropy_mean)
       total_loss = tf.add_n(tf.get_collection(flags.LOSSES), name='total_loss')
-    tf.scalar_summary('cross entropy', total_loss)
+    tf.summary.scalar('cross entropy', total_loss)
 
   with tf.name_scope('train'):
     train_step = tf.train.GradientDescentOptimizer(
@@ -190,7 +190,7 @@ def add_evaluation_step(result_tensor, ground_truth_tensor):
         tf.argmax(ground_truth_tensor, 1))
     with tf.name_scope('accuracy'):
       evaluation_step = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-    tf.scalar_summary('accuracy', evaluation_step)
+    tf.summary.scalar('accuracy', evaluation_step)
     
   return evaluation_step
 

@@ -45,9 +45,9 @@ def init_writer(sess):
   """
   (training_sum_dir, validatn_sum_dir) = init_log_directories(sess)
   # Merge all the summaries and write them out to /tmp/retrain_inception_logs (by default)
-  merged = tf.merge_all_summaries()
-  train_writer = tf.train.SummaryWriter(training_sum_dir, sess.graph)
-  validation_writer = tf.train.SummaryWriter(validatn_sum_dir)
+  merged = tf.summary.merge_all()
+  train_writer = tf.summary.FileWriter(training_sum_dir, sess.graph)
+  validation_writer = tf.summary.FileWriter(validatn_sum_dir)
   
   return (merged, train_writer, validation_writer)
     

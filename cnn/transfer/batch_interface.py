@@ -65,7 +65,7 @@ class batch_recognizer(retrained_recognizer):
   def resize_image(self, im):
     """Resizes image for recognition
       Args:
-        image_data - binary image
+        im - binary image
       Returns:
         img - resized image
     """
@@ -107,10 +107,7 @@ class batch_recognizer(retrained_recognizer):
     return im_arr
     
   def recognize_batch(self):
-    """Runs recognition of images
-    Args:
-      argument_flags - argument parsers
-  """
+    """Runs recognition of images"""
     
     model_dir = argument_flags.model_path
     model_path = os.path.join(model_dir, files.WEIGHTS_FILE)
