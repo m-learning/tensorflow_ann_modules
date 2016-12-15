@@ -23,8 +23,7 @@ class cnn_functions(object):
     self.x = tf.placeholder(tf.float32, [None, pr.N_INPUT])
     self.y = tf.placeholder(tf.float32, [None, pr.N_CLASSES])
     self.weights = cnn_weights()
-    if decay:
-      self.weights.init_weights(wdc=decay)
+    self.weights.init_weights(wdc=decay)
     self._for_training = for_training
     self.keep_prob = tf.placeholder(tf.float32)  # dropout (keep probability)
 
@@ -71,15 +70,10 @@ class cnn_functions(object):
   
   def conv_net(self):
     """Full network interface
-      Args:
-        x - input tensor
-        ksize - kernel size
-        strides - strides for convolve and pooling
       Returns:
         out - output from network
     """
   
-    # Reshape input picture
     net = self.conv_layers()
 
     # Fully connected layer

@@ -7,6 +7,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
+
 from tensorflow.examples.tutorials.mnist import input_data
 
 from cnn.mnist import cnn_parameters
@@ -18,7 +20,7 @@ import tensorflow as tf
 
 # Parameters
 learning_rate = 0.001
-training_iters = 200000
+training_iters = None
 batch_size = 128
 display_step = 10
 
@@ -89,6 +91,15 @@ class cnn_learner(object):
                 
 def main():
   """Runs training with graph initialization"""
+  
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--training_steps',
+                          type=int,
+                          default=200000,
+                          help='Number of training iterations')
+  (argument_flags, _) = arg_parser.parse_known_args()
+  global training_iters
+  training_iters = argument_flags.training_steps
   
   with tf.Graph().as_default():
       learner = cnn_learner()

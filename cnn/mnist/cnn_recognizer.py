@@ -8,10 +8,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 from cnn.mnist.cnn_files import training_file
 from cnn.mnist.cnn_input_reader import read_input_file
 from cnn.mnist.cnn_network import cnn_functions
+from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 import tensorflow as tf
 
 
@@ -32,7 +32,7 @@ class image_recognizer(object):
     """Recognizes digit from file
       Args:
         image_file_path - path for image file
-      Return:
+      Returns:
         Recognized digit
     """
   

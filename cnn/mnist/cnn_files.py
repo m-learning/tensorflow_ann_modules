@@ -29,7 +29,7 @@ class training_file(files_and_path_utils):
       
   def get_current(self):
     """Gets current directory of script
-      Retruns:
+      Returns:
         current_dir - directory for training files
     """
       
