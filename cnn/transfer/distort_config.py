@@ -132,14 +132,13 @@ def distort_images(prepared_parameters):
       and distorted images tensor
   """
   
-  (_, bottleneck_tensor, jpeg_data_tensor,
+  (sess, _, bottleneck_tensor, jpeg_data_tensor,
    _, image_lists) = prepared_parameters
   
   do_distort_images = should_distort_images(
       flags.flip_left_right, flags.random_crop, flags.random_scale,
       flags.random_brightness)
 
-  sess = tf.Session()
   if do_distort_images:
     # We will be applying distortions, so setup the operations we'll need.
     distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
@@ -153,4 +152,4 @@ def distort_images(prepared_parameters):
                     jpeg_data_tensor, bottleneck_tensor)
     bottleneck.cache_bottlenecks(cache_params)
     
-  return (sess, do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)
+  return (do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)

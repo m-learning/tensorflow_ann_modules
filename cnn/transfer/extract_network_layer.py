@@ -16,8 +16,7 @@ import tensorflow as tf
 
 
 def extract_net_main(_):
-  """Extracts network layer for 
-     training and testing"""
+  """Extracts features network layer"""
   
   tr_files = training_file()
   features = layer_features('pool_3:0')

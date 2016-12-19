@@ -66,7 +66,6 @@ def retrain_net_main(_):
   tr_files = training_file()
   flags.parse_and_retrieve(tr_files)
   retrainer.retrain_net(tr_files)
-  
 # Runs training and test process
 if __name__ == '__main__':
   """Runs training and test process"""

@@ -195,7 +195,7 @@ def prepare_parameters(tr_file):
   config.init_flags_and_files(tr_file)
   # Set up the pre-trained graph.
   dataset.maybe_download_and_extract()
-  (graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor) = gconf.create_inception_graph()
+  (sess, graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor) = gconf.create_inception_graph()
 
   # Look at the folder structure, and create lists of all the images.
   image_lists = dataset.create_image_lists(flags.image_dir, flags.testing_percentage,
@@ -211,7 +211,7 @@ def prepare_parameters(tr_file):
           ' - multiple classes are needed for classification.')
     return None
   
-  return (graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor, image_lists)
+  return (sess, graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor, image_lists)
 
 def prepare_session(sess):
   """Prepares session for training, validation 
@@ -245,11 +245,11 @@ def prepare_iteration_parameters(prepared_parameters):
         cross_entropy - result producer function                             
   """
   
-  (graph, bottleneck_tensor, jpeg_data_tensor,
+  (sess, graph, bottleneck_tensor, jpeg_data_tensor,
    resized_image_tensor, image_lists) = prepared_parameters
   # See if the command-line flags mean we're applying any distortions.
-  (sess, do_distort_images,
-   distorted_jpeg_data_tensor, distorted_image_tensor) = distort.distort_images(prepared_parameters)
+  (do_distort_images, distorted_jpeg_data_tensor,
+   distorted_image_tensor) = distort.distort_images(prepared_parameters)
   # Add the new layer that we'll be training.
   num_classes = len(image_lists.keys())  # Calculates number of output classes
   (train_step, cross_entropy, total_loss, bottleneck_input,

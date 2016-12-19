@@ -57,7 +57,7 @@ def create_inception_graph():
               BOTTLENECK_TENSOR_NAME, JPEG_DATA_TENSOR_NAME,
               RESIZED_INPUT_TENSOR_NAME]))
   
-  return (sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
+    return (sess, sess.graph, bottleneck_tensor, jpeg_data_tensor, resized_input_tensor)
 
 def list_layer_values(values, layer_name):
   """List all network layers

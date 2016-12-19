@@ -67,7 +67,6 @@ def retrain_net_main(_):
   flags.parse_and_retrieve(tr_files)
   retrainer.retrain_net(tr_files)
   
-
 if __name__ == '__main__':
   """Runs training and test process"""
   tf.app.run(retrain_net_main)
