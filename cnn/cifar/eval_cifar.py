@@ -50,7 +50,6 @@ import tensorflow as tf
 
 FLAGS = None
 
-
 def eval_once(saver, summary_writer, top_k_op, summary_op):
   """Run Eval once.
 
@@ -104,7 +103,6 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
     coord.request_stop()
     coord.join(threads, stop_grace_period_secs=10)
 
-
 def evaluate():
   """Eval CIFAR-10 for a number of steps."""
   with tf.Graph().as_default() as g:
@@ -135,7 +133,6 @@ def evaluate():
       if FLAGS.run_once:
         break
       time.sleep(FLAGS.eval_interval_secs)
-
 
 def eval_network(argv=None):  # pylint: disable=unused-argument
   network.maybe_download_and_extract()

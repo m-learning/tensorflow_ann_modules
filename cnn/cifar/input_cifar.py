@@ -89,7 +89,6 @@ def read_cifar10(filename_queue):
 
   return result
 
-
 def _generate_image_and_label_batch(image, label, min_queue_examples,
                                     batch_size, shuffle):
   """Construct a queued batch of images and labels.
@@ -190,7 +189,6 @@ def distorted_inputs(data_dir, batch_size):
   return _generate_image_and_label_batch(float_image, read_input.label,
                                          min_queue_examples, batch_size,
                                          shuffle=True)
-
 
 def inputs(eval_data, data_dir, batch_size):
   """Construct input for CIFAR evaluation using the Reader ops.

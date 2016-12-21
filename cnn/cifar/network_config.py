@@ -165,8 +165,9 @@ def inputs(eval_data):
     eval_data: bool, indicating if one should use the train or eval data set.
 
   Returns:
-    images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
-    labels: Labels. 1D tensor of [batch_size] size.
+    tuple of:
+      images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
+      labels: Labels. 1D tensor of [batch_size] size.
 
   Raises:
     ValueError: If no data_dir
@@ -180,8 +181,7 @@ def inputs(eval_data):
   if FLAGS.use_fp16:
     images = tf.cast(images, tf.float16)
     labels = tf.cast(labels, tf.float16)
-  return images, labels
-
+  return (images, labels)
 
 def inference(images):
   """Build the CIFAR-10 model.
@@ -267,7 +267,6 @@ def inference(images):
     _activation_summary(softmax_linear)
 
   return softmax_linear
-
 
 def loss(logits, labels):
   """Add L2Loss to all the trainable variables.

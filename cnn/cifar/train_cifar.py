@@ -34,6 +34,9 @@ import tensorflow as tf
 
 FLAGS = None
 
+FORMAT_STR = ('%s: step %d, loss = %.2f (%.1f examples/sec; %.3f '
+              'sec/batch)')
+
 def train():
   """Train CIFAR-10 for a number of steps."""
   with tf.Graph().as_default():
@@ -65,17 +68,15 @@ def train():
         return tf.train.SessionRunArgs(loss)  # Asks for loss value.
 
       def after_run(self, run_context, run_values):
-        duration = time.time() - self._start_time
-        loss_value = run_values.results
-        if self._step % 10 == 0:
-          num_examples_per_step = FLAGS.batch_size
-          examples_per_sec = num_examples_per_step / duration
-          sec_per_batch = float(duration)
-
-          format_str = ('%s: step %d, loss = %.2f (%.1f examples/sec; %.3f '
-                        'sec/batch)')
-          print (format_str % (datetime.now(), self._step, loss_value,
-                               examples_per_sec, sec_per_batch))
+        if FLAGS.verbose_training:
+          duration = time.time() - self._start_time
+          loss_value = run_values.results
+          if self._step % 10 == 0:
+            num_examples_per_step = FLAGS.batch_size
+            examples_per_sec = num_examples_per_step / duration
+            sec_per_batch = float(duration)
+            print (FORMAT_STR % (datetime.now(), self._step, loss_value,
+                                 examples_per_sec, sec_per_batch))
 
     with tf.train.MonitoredTrainingSession(
         checkpoint_dir=FLAGS.train_dir,
@@ -93,6 +94,7 @@ def prepare_and_train(argv=None):  # pylint: disable=unused-argument
   if tf.gfile.Exists(FLAGS.train_dir):
     tf.gfile.DeleteRecursively(FLAGS.train_dir)
   tf.gfile.MakeDirs(FLAGS.train_dir)
+  tf.logging.set_verbosity(tf.logging.INFO)
   train()
 
 def parse_and_retrieve():
@@ -141,6 +143,14 @@ def parse_and_retrieve():
                           dest='use_fp16',
                           action='store_false',
                           help='Train the model using fp32.')
+  arg_parser.add_argument('--verbose_training',
+                          dest='verbose_training',
+                          action='store_true',
+                          help='Print training loss and steps.')
+  arg_parser.add_argument('--not_verbose_training',
+                          dest='verbose_training',
+                          action='store_false',
+                          help='Do not print training loss and steps.')
   (FLAGS, _) = arg_parser.parse_known_args()
   print('parameters identified:')
   print('train_dir', FLAGS.train_dir)
@@ -149,6 +159,7 @@ def parse_and_retrieve():
   print('log_errors', FLAGS.log_errors)
   print('log_device_placement', FLAGS.log_device_placement)
   print('use_fp16', FLAGS.use_fp16)
+  print('verbose_training', FLAGS.verbose_training)
   network.FLAGS = FLAGS
 
 if __name__ == '__main__':
