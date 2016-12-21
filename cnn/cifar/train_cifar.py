@@ -125,6 +125,14 @@ def parse_and_retrieve():
                           type=str,
                           default=__files.get_training_directory(),
                           help='Path to the CIFAR-10 data directory.')
+  arg_parser.add_argument('--log_files',
+                          type=str,
+                          default=__files.init_log_files(),
+                          help='Path to the training output log files.')
+  arg_parser.add_argument('--log_errors',
+                          type=str,
+                          default=__files.init_error_files(),
+                          help='Path to the training error log files.')
   arg_parser.add_argument('--use_fp16',
                           dest='use_fp16',
                           action='store_true',
@@ -134,6 +142,13 @@ def parse_and_retrieve():
                           action='store_false',
                           help='Train the model using fp32.')
   (FLAGS, _) = arg_parser.parse_known_args()
+  print('parameters identified:')
+  print('train_dir', FLAGS.train_dir)
+  print('data_dir', FLAGS.data_dir)
+  print('log_files', FLAGS.log_files)
+  print('log_errors', FLAGS.log_errors)
+  print('log_device_placement', FLAGS.log_device_placement)
+  print('use_fp16', FLAGS.use_fp16)
   network.FLAGS = FLAGS
 
 if __name__ == '__main__':

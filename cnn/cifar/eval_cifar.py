@@ -43,6 +43,7 @@ import math
 import time
 
 from cnn.cifar import network_config as network
+from cnn.cifar.cnn_files import training_file
 import numpy as np
 import tensorflow as tf
 
@@ -136,7 +137,7 @@ def evaluate():
       time.sleep(FLAGS.eval_interval_secs)
 
 
-def eval_network():  # pylint: disable=unused-argument
+def eval_network(argv=None):  # pylint: disable=unused-argument
   network.maybe_download_and_extract()
   if tf.gfile.Exists(FLAGS.eval_dir):
     tf.gfile.DeleteRecursively(FLAGS.eval_dir)
@@ -146,6 +147,7 @@ def eval_network():  # pylint: disable=unused-argument
 def parse_and_retrieve():
   """Parses command line arguments"""
   
+  __files = training_file()
   global FLAGS
   arg_parser = argparse.ArgumentParser()
   arg_parser.add_argument('--eval_dir',
@@ -158,7 +160,7 @@ def parse_and_retrieve():
                           help='Either "test" or "train_eval".')
   arg_parser.add_argument('--checkpoint_dir',
                           type=str,
-                          default='/tmp/cifar10_train',
+                          default=__files.init_files_directory(),
                           help='Directory where to read model checkpoints.')
   arg_parser.add_argument('--eval_interval_secs',
                           type=int,
@@ -182,7 +184,7 @@ def parse_and_retrieve():
                           help='Number of images to process in a batch.')
   arg_parser.add_argument('--data_dir',
                           type=str,
-                          default='/tmp/cifar10_data',
+                          default=__files.get_training_directory(),
                           help='Path to the CIFAR-10 data directory.')
   arg_parser.add_argument('--use_fp16',
                           dest='use_fp16',

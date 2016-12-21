@@ -1,7 +1,7 @@
 """
 Created on Jul 6, 2016
 
-Utility class for training test and validation data files
+Utility module for training test and validation data files
 
 @author: Levan Tsinadze
 """

@@ -190,7 +190,7 @@ def inference(images):
     images: Images returned from distorted_inputs() or inputs().
 
   Returns:
-    Logits.
+    softmax_linear - Logits.
   """
   # We instantiate all variables using tf.get_variable() instead of
   # tf.Variable() in order to share variables across multiple GPU training runs.
@@ -378,6 +378,7 @@ def train(total_loss, global_step):
 
 def maybe_download_and_extract():
   """Download and extract the tarball from Alex's website."""
+  
   dest_directory = FLAGS.data_dir
   if not os.path.exists(dest_directory):
     os.makedirs(dest_directory)
