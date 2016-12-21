@@ -11,9 +11,9 @@ import argparse
 
 from tensorflow.examples.tutorials.mnist import input_data
 
-from cnn.mnist import cnn_parameters
+from cnn.mnist import network_parameters as pr
 from cnn.mnist.cnn_files import training_file
-from cnn.mnist.cnn_network import cnn_functions
+from cnn.mnist.network_config import cnn_functions
 from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 import tensorflow as tf
 
@@ -69,7 +69,7 @@ class cnn_learner(object):
             batch_x, batch_y = mnist.train.next_batch(batch_size)
             # Run optimization op (backprop)
             sess.run(self.optimizer, feed_dict={self.network.x: batch_x, self.network.y: batch_y,
-                                                self.network.keep_prob: cnn_parameters.CNN_DROPOUT})
+                                                self.network.keep_prob: pr.CNN_DROPOUT})
             if step % display_step == 0:
                 # Calculate batch loss and accuracy
                 loss, acc = sess.run([self.cost, self.accuracy], feed_dict={self.network.x: batch_x,

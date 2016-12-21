@@ -6,17 +6,18 @@ Evaluates object detection in image
 @author: Levan Tsinadze
 '''
 
-import tensorflow as tf
-import matplotlib.pyplot as plt
-import sys
 import json
+import sys
+
 from scipy.misc import imread, imresize
 
-from train import build_forward
+from cnn.detect.cnn_files import training_file
 from cnn.detect.utils import googlenet_load
 from cnn.detect.utils.train_utils import add_rectangles
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from train import build_forward
 
-from cnn.detect.cnn_files import training_file
 
 def generate_pred_image(pred_params):
     
@@ -50,26 +51,26 @@ iteration = 190000
 with open(hypes_file, 'r') as f:
     H = json.load(f)
 
-#Loads graph
+# Loads graph
 tf.reset_default_graph()
 googlenet = googlenet_load.init(H)
 x_in = tf.placeholder(tf.float32, name='x_in', shape=[H['image_height'], H['image_width'], 3])
 if H['use_rezoom']:
-    (pred_boxes, pred_logits, pred_confidences, 
-     pred_confs_deltas, pred_boxes_deltas) = build_forward(H, tf.expand_dims(x_in, 0), 
+    (pred_boxes, pred_logits, pred_confidences,
+     pred_confs_deltas, pred_boxes_deltas) = build_forward(H, tf.expand_dims(x_in, 0),
                                                            googlenet, 'test', reuse=None)
     grid_area = H['grid_height'] * H['grid_width']
-    pred_confidences = tf.reshape(tf.nn.softmax(tf.reshape(pred_confs_deltas, 
-                                                           [grid_area * H['rnn_len'], 2])), 
+    pred_confidences = tf.reshape(tf.nn.softmax(tf.reshape(pred_confs_deltas,
+                                                           [grid_area * H['rnn_len'], 2])),
                                                            [grid_area, H['rnn_len'], 2])
     if H['reregress']:
         pred_boxes = pred_boxes + pred_boxes_deltas
 else:
-    pred_boxes, pred_logits, pred_confidences = build_forward(H, tf.expand_dims(x_in, 0), 
+    pred_boxes, pred_logits, pred_confidences = build_forward(H, tf.expand_dims(x_in, 0),
                                                               googlenet, 'test', reuse=None)
 saver = tf.train.Saver()
 with tf.Session() as sess:
-    sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer())
     saver.restore(sess, cnn_param_files.get_checkpoint(iteration))
     img_path = init_image_path(sys.argv, cnn_param_files)
     pred_params = (H, img_path, pred_boxes, pred_logits, pred_confidences)

@@ -21,13 +21,6 @@ CNN_DROPOUT = 0.75  # Dropout, probability to keep units
 class cnn_weights(object):
   """Initializes weights and biases"""
     
-  def __init__(self):
-    # Store layers biases
-    self._bc1 = tf.Variable(tf.random_normal([32]))
-    self._bc2 = tf.Variable(tf.random_normal([64]))
-    self._bd1 = tf.Variable(tf.random_normal([1024]))
-    self._b_out = tf.Variable(tf.random_normal([N_CLASSES]))
-    
   def _init_weight(self, shape, wdc=None):
     """Initializes weight with decay
       Args:

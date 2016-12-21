@@ -138,9 +138,6 @@ def init_parameters_and_run(argument_flags):
     recognizer = batch_recognizer(argument_flags)
     recognizer.recognize_batch()
   
-  
-  
-
 if __name__ == '__main__':
   
   arg_parser = argparse.ArgumentParser()

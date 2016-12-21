@@ -9,8 +9,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cnn.mnist import cnn_parameters as pr
-from cnn.mnist.cnn_parameters import cnn_weights
+from cnn.mnist import network_parameters as pr
+from cnn.mnist.network_parameters import cnn_weights
 import tensorflow as tf
 
 

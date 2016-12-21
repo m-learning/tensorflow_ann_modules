@@ -56,7 +56,6 @@ class pillow_resizer(object):
     
     return resized_image
     
-  
   def resize_full(self, img):
     """Resizes passed image with "thumbnail" and "height" method
       Args: 
@@ -73,4 +72,3 @@ class pillow_resizer(object):
       full_resized_img = resized_img
     
     return  full_resized_img 
-  

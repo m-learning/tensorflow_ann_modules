@@ -52,7 +52,6 @@ class document_image_converter(image_converter):
     
     return croped_image    
     
-    
   def resize_if_nedded(self, im):
     """Resizes passed image if configured
       Args:
@@ -195,8 +194,7 @@ def read_arguments_and_run():
                           help='Change extension to JPG flag')
   (argument_flags, _) = arg_parser.parse_known_args()
   run_image_processing(argument_flags)
-
-        
+       
 if __name__ == '__main__':
   """Converts images for training data set"""
   

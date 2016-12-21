@@ -9,8 +9,8 @@ from __future__ import division
 from __future__ import print_function
 
 from cnn.mnist.cnn_files import training_file
-from cnn.mnist.cnn_input_reader import read_input_file
-from cnn.mnist.cnn_network import cnn_functions
+from cnn.mnist.input_reader import read_input_file
+from cnn.mnist.network_config import cnn_functions
 from cnn.utils.cnn_flags_utils import KEEP_FULL_PROB
 import tensorflow as tf
 
