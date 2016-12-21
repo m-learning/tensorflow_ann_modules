@@ -1,54 +1,58 @@
-'''
-Created on Jul 8, 2016
+# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 
-"""Evaluation for CIFAR-10.
+""" Created on Jul 8, 2016
+Evaluation for CIFAR-10.
+
 Accuracy:
 cifar10_train.py achieves 83.0% accuracy after 100K steps (256 epochs
 of data) as judged by cifar10_eval.py.
+
 Speed:
 On a single Tesla K40, cifar10_train.py processes a single batch of 128 images
 in 0.25-0.35 sec (i.e. 350 - 600 images /sec). The model reaches ~86%
 accuracy after 100K steps in 8 hours of training time.
+
 Usage:
 Please see the tutorial and website for how to download the CIFAR-10
 data set, compile the program and train the model.
+
 http://tensorflow.org/tutorials/deep_cnn/
-"""
 
 @author: Levan Tsinadze
-'''
-
+"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
 from datetime import datetime
 import math
 import time
 
+from cnn.cifar import network_config as network
 import numpy as np
 import tensorflow as tf
 
-from cnn.cifar import cnn_cifar
 
-FLAGS = tf.app.flags.FLAGS
-
-tf.app.flags.DEFINE_string('eval_dir', '/tmp/cifar10_eval',
-                           """Directory where to write event logs.""")
-tf.app.flags.DEFINE_string('eval_data', 'test',
-                           """Either 'test' or 'train_eval'.""")
-tf.app.flags.DEFINE_string('checkpoint_dir', '/tmp/cifar10_train',
-                           """Directory where to read model checkpoints.""")
-tf.app.flags.DEFINE_integer('eval_interval_secs', 60 * 5,
-                            """How often to run the eval.""")
-tf.app.flags.DEFINE_integer('num_examples', 10000,
-                            """Number of examples to run.""")
-tf.app.flags.DEFINE_boolean('run_once', False,
-                         """Whether to run eval only once.""")
+FLAGS = None
 
 
 def eval_once(saver, summary_writer, top_k_op, summary_op):
   """Run Eval once.
+
   Args:
     saver: Saver.
     summary_writer: Summary writer.
@@ -105,25 +109,25 @@ def evaluate():
   with tf.Graph().as_default() as g:
     # Get images and labels for CIFAR-10.
     eval_data = FLAGS.eval_data == 'test'
-    images, labels = cnn_cifar.inputs(eval_data=eval_data)
+    images, labels = network.inputs(eval_data=eval_data)
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    logits = cnn_cifar.inference(images)
+    logits = network.inference(images)
 
     # Calculate predictions.
     top_k_op = tf.nn.in_top_k(logits, labels, 1)
 
     # Restore the moving average version of the learned variables for eval.
     variable_averages = tf.train.ExponentialMovingAverage(
-        cnn_cifar.MOVING_AVERAGE_DECAY)
+        network.MOVING_AVERAGE_DECAY)
     variables_to_restore = variable_averages.variables_to_restore()
     saver = tf.train.Saver(variables_to_restore)
 
     # Build the summary operation based on the TF collection of Summaries.
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
 
-    summary_writer = tf.train.SummaryWriter(FLAGS.eval_dir, g)
+    summary_writer = tf.summary.FileWriter(FLAGS.eval_dir, g)
 
     while True:
       eval_once(saver, summary_writer, top_k_op, summary_op)
@@ -132,13 +136,65 @@ def evaluate():
       time.sleep(FLAGS.eval_interval_secs)
 
 
-def main(argv=None):  # pylint: disable=unused-argument
-  cnn_cifar.maybe_download_and_extract()
+def eval_network():  # pylint: disable=unused-argument
+  network.maybe_download_and_extract()
   if tf.gfile.Exists(FLAGS.eval_dir):
     tf.gfile.DeleteRecursively(FLAGS.eval_dir)
   tf.gfile.MakeDirs(FLAGS.eval_dir)
   evaluate()
 
+def parse_and_retrieve():
+  """Parses command line arguments"""
+  
+  global FLAGS
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--eval_dir',
+                          type=str,
+                          default='/tmp/cifar10_eval',
+                          help='Directory where to write event logs.')
+  arg_parser.add_argument('--eval_data',
+                          type=str,
+                          default='test',
+                          help='Either "test" or "train_eval".')
+  arg_parser.add_argument('--checkpoint_dir',
+                          type=str,
+                          default='/tmp/cifar10_train',
+                          help='Directory where to read model checkpoints.')
+  arg_parser.add_argument('--eval_interval_secs',
+                          type=int,
+                          default=60 * 5,
+                          help='How often to run the eval.')
+  arg_parser.add_argument('--num_examples',
+                          type=int,
+                          default=10000,
+                          help='Number of examples to run.')
+  arg_parser.add_argument('--run_once',
+                          dest='run_once',
+                          action='store_true',
+                          help='Whether to run eval only once.')
+  arg_parser.add_argument('--not_run_once',
+                          dest='run_once',
+                          action='store_false',
+                          help='Whether to run eval not only once.')
+  arg_parser.add_argument('--batch_size',
+                          type=int,
+                          default=128,
+                          help='Number of images to process in a batch.')
+  arg_parser.add_argument('--data_dir',
+                          type=str,
+                          default='/tmp/cifar10_data',
+                          help='Path to the CIFAR-10 data directory.')
+  arg_parser.add_argument('--use_fp16',
+                          dest='use_fp16',
+                          action='store_true',
+                          help='Train the model using fp16.')
+  arg_parser.add_argument('--not_use_fp16',
+                          dest='use_fp16',
+                          action='store_false',
+                          help='Train the model using fp32.')
+  (FLAGS, _) = arg_parser.parse_known_args()
+  network.FLAGS = FLAGS
 
 if __name__ == '__main__':
-  tf.app.run()
+  parse_and_retrieve()
+  tf.app.run(eval_network)

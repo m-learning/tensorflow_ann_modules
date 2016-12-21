@@ -7,6 +7,7 @@
 **/imagenet
 **/training_arch
 **/test_images
+/datas/cifar/
 /datas/flowers/
 /datas/flomen/
 /datas/zebras/

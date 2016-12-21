@@ -1,8 +1,10 @@
-# '''
-# Created on Sep 21, 2016
-#
-# @author: Levan Tsinadze
-# '''
+"""
+ Created on Sep 21, 2016
+
+  Data set management module
+
+ @author: Levan Tsinadze
+"""
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
