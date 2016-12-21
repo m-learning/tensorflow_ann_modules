@@ -59,4 +59,3 @@ class image_recognizer(object):
     
     return resp_dgt[0]
     
-    

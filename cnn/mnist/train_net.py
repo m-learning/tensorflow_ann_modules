@@ -31,7 +31,7 @@ class cnn_learner(object):
     
   def __init__(self):
     
-    self.network = cnn_functions(decay=0.00001, for_training=True)
+    self.network = cnn_functions(decay=0.00001, for_training=False)
     (self.pred, self.correct_pred, self.accuracy) = self.network.cnn_pred()
     # Define loss and optimizer
     self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.pred, self.network.y))
@@ -43,7 +43,7 @@ class cnn_learner(object):
   def init_mnist(self):
     """Initializes MNIST data set
       Returns:
-        mnist - data set
+        MNIST - data set
     """
     self.tr_files = training_file()
     data_path = self.tr_files.get_data_directory()
