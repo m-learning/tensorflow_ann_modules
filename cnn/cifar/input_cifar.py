@@ -130,7 +130,7 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
   # Display the training images in the visualizer.
   tf.summary.image('images', images)
 
-  return images, tf.reshape(label_batch, [batch_size])
+  return (images, tf.reshape(label_batch, [batch_size]))
 
 def distorted_inputs(data_dir, batch_size):
   """Construct distorted input for CIFAR training using the Reader ops.
@@ -188,11 +188,12 @@ def distorted_inputs(data_dir, batch_size):
                            min_fraction_of_examples_in_queue)
   print ('Filling queue with %d CIFAR images before starting to train. '
          'This will take a few minutes.' % min_queue_examples)
-
   # Generate a batch of images and labels by building up a queue of examples.
-  return _generate_image_and_label_batch(float_image, read_input.label,
+  image_and_label_batch = _generate_image_and_label_batch(float_image, read_input.label,
                                          min_queue_examples, batch_size,
                                          shuffle=True)
+  
+  return image_and_label_batch
 
 def inputs(eval_data, data_dir, batch_size):
   """Construct input for CIFAR evaluation using the Reader ops.
@@ -240,8 +241,10 @@ def inputs(eval_data, data_dir, batch_size):
   min_fraction_of_examples_in_queue = 0.4
   min_queue_examples = int(num_examples_per_epoch * 
                            min_fraction_of_examples_in_queue)
-
   # Generate a batch of images and labels by building up a queue of examples.
-  return _generate_image_and_label_batch(float_image, read_input.label,
+  image_and_label_batch = _generate_image_and_label_batch(float_image, read_input.label,
                                          min_queue_examples, batch_size,
                                          shuffle=False)
+  
+  return image_and_label_batch
+

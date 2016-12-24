@@ -123,7 +123,7 @@ def _variable_with_weight_decay(name, shape, stddev, wd):
         decay is not added for this Variable.
 
   Returns:
-    Variable Tensor
+    var - Variable Tensor
   """
   dtype = tf.float16 if FLAGS.use_fp16 else tf.float32
   var = _variable_on_cpu(
@@ -140,8 +140,9 @@ def distorted_inputs():
   """Construct distorted input for CIFAR training using the Reader ops.
 
   Returns:
-    images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
-    labels: Labels. 1D tensor of [batch_size] size.
+    tuple of - 
+      images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
+      labels: Labels. 1D tensor of [batch_size] size.
 
   Raises:
     ValueError: If no data_dir
@@ -278,7 +279,7 @@ def loss(logits, labels):
             of shape [batch_size]
 
   Returns:
-    Loss tensor of type float.
+    linear_loss - loss tensor of type float.
   """
   # Calculate the average cross entropy loss across the batch.
   labels = tf.cast(labels, tf.int64)
@@ -289,7 +290,9 @@ def loss(logits, labels):
 
   # The total loss is defined as the cross entropy loss plus all of the weight
   # decay terms (L2 loss).
-  return tf.add_n(tf.get_collection('losses'), name='total_loss')
+  linear_loss = tf.add_n(tf.get_collection('losses'), name='total_loss')
+  
+  return linear_loss
 
 def _add_loss_summaries(total_loss):
   """Add summaries for losses in CIFAR-10 model.

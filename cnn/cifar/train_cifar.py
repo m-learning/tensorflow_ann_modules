@@ -39,6 +39,7 @@ FORMAT_STR = ('%s: step %d, loss = %.2f (%.1f examples/sec; %.3f '
 
 def train():
   """Train CIFAR-10 for a number of steps."""
+  
   with tf.Graph().as_default():
     global_step = tf.contrib.framework.get_or_create_global_step()
 
@@ -89,6 +90,10 @@ def train():
         mon_sess.run(train_op)
 
 def prepare_and_train(argv=None):  # pylint: disable=unused-argument
+  """Prepares network and parameters for training
+    Args:
+      argv - command line arguments
+  """
   
   network.maybe_download_and_extract()
   if tf.gfile.Exists(FLAGS.train_dir):
@@ -98,7 +103,7 @@ def prepare_and_train(argv=None):  # pylint: disable=unused-argument
   train()
 
 def parse_and_retrieve():
-  """Parses command line arguments"""
+  """Parses command line arguments for training"""
   
   __files = training_file()
   global FLAGS
