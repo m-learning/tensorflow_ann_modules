@@ -92,7 +92,6 @@ def _activation_summary(x):
   tf.summary.scalar(tensor_name + '/sparsity',
                                        tf.nn.zero_fraction(x))
 
-
 def _variable_on_cpu(name, shape, initializer):
   """Helper to create a Variable stored on CPU memory.
 
@@ -107,8 +106,8 @@ def _variable_on_cpu(name, shape, initializer):
   with tf.device('/cpu:0'):
     dtype = tf.float16 if FLAGS.use_fp16 else tf.float32
     var = tf.get_variable(name, shape, initializer=initializer, dtype=dtype)
+    
   return var
-
 
 def _variable_with_weight_decay(name, shape, stddev, wd):
   """Helper to create an initialized Variable with weight decay.
@@ -134,8 +133,8 @@ def _variable_with_weight_decay(name, shape, stddev, wd):
   if wd is not None:
     weight_decay = tf.mul(tf.nn.l2_loss(var), wd, name='weight_loss')
     tf.add_to_collection('losses', weight_decay)
+    
   return var
-
 
 def distorted_inputs():
   """Construct distorted input for CIFAR training using the Reader ops.
@@ -155,8 +154,8 @@ def distorted_inputs():
   if FLAGS.use_fp16:
     images = tf.cast(images, tf.float16)
     labels = tf.cast(labels, tf.float16)
-  return images, labels
-
+    
+  return (images, labels)
 
 def inputs(eval_data):
   """Construct input for CIFAR evaluation using the Reader ops.
@@ -181,6 +180,7 @@ def inputs(eval_data):
   if FLAGS.use_fp16:
     images = tf.cast(images, tf.float16)
     labels = tf.cast(labels, tf.float16)
+    
   return (images, labels)
 
 def inference(images):
@@ -291,7 +291,6 @@ def loss(logits, labels):
   # decay terms (L2 loss).
   return tf.add_n(tf.get_collection('losses'), name='total_loss')
 
-
 def _add_loss_summaries(total_loss):
   """Add summaries for losses in CIFAR-10 model.
 
@@ -317,7 +316,6 @@ def _add_loss_summaries(total_loss):
     tf.summary.scalar(l.op.name, loss_averages.average(l))
 
   return loss_averages_op
-
 
 def train(total_loss, global_step):
   """Train CIFAR-10 model.
@@ -373,7 +371,6 @@ def train(total_loss, global_step):
     train_op = tf.no_op(name='train')
 
   return train_op
-
 
 def maybe_download_and_extract():
   """Download and extract the tarball from Alex's website."""

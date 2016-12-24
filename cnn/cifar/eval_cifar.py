@@ -149,7 +149,7 @@ def parse_and_retrieve():
   arg_parser = argparse.ArgumentParser()
   arg_parser.add_argument('--eval_dir',
                           type=str,
-                          default='/tmp/cifar10_eval',
+                          default=__files.init_logs_directory(),
                           help='Directory where to write event logs.')
   arg_parser.add_argument('--eval_data',
                           type=str,

@@ -29,7 +29,7 @@ class training_file(cnn_file_utils):
   def init_logs_directory(self):
     """Gets or creates directory for logs
       Returns:
-        directory for logs
+        directory for log files
     """
       
     return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_LOGS)

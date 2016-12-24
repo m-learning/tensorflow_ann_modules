@@ -26,6 +26,8 @@ NUM_CLASSES = 10
 NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN = 50000
 NUM_EXAMPLES_PER_EPOCH_FOR_EVAL = 10000
 
+NUM_PREPROCESS_THREADS = 16
+
 
 def read_cifar10(filename_queue):
   """Reads and parses examples from CIFAR10 data files.
@@ -107,26 +109,28 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
   """
   # Create a queue that shuffles the examples, and then
   # read 'batch_size' images + labels from the example queue.
-  num_preprocess_threads = 16
+  img_label = [image, label]
+  batch_size = batch_size
+  capacity = min_queue_examples + 3 * batch_size
   if shuffle:
     images, label_batch = tf.train.shuffle_batch(
-        [image, label],
+        img_label,
         batch_size=batch_size,
-        num_threads=num_preprocess_threads,
-        capacity=min_queue_examples + 3 * batch_size,
+        num_threads=NUM_PREPROCESS_THREADS,
+        capacity=capacity,
         min_after_dequeue=min_queue_examples)
   else:
+    label.set_shape(1)
     images, label_batch = tf.train.batch(
-        [image, label],
+        img_label,
         batch_size=batch_size,
-        num_threads=num_preprocess_threads,
-        capacity=min_queue_examples + 3 * batch_size)
-
+        num_threads=NUM_PREPROCESS_THREADS,
+        capacity=capacity)
+  print(images, label_batch)
   # Display the training images in the visualizer.
   tf.summary.image('images', images)
 
   return images, tf.reshape(label_batch, [batch_size])
-
 
 def distorted_inputs(data_dir, batch_size):
   """Construct distorted input for CIFAR training using the Reader ops.

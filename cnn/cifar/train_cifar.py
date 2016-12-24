@@ -88,8 +88,8 @@ def train():
       while not mon_sess.should_stop():
         mon_sess.run(train_op)
 
-
 def prepare_and_train(argv=None):  # pylint: disable=unused-argument
+  
   network.maybe_download_and_extract()
   if tf.gfile.Exists(FLAGS.train_dir):
     tf.gfile.DeleteRecursively(FLAGS.train_dir)
