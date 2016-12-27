@@ -13,7 +13,7 @@ from cnn.cifar import network_config as network
 from cnn.cifar.cnn_files import training_file
 
 
-def parse_and_retrieve(batch_size=128):
+def parse_and_retrieve(batch_size=128, num_examples=10000):
   """Parses command line arguments
     Returns:
       FLAGS - command line arguments and flags
@@ -45,7 +45,7 @@ def parse_and_retrieve(batch_size=128):
                           help='How often to run the eval.')
   arg_parser.add_argument('--num_examples',
                           type=int,
-                          default=10000,
+                          default=num_examples,
                           help='Number of examples to run.')
   arg_parser.add_argument('--run_once',
                           dest='run_once',

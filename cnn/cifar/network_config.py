@@ -92,14 +92,12 @@ def _activation_summary(x):
 
 def _variable_on_cpu(name, shape, initializer):
   """Helper to create a Variable stored on CPU memory.
-
-  Args:
-    name: name of the variable
-    shape: list of ints
-    initializer: initializer for Variable
-
-  Returns:
-    Variable Tensor
+    Args:
+      name: name of the variable
+      shape: list of ints
+      initializer: initializer for Variable
+    Returns:
+      Variable Tensor
   """
   with tf.device('/cpu:0'):
     dtype = tf.float16 if FLAGS.use_fp16 else tf.float32

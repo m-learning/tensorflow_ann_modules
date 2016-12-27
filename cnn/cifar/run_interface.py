@@ -73,7 +73,7 @@ def parse_and_retrieve():
   """Parses command line arguments"""
   
   global FLAGS
-  FLAGS = reader.parse_and_retrieve(batch_size=1)
+  FLAGS = reader.parse_and_retrieve(batch_size=1, num_examples=1)
   evaluator.FLAGS = FLAGS
 
 if __name__ == '__main__':
