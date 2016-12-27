@@ -115,7 +115,6 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
         capacity=capacity,
         min_after_dequeue=min_queue_examples)
   else:
-    label.set_shape(1)
     (images, label_batch) = tf.train.batch(
         img_label,
         batch_size=batch_size,
@@ -124,6 +123,7 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
   print(images, label_batch)
   # Display the training images in the visualizer.
   tf.summary.image('images', images)
+  print(label_batch.get_shape())
   labels = tf.reshape(label_batch, [batch_size])
   
   return (images, labels)
@@ -217,7 +217,7 @@ def input_from_filenames(filenames, num_examples_per_epoch=1, batch_size=1):
 
   # Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_standardization(resized_image)
-
+  read_input.label.set_shape([1])
   # Ensure that the random shuffling has good mixing properties.
   min_fraction_of_examples_in_queue = 0.4
   min_queue_examples = int(num_examples_per_epoch * 
