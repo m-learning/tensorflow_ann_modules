@@ -68,7 +68,7 @@ def read_cifar10(filename_queue):
   # header or footer in the CIFAR-10 format, so we leave header_bytes
   # and footer_bytes at their default of 0.
   reader = tf.FixedLengthRecordReader(record_bytes=record_bytes)
-  result.key, value = reader.read(filename_queue)
+  (result.key, value) = reader.read(filename_queue)
 
   # Convert from a string to a vector of uint8 that is record_bytes long.
   record_bytes = tf.decode_raw(value, tf.uint8)
@@ -120,10 +120,8 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
         batch_size=batch_size,
         num_threads=NUM_PREPROCESS_THREADS,
         capacity=capacity)
-  print(images, label_batch)
   # Display the training images in the visualizer.
   tf.summary.image('images', images)
-  print(label_batch.get_shape())
   labels = tf.reshape(label_batch, [batch_size])
   
   return (images, labels)
@@ -189,18 +187,16 @@ def distorted_inputs(data_dir, batch_size):
   
   return image_and_label_batch
 
-def input_from_filenames(filenames, num_examples_per_epoch=1, batch_size=1):
-  """Construct input for CIFAR evaluation from file names using the Reader ops.
+def read_image_file(filenames):
+  """Generates image input from file paths
     Args:
       filenames: array of file names.
-      num_examples_per_epoch: number of examples per epoch.
-      batch_size: Number of images per batch.
     Returns:
-      images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
-      labels: Labels. 1D tensor of [batch_size] size.
+      tuple of -
+        read_imput - file and label input
+        float_image - image from file path 
   """
-
-  # Create a queue that produces the filenames to read.
+  
   filename_queue = tf.train.string_input_producer(filenames)
 
   # Read examples from files in the filename queue.
@@ -217,6 +213,22 @@ def input_from_filenames(filenames, num_examples_per_epoch=1, batch_size=1):
 
   # Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_standardization(resized_image)
+  
+  return (read_input, float_image)
+
+def input_from_filenames(filenames, num_examples_per_epoch=1, batch_size=1):
+  """Construct input for CIFAR evaluation from file names using the Reader ops.
+    Args:
+      filenames: array of file names.
+      num_examples_per_epoch: number of examples per epoch.
+      batch_size: Number of images per batch.
+    Returns:
+      images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
+      labels: Labels. 1D tensor of [batch_size] size.
+  """
+
+  # Create a queue that produces the filenames to read.
+  (read_input, float_image) = read_image_file(filenames)
   read_input.label.set_shape([1])
   # Ensure that the random shuffling has good mixing properties.
   min_fraction_of_examples_in_queue = 0.4

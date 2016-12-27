@@ -16,7 +16,7 @@ from cnn.cifar.cnn_files import training_file
 def parse_and_retrieve(batch_size=128, num_examples=10000):
   """Parses command line arguments
     Returns:
-      FLAGS - command line arguments and flags
+      FLAGS - command line arguments and flags object
   """
   
   __files = training_file()

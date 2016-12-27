@@ -37,7 +37,7 @@ class training_file(cnn_file_utils):
   def init_log_files(self):
     """Gets or creates path to output log files
       Returns:
-        log_files - output log files path    
+        log_files - output log file path    
     """  
     
     dir_path = self.init_logs_directory()
@@ -48,7 +48,7 @@ class training_file(cnn_file_utils):
   def init_error_files(self):
     """Gets or creates path to error log files
       Returns:
-        log_errors - error log files path    
+        log_errors - error log file path    
     """ 
     
     dir_path = self.init_logs_directory()

@@ -135,6 +135,7 @@ def evaluate():
       time.sleep(FLAGS.eval_interval_secs)
 
 def eval_network(argv=None):  # pylint: disable=unused-argument
+  """Runs network evaluation"""
   
   network.maybe_download_and_extract()
   if tf.gfile.Exists(FLAGS.eval_dir):
