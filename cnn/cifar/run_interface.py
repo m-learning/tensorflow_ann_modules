@@ -52,9 +52,15 @@ def eval_interface(argsv=None):
     # Build a Graph that computes the logits predictions from the
     # inference model.
     logits = network.inference(images)
+    
+    labels_max = tf.reduce_max(labels)
+    with tf.Session() as sess:
+      print(sess.run(labels_max))
   
     # Calculate predictions.
     top_k_op = tf.nn.in_top_k(logits, labels, 1)
+    
+    print('images - ', images, 'labels - ', labels, 'top_k_op - ', top_k_op)
   
     # Restore the moving average version of the learned variables for eval.
     variable_averages = tf.train.ExponentialMovingAverage(
