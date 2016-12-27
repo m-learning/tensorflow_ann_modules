@@ -108,7 +108,7 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
   batch_size = batch_size
   capacity = min_queue_examples + 3 * batch_size
   if shuffle:
-    images, label_batch = tf.train.shuffle_batch(
+    (images, label_batch) = tf.train.shuffle_batch(
         img_label,
         batch_size=batch_size,
         num_threads=NUM_PREPROCESS_THREADS,
@@ -116,7 +116,7 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
         min_after_dequeue=min_queue_examples)
   else:
     label.set_shape(1)
-    images, label_batch = tf.train.batch(
+    (images, label_batch) = tf.train.batch(
         img_label,
         batch_size=batch_size,
         num_threads=NUM_PREPROCESS_THREADS,
@@ -124,8 +124,9 @@ def _generate_image_and_label_batch(image, label, min_queue_examples,
   print(images, label_batch)
   # Display the training images in the visualizer.
   tf.summary.image('images', images)
-
-  return (images, tf.reshape(label_batch, [batch_size]))
+  labels = tf.reshape(label_batch, [batch_size])
+  
+  return (images, labels)
 
 def distorted_inputs(data_dir, batch_size):
   """Construct distorted input for CIFAR training using the Reader ops.

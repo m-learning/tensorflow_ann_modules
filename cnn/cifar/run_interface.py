@@ -53,10 +53,6 @@ def eval_interface(argsv=None):
     # inference model.
     logits = network.inference(images)
     
-    labels_max = tf.reduce_max(labels)
-    with tf.Session() as sess:
-      print(sess.run(labels_max))
-  
     # Calculate predictions.
     top_k_op = tf.nn.in_top_k(logits, labels, 1)
     
