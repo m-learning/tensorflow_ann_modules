@@ -76,14 +76,12 @@ DATA_URL = 'http://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz'
 
 def _activation_summary(x):
   """Helper to create summaries for activations.
-
-  Creates a summary that provides a histogram of activations.
-  Creates a summary that measures the sparsity of activations.
-
-  Args:
-    x: Tensor
-  Returns:
-    nothing
+    Creates a summary that provides a histogram of activations.
+    Creates a summary that measures the sparsity of activations.
+    Args:
+      x: Tensor
+    Returns:
+      nothing
   """
   # Remove 'tower_[0-9]/' from the name in case this is a multi-GPU training
   # session. This helps the clarity of presentation on tensorboard.
@@ -111,19 +109,16 @@ def _variable_on_cpu(name, shape, initializer):
 
 def _variable_with_weight_decay(name, shape, stddev, wd):
   """Helper to create an initialized Variable with weight decay.
-
-  Note that the Variable is initialized with a truncated normal distribution.
-  A weight decay is added only if one is specified.
-
-  Args:
-    name: name of the variable
-    shape: list of ints
-    stddev: standard deviation of a truncated Gaussian
-    wd: add L2Loss weight decay multiplied by this float. If None, weight
-        decay is not added for this Variable.
-
-  Returns:
-    var - Variable Tensor
+    Note that the Variable is initialized with a truncated normal distribution.
+    A weight decay is added only if one is specified.
+    Args:
+      name: name of the variable
+      shape: list of ints
+      stddev: standard deviation of a truncated Gaussian
+      wd: add L2Loss weight decay multiplied by this float. If None, weight
+          decay is not added for this Variable.
+    Returns:
+      var - Variable Tensor
   """
   dtype = tf.float16 if FLAGS.use_fp16 else tf.float32
   var = _variable_on_cpu(
@@ -138,14 +133,12 @@ def _variable_with_weight_decay(name, shape, stddev, wd):
 
 def distorted_inputs():
   """Construct distorted input for CIFAR training using the Reader ops.
-
-  Returns:
-    tuple of - 
-      images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
-      labels: Labels. 1D tensor of [batch_size] size.
-
-  Raises:
-    ValueError: If no data_dir
+    Returns:
+      tuple of - 
+        images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
+        labels: Labels. 1D tensor of [batch_size] size.
+    Raises:
+      ValueError: If no data_dir
   """
   if not FLAGS.data_dir:
     raise ValueError('Please supply a data_dir')
@@ -160,17 +153,14 @@ def distorted_inputs():
 
 def inputs(eval_data):
   """Construct input for CIFAR evaluation using the Reader ops.
-
-  Args:
-    eval_data: bool, indicating if one should use the train or eval data set.
-
-  Returns:
-    tuple of:
-      images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
-      labels: Labels. 1D tensor of [batch_size] size.
-
-  Raises:
-    ValueError: If no data_dir
+    Args:
+      eval_data: bool, indicating if one should use the train or eval data set.
+    Returns:
+      tuple of:
+        images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
+        labels: Labels. 1D tensor of [batch_size] size.
+    Raises:
+      ValueError: If no data_dir
   """
   if not FLAGS.data_dir:
     raise ValueError('Please supply a data_dir')
@@ -186,12 +176,10 @@ def inputs(eval_data):
 
 def inference(images):
   """Build the CIFAR-10 model.
-
-  Args:
-    images: Images returned from distorted_inputs() or inputs().
-
-  Returns:
-    softmax_linear - Logits.
+    Args:
+      images: Images returned from distorted_inputs() or inputs().
+    Returns:
+      softmax_linear - Logits.
   """
   # We instantiate all variables using tf.get_variable() instead of
   # tf.Variable() in order to share variables across multiple GPU training runs.
@@ -271,15 +259,13 @@ def inference(images):
 
 def loss(logits, labels):
   """Add L2Loss to all the trainable variables.
-
-  Add summary for "Loss" and "Loss/avg".
-  Args:
-    logits: Logits from inference().
-    labels: Labels from distorted_inputs or inputs(). 1-D tensor
-            of shape [batch_size]
-
-  Returns:
-    linear_loss - loss tensor of type float.
+    Add summary for "Loss" and "Loss/avg".
+    Args:
+      logits: Logits from inference().
+      labels: Labels from distorted_inputs or inputs(). 1-D tensor
+              of shape [batch_size]
+    Returns:
+      linear_loss - loss tensor of type float.
   """
   # Calculate the average cross entropy loss across the batch.
   labels = tf.cast(labels, tf.int64)
@@ -296,14 +282,12 @@ def loss(logits, labels):
 
 def _add_loss_summaries(total_loss):
   """Add summaries for losses in CIFAR-10 model.
-
-  Generates moving average for all losses and associated summaries for
-  visualizing the performance of the network.
-
-  Args:
-    total_loss: Total loss from loss().
-  Returns:
-    loss_averages_op: op for generating moving averages of losses.
+    Generates moving average for all losses and associated summaries for
+    visualizing the performance of the network.
+    Args:
+      total_loss: Total loss from loss().
+    Returns:
+      loss_averages_op: op for generating moving averages of losses.
   """
   # Compute the moving average of all individual losses and the total loss.
   loss_averages = tf.train.ExponentialMovingAverage(0.9, name='avg')
@@ -322,16 +306,14 @@ def _add_loss_summaries(total_loss):
 
 def train(total_loss, global_step):
   """Train CIFAR-10 model.
-
-  Create an optimizer and apply to all trainable variables. Add moving
-  average for all trainable variables.
-
-  Args:
-    total_loss: Total loss from loss().
-    global_step: Integer Variable counting the number of training steps
-      processed.
-  Returns:
-    train_op: op for training.
+    Create an optimizer and apply to all trainable variables. Add moving
+    average for all trainable variables.
+    Args:
+      total_loss: Total loss from loss().
+      global_step: Integer Variable counting the number of training steps
+        processed.
+    Returns:
+      train_op: op for training.
   """
   # Variables that affect learning rate.
   num_batches_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN / FLAGS.batch_size

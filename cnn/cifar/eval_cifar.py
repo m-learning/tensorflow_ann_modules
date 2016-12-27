@@ -37,13 +37,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import argparse
 from datetime import datetime
 import math
 import time
 
+from cnn.cifar import argument_reader as reader
 from cnn.cifar import network_config as network
-from cnn.cifar.cnn_files import training_file
 import numpy as np
 import tensorflow as tf
 
@@ -146,55 +145,8 @@ def eval_network(argv=None):  # pylint: disable=unused-argument
 def parse_and_retrieve():
   """Parses command line arguments"""
   
-  __files = training_file()
   global FLAGS
-  arg_parser = argparse.ArgumentParser()
-  arg_parser.add_argument('--eval_dir',
-                          type=str,
-                          default=__files.init_logs_directory(),
-                          help='Directory where to write event logs.')
-  arg_parser.add_argument('--eval_data',
-                          type=str,
-                          default='test',
-                          help='Either "test" or "train_eval".')
-  arg_parser.add_argument('--checkpoint_dir',
-                          type=str,
-                          default=__files.init_files_directory(),
-                          help='Directory where to read model checkpoints.')
-  arg_parser.add_argument('--eval_interval_secs',
-                          type=int,
-                          default=60 * 5,
-                          help='How often to run the eval.')
-  arg_parser.add_argument('--num_examples',
-                          type=int,
-                          default=10000,
-                          help='Number of examples to run.')
-  arg_parser.add_argument('--run_once',
-                          dest='run_once',
-                          action='store_true',
-                          help='Whether to run eval only once.')
-  arg_parser.add_argument('--not_run_once',
-                          dest='run_once',
-                          action='store_false',
-                          help='Whether to run eval not only once.')
-  arg_parser.add_argument('--batch_size',
-                          type=int,
-                          default=128,
-                          help='Number of images to process in a batch.')
-  arg_parser.add_argument('--data_dir',
-                          type=str,
-                          default=__files.get_training_directory(),
-                          help='Path to the CIFAR-10 data directory.')
-  arg_parser.add_argument('--use_fp16',
-                          dest='use_fp16',
-                          action='store_true',
-                          help='Train the model using fp16.')
-  arg_parser.add_argument('--not_use_fp16',
-                          dest='use_fp16',
-                          action='store_false',
-                          help='Train the model using fp32.')
-  (FLAGS, _) = arg_parser.parse_known_args()
-  network.FLAGS = FLAGS
+  FLAGS = reader.parse_and_retrieve()
 
 if __name__ == '__main__':
   parse_and_retrieve()
