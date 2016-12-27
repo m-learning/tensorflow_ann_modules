@@ -101,6 +101,18 @@ def prepare_and_train(argv=None):  # pylint: disable=unused-argument
   tf.gfile.MakeDirs(FLAGS.train_dir)
   tf.logging.set_verbosity(tf.logging.INFO)
   train()
+  
+def _log_flags():
+  """Logs command line arguments"""
+
+  print('parameters identified:')
+  print('train_dir', FLAGS.train_dir)
+  print('data_dir', FLAGS.data_dir)
+  print('log_files', FLAGS.log_files)
+  print('log_errors', FLAGS.log_errors)
+  print('log_device_placement', FLAGS.log_device_placement)
+  print('use_fp16', FLAGS.use_fp16)
+  print('verbose_training', FLAGS.verbose_training)
 
 def parse_and_retrieve():
   """Parses command line arguments for training"""
@@ -157,14 +169,7 @@ def parse_and_retrieve():
                           action='store_false',
                           help='Do not print training loss and steps.')
   (FLAGS, _) = arg_parser.parse_known_args()
-  print('parameters identified:')
-  print('train_dir', FLAGS.train_dir)
-  print('data_dir', FLAGS.data_dir)
-  print('log_files', FLAGS.log_files)
-  print('log_errors', FLAGS.log_errors)
-  print('log_device_placement', FLAGS.log_device_placement)
-  print('use_fp16', FLAGS.use_fp16)
-  print('verbose_training', FLAGS.verbose_training)
+  _log_flags()
   network.FLAGS = FLAGS
 
 if __name__ == '__main__':

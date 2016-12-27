@@ -1,47 +1,18 @@
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
+"""
+Created on Dec 27, 2016
 
-""" Created on Jul 8, 2016
-Evaluation for CIFAR-10.
-
-Accuracy:
-cifar10_train.py achieves 83.0% accuracy after 100K steps (256 epochs
-of data) as judged by cifar10_eval.py.
-
-Speed:
-On a single Tesla K40, cifar10_train.py processes a single batch of 128 images
-in 0.25-0.35 sec (i.e. 350 - 600 images /sec). The model reaches ~86%
-accuracy after 100K steps in 8 hours of training time.
-
-Usage:
-Please see the tutorial and website for how to download the CIFAR-10
-data set, compile the program and train the model.
-
-http://tensorflow.org/tutorials/deep_cnn/
+Runs CIFAR10 network interface for image recognition
 
 @author: Levan Tsinadze
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import argparse
 from datetime import datetime
 import math
-import time
+import os
 
+from cnn.cifar import eval_cifar as evaluator
+from cnn.cifar import input_cifar as inputs
 from cnn.cifar import network_config as network
 from cnn.cifar.cnn_files import training_file
 import numpy as np
@@ -103,52 +74,55 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
     coord.request_stop()
     coord.join(threads, stop_grace_period_secs=10)
 
-def evaluate():
-  """Eval CIFAR-10 for a number of steps."""
+def eval_interface(argsv=None):
+  """Evaluates CIFAR network interface for instant file
+    Args:
+      file_path - path for file or 
+                  directory of files for recognition
+    Returns:
+      answer - recognition result
+  """
+  if os.path.isdir(FLAGS.file_path):
+    filenames = os.listdir(FLAGS.file_path)
+    
+  else:
+    filenames = [FLAGS.file_path]
   
   with tf.Graph().as_default() as g:
-    # Get images and labels for CIFAR-10.
-    eval_data = FLAGS.eval_data == 'test'
-    (images, labels) = network.inputs(eval_data=eval_data)
-
+  
+    (images, labels) = inputs.input_from_filenames(filenames)
+    
     # Build a Graph that computes the logits predictions from the
     # inference model.
     logits = network.inference(images)
-
+  
     # Calculate predictions.
     top_k_op = tf.nn.in_top_k(logits, labels, 1)
-
+  
     # Restore the moving average version of the learned variables for eval.
     variable_averages = tf.train.ExponentialMovingAverage(
         network.MOVING_AVERAGE_DECAY)
     variables_to_restore = variable_averages.variables_to_restore()
     saver = tf.train.Saver(variables_to_restore)
-
+  
     # Build the summary operation based on the TF collection of Summaries.
     summary_op = tf.summary.merge_all()
-
-    summary_writer = tf.summary.FileWriter(FLAGS.eval_dir, g)
-
-    while True:
-      eval_once(saver, summary_writer, top_k_op, summary_op)
-      if FLAGS.run_once:
-        break
-      time.sleep(FLAGS.eval_interval_secs)
-
-def eval_network(argv=None):  # pylint: disable=unused-argument
   
-  network.maybe_download_and_extract()
-  if tf.gfile.Exists(FLAGS.eval_dir):
-    tf.gfile.DeleteRecursively(FLAGS.eval_dir)
-  tf.gfile.MakeDirs(FLAGS.eval_dir)
-  evaluate()
+    summary_writer = tf.summary.FileWriter(FLAGS.eval_dir, g)
+    
+    evaluator.eval_once(saver, summary_writer, top_k_op, summary_op)
 
 def parse_and_retrieve():
   """Parses command line arguments"""
   
   __files = training_file()
+  __default_data_dir = __files.get_training_directory()
   global FLAGS
   arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--file_path',
+                          type=str,
+                          default=os.path.join(__default_data_dir, 'test_batch.bin'),
+                          help='File or directory path for evaluation') 
   arg_parser.add_argument('--eval_dir',
                           type=str,
                           default=__files.init_logs_directory(),
@@ -183,7 +157,7 @@ def parse_and_retrieve():
                           help='Number of images to process in a batch.')
   arg_parser.add_argument('--data_dir',
                           type=str,
-                          default=__files.get_training_directory(),
+                          default=__default_data_dir,
                           help='Path to the CIFAR-10 data directory.')
   arg_parser.add_argument('--use_fp16',
                           dest='use_fp16',
@@ -198,4 +172,4 @@ def parse_and_retrieve():
 
 if __name__ == '__main__':
   parse_and_retrieve()
-  tf.app.run(eval_network)
+  tf.app.run(eval_interface)
