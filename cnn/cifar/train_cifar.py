@@ -173,5 +173,7 @@ def parse_and_retrieve():
   network.FLAGS = FLAGS
 
 if __name__ == '__main__':
+  """Runs CIFAR10 training"""
+  
   parse_and_retrieve()
   tf.app.run(prepare_and_train)

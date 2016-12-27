@@ -150,5 +150,6 @@ def parse_and_retrieve():
   FLAGS = reader.parse_and_retrieve()
 
 if __name__ == '__main__':
+  """Evaluates CIFAR10 interface"""
   parse_and_retrieve()
   tf.app.run(eval_network)

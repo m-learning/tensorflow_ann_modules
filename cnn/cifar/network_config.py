@@ -256,7 +256,7 @@ def inference(images):
   return softmax_linear
 
 def loss(logits, labels):
-  """Add L2Loss to all the trainable variables.
+  """Add L2 Loss to all the trainable variables.
     Add summary for "Loss" and "Loss/avg".
     Args:
       logits: Logits from inference().

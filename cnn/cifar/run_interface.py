@@ -8,6 +8,10 @@ Runs CIFAR10 network interface for image recognition
 
 import math
 import os
+import traceback
+
+from PIL import Image
+import PIL
 
 from cnn.cifar import argument_reader as reader
 from cnn.cifar import eval_cifar as evaluator
@@ -19,19 +23,25 @@ import tensorflow as tf
 
 FLAGS = None
 
-def _get_file_names():
-  """Gets file names for recognition 
+def _has_appropriate_extension(file_name):
+  """Validates if file has appropriate extension
     Returns:
-      filenames - collection of file paths
+      True if file has appropriate extension or 
+      False it other case
   """
-
-  if os.path.isdir(FLAGS.file_path):
-    filenames = [os.path.join(FLAGS.file_path, f) for f in os.listdir(FLAGS.file_path)]
-    print(filenames)
-  else:
-    filenames = [FLAGS.file_path]
-    
-  return filenames
+  return file_name.endswith('.jpg') or file_name.endswith('.jpeg') \
+         or file_name.endswith('.JPG') or file_name.endswith('.JPEG') \
+         or file_name.endswith('.png') or file_name.endswith('.PNG')
+         
+def resize_image(filename):
+  """"Resizes image for CIFAR10 interface
+    Args:
+      filename = image path to resize
+  """
+  
+  img = Image.open(filename)
+  img = img.resize((32, 32), PIL.Image.ANTIALIAS)
+  img.save(filename)
 
 def eval_once(saver, logits_labels):
   """Run Eval once.
@@ -65,6 +75,7 @@ def eval_once(saver, logits_labels):
       step = 0
       while step < num_iter and not coord.should_stop():
         nlogits = sess.run(logits)
+        print(nlogits)
         preds = np.squeeze(nlogits)
         top_k = preds.argsort()[-5:][::-1]
         print(filename, ' - ')
@@ -76,8 +87,9 @@ def eval_once(saver, logits_labels):
 
       # Compute precision @ 1.
 
-    except Exception as e:  # pylint: disable=broad-except
-      coord.request_stop(e)
+    except Exception as ex:  # pylint: disable=broad-except
+      traceback.print_exc()
+      coord.request_stop(ex)
 
     coord.request_stop()
     coord.join(threads, stop_grace_period_secs=10)
@@ -89,7 +101,7 @@ def eval_for_file(filename):
     Returns:
       answer - recognition result
   """
-  
+  resize_image(filename)
   filenames = [filename]
   
   with tf.Graph().as_default():
@@ -124,7 +136,9 @@ def eval_interface(argsv=None):
       answer - recognition result
   """
   if os.path.isdir(FLAGS.file_path):
-    filenames = [os.path.join(FLAGS.file_path, f) for f in os.listdir(FLAGS.file_path)]
+    filenames = [os.path.join(FLAGS.file_path, f) for 
+             f in os.listdir(FLAGS.file_path)
+             if _has_appropriate_extension(f)]
     print(filenames)
     for filename in filenames:
       eval_for_file(filename)

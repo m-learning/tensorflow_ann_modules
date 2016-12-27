@@ -247,7 +247,6 @@ def inputs(eval_data, data_dir, batch_size):
       eval_data: bool, indicating if one should use the train or eval data set.
       data_dir: Path to the CIFAR-10 data directory.
       batch_size: Number of images per batch.
-  
     Returns:
       images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
       labels: Labels. 1D tensor of [batch_size] size.
@@ -269,4 +268,3 @@ def inputs(eval_data, data_dir, batch_size):
                                                batch_size=batch_size)
   
   return image_and_label_batch
-
