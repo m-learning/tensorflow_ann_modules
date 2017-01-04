@@ -1,5 +1,6 @@
 """
 Created on Nov 8, 2016
+
 Training and evaluation of VGG model
 
 @author: Levan Tsinadze

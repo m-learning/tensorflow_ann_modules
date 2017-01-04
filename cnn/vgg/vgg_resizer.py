@@ -1,6 +1,9 @@
 """
 Created on Oct 19, 2016
+
 Image size utility for VGG networks 
+
+@author: Levan Tsinadze
 """
 
 from __future__ import absolute_import

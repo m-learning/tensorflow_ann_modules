@@ -1,8 +1,9 @@
 """
 Created on Oct 10, 2016
+
 Implementation of VGG network
+
 @author: Levan Tsinadze
-"""
 
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +19,7 @@ Implementation of VGG network
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Contains model definitions for versions of the Oxford VGG network.
+# Contains model definitions for versions of the Oxford VGG network.
 #
 # These model definitions were introduced in the following technical report:
 #
@@ -42,7 +43,8 @@ Implementation of VGG network
 # @@vgg_a
 # @@vgg_16
 # @@vgg_19
-# """
+"""
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
