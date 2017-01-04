@@ -1,4 +1,4 @@
-# '''
+"""
 # Created on Sep 14, 2016
 #
 # Implementation of inception_v2 from TensorFlow-slim models
@@ -20,7 +20,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Contains the definition for inception v2 classification network."""
+# 
+Contains the definition for inception v2 classification network."""
 
 from __future__ import absolute_import
 from __future__ import division
