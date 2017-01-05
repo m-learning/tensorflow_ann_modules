@@ -154,6 +154,22 @@ def inception_tower_2(inception_x):
   
   return inception2
 
+def dropout_layer(net, train=False):
+  """Adds dropout layer if training
+    Args:
+      net - previous layer
+      train - training flag
+    Returns:
+      out - next layer
+  """
+
+  if train:
+      out = tf.nn.dropout(net, dropout)
+  else:
+      out = net
+    
+  return out
+
 def model(x, size, train=False):
   """Inception model
     Args:
@@ -179,10 +195,8 @@ def model(x, size, train=False):
   inception2_flat = tf.reshape(inception2, [-1, size * size * 4 * map2])
   
   # Fully connected layers
-  if train:
-      h_fc1 = tf.nn.dropout(tf.nn.relu(tf.matmul(inception2_flat, W_fc1) + b_fc1), dropout)
-  else:
-      h_fc1 = tf.nn.relu(tf.matmul(inception2_flat, W_fc1) + b_fc1)
+  h_fc0 = tf.nn.relu(tf.matmul(inception2_flat, W_fc1) + b_fc1)
+  h_fc1 = dropout_layer(h_fc0, train=train)
   out = tf.matmul(h_fc1, W_fc2) + b_fc2
   
   return out

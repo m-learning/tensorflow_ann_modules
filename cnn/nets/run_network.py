@@ -1,8 +1,13 @@
-# '''
-# Created on Oct 6, 2016
-# General interface module for network implementation
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Oct 6, 2016
+
+General interface module for network implementation
+
+@author: Levan Tsinadze
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import cnn.vgg.vgg as vgg
 import numpy as np

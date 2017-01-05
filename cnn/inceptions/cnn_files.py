@@ -42,6 +42,8 @@ class training_file(cnn_file_utils):
   
   def _get_data_file_path(self, filename):
     """Gets training or test set CSV file path
+      Args:
+        filename - file name
       Returns:
         filepath - training or test set file path
     """
@@ -52,7 +54,11 @@ class training_file(cnn_file_utils):
     return filepath
   
   def _download_data_files(self, filename, url_path):
-    """Downloads training and test CSV files"""
+    """Downloads training and test CSV files
+      Args:
+        filename - file name
+        url_path - file URL address
+    """
     
     filepath = self._get_data_file_path(filename)
     if not os.path.exists(filepath):

@@ -1,11 +1,13 @@
-# '''
-# Created on Sep 23, 2016
-# General configuration parameters for training testing and evaluation
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Sep 23, 2016
 
+General configuration parameters for training testing and evaluation
+
+@author: Levan Tsinadze
+"""
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 import os
 import sys

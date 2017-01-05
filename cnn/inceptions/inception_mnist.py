@@ -68,7 +68,7 @@ class test_batchs:
       self.batch_index = self.batch_index + batch_size
       return batch
 
-# set the test batchsize
+# set the test batch size
 test_batch_size = 100
 
 # returns accuracy of model
@@ -140,7 +140,7 @@ with tf.Session(graph=graph) as sess:
           # use the batches class
           batch_testX = test_batchs(testX)
   
-          for i in range(len(testX) / test_batch_size):
+          for i in range(len(testX) // test_batch_size):
               feed_dict = {tf_testX : batch_testX.nextBatch(test_batch_size)}
               preds = sess.run(predictions_test, feed_dict=feed_dict)
               result = np.concatenate((result, preds), axis=0)

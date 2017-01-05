@@ -552,4 +552,5 @@ def inception_v2_arg_scope(weight_decay=0.00004):
         activation_fn=tf.nn.relu,
         normalizer_fn=slim.batch_norm,
         normalizer_params=batch_norm_params) as sc:
+      
       return sc

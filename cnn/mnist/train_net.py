@@ -1,6 +1,8 @@
 """
 Created on Jun 18, 2016
 
+Training module for MNIST classifier
+
 @author: Levan Tsinadze
 """
 from __future__ import absolute_import

@@ -346,4 +346,5 @@ def inception_v1_arg_scope(weight_decay=0.00004,
         activation_fn=tf.nn.relu,
         normalizer_fn=normalizer_fn,
         normalizer_params=normalizer_params) as sc:
+      
       return sc
