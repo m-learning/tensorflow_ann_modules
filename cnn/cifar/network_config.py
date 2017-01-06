@@ -32,7 +32,6 @@ Summary of available functions:
  train_op = train(loss, global_step)
  
 @author: Levan Tsinadze
- 
 """
 # pylint: disable=missing-docstring
 

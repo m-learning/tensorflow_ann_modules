@@ -78,7 +78,6 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
       for qr in tf.get_collection(tf.GraphKeys.QUEUE_RUNNERS):
         threads.extend(qr.create_threads(sess, coord=coord, daemon=True,
                                          start=True))
-
       num_iter = int(math.ceil(FLAGS.num_examples / FLAGS.batch_size))
       true_count = 0  # Counts the number of correct predictions.
       total_sample_count = num_iter * FLAGS.batch_size
@@ -128,11 +127,13 @@ def evaluate():
 
     summary_writer = tf.summary.FileWriter(FLAGS.eval_dir, g)
 
-    while True:
+    repeat_interface = True
+    while repeat_interface:
       eval_once(saver, summary_writer, top_k_op, summary_op)
       if FLAGS.run_once:
-        break
-      time.sleep(FLAGS.eval_interval_secs)
+        repeat_interface = False
+      else:
+        time.sleep(FLAGS.eval_interval_secs)
 
 def eval_network(argv=None):  # pylint: disable=unused-argument
   """Runs network evaluation"""

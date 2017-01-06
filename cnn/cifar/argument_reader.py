@@ -15,6 +15,9 @@ from cnn.cifar.cnn_files import training_file
 
 def parse_and_retrieve(batch_size=128, num_examples=10000):
   """Parses command line arguments
+    Args:
+      batch_size - training batch size
+      num_examples - number of examples to run
     Returns:
       FLAGS - command line arguments and flags object
   """
