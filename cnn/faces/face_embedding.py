@@ -15,11 +15,12 @@ import math
 import os
 import sys
 
-from cnn.faces.cnn_files import training_file 
 from cnn.faces import facenet
 from cnn.faces import lfw
+from cnn.faces.cnn_files import training_file 
 import numpy as np
 import tensorflow as tf
+
 
 INPUT_LAYER = 'input:0'
 EMBEDDINGS_LAYER = 'embeddings:0'
@@ -116,11 +117,13 @@ def generate_embedding(args):
 def parse_arguments(argv):
   
     _files = training_file()
+    lfw_dir = _files.join_path(_files.eval_dir, 'lfw', 'lfw_mtcnnpy_160')
   
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('lfw_dir',
+    parser.add_argument('--lfw_dir',
                         type=str,
+                        default=lfw_dir,
                         help='Path to the data directory containing aligned LFW face patches.')
     parser.add_argument('--lfw_batch_size',
                         type=int,
