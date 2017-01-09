@@ -119,20 +119,35 @@ def parse_arguments(argv):
   
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('lfw_dir', type=str,
-        help='Path to the data directory containing aligned LFW face patches.')
-    parser.add_argument('--lfw_batch_size', type=int,
-        help='Number of images to process in a batch in the LFW test set.', default=100)
-    parser.add_argument('--model_dir', type=str, default=_files.model_dir,
-        help='Directory containing the metagraph (.meta) file and the checkpoint (ckpt) file containing model parameters')
-    parser.add_argument('--lfw_pairs', type=str,
-        help='The file containing the pairs to use for validation.', default=_files.pairs_file)
-    parser.add_argument('--lfw_file_ext', type=str,
-        help='The file extension for the LFW dataset.', default='png', choices=['jpg', 'png'])
-    parser.add_argument('--lfw_nrof_folds', type=int,
-        help='Number of folds to use for cross validation. Mainly used for testing.', default=10)
-    parser.add_argument('--seed', type=int,
-        help='Random seed.', default=667)
+    parser.add_argument('lfw_dir',
+                        type=str,
+                        help='Path to the data directory containing aligned LFW face patches.')
+    parser.add_argument('--lfw_batch_size',
+                        type=int,
+                        default=100,
+                        help='Number of images to process in a batch in the LFW test set.')
+    parser.add_argument('--model_dir',
+                        type=str,
+                        default=_files.model_dir,
+                        help='Directory containing the metagraph (.meta) file and the checkpoint (ckpt) file containing model parameters')
+    parser.add_argument('--lfw_pairs',
+                        type=str,
+                        default=_files.pairs_file,
+                        help='The file containing the pairs to use for validation.')
+    parser.add_argument('--lfw_file_ext',
+                        type=str,
+                        default='png',
+                        choices=['jpg', 'png'],
+                        help='The file extension for the LFW dataset.')
+    parser.add_argument('--lfw_nrof_folds',
+                        type=int,
+                        help='Number of folds to use for cross validation. Mainly used for testing.',
+                        default=10)
+    parser.add_argument('--seed',
+                        type=int,
+                        default=667,
+                        help='Random seed.')
+    
     return parser.parse_args(argv)
 
 if __name__ == '__main__':
