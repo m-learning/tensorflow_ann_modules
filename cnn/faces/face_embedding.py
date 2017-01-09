@@ -15,17 +15,20 @@ import math
 import os
 import sys
 
-import cnn.faces.facenet as facenet
-import cnn.faces.lfw as lfw
+from cnn.faces.cnn_files import training_file 
+from cnn.faces import facenet
+from cnn.faces import lfw
 import numpy as np
 import tensorflow as tf
 
 INPUT_LAYER = 'input:0'
 EMBEDDINGS_LAYER = 'embeddings:0'
 
-def image_to_embedding(sess, model_dir, mete_file, chp_file, paths):
+def image_to_embedding(paths):
   
   embs = []
+  _files = training_file()
+  model_dir = _files.model_dir
   
   with tf.Graph().as_default():
     
@@ -61,6 +64,9 @@ def image_to_embedding(sess, model_dir, mete_file, chp_file, paths):
 
 def generate_embedding(args):
   
+    _files = training_file()
+    model_dir = _files.model_dir
+  
     with tf.Graph().as_default():
       
         with tf.Session() as sess:
@@ -72,11 +78,11 @@ def generate_embedding(args):
             paths, actual_issame = lfw.get_paths(os.path.expanduser(args.lfw_dir), pairs, args.lfw_file_ext)
 
             # Load the model
-            print('Model directory: %s' % args.model_dir)
-            meta_file, ckpt_file = facenet.get_model_filenames(os.path.expanduser(args.model_dir))
+            print('Model directory: %s' % model_dir)
+            meta_file, ckpt_file = facenet.get_model_filenames(os.path.expanduser(model_dir))
             print('Metagraph file: %s' % meta_file)
             print('Checkpoint file: %s' % ckpt_file)
-            facenet.load_model(args.model_dir, meta_file, ckpt_file)
+            facenet.load_model(model_dir, meta_file, ckpt_file)
             
             # Get input and output tensors
             images_placeholder = tf.get_default_graph().get_tensor_by_name(INPUT_LAYER)
@@ -108,16 +114,19 @@ def generate_embedding(args):
             facenet.plot_roc(fpr, tpr, 'NN4')
             
 def parse_arguments(argv):
+  
+    _files = training_file()
+  
     parser = argparse.ArgumentParser()
     
     parser.add_argument('lfw_dir', type=str,
         help='Path to the data directory containing aligned LFW face patches.')
     parser.add_argument('--lfw_batch_size', type=int,
         help='Number of images to process in a batch in the LFW test set.', default=100)
-    parser.add_argument('model_dir', type=str,
+    parser.add_argument('--model_dir', type=str, default=_files.model_dir,
         help='Directory containing the metagraph (.meta) file and the checkpoint (ckpt) file containing model parameters')
     parser.add_argument('--lfw_pairs', type=str,
-        help='The file containing the pairs to use for validation.', default='../data/pairs.txt')
+        help='The file containing the pairs to use for validation.', default=_files.pairs_file)
     parser.add_argument('--lfw_file_ext', type=str,
         help='The file extension for the LFW dataset.', default='png', choices=['jpg', 'png'])
     parser.add_argument('--lfw_nrof_folds', type=int,

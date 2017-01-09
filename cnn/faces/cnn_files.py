@@ -18,3 +18,15 @@ class training_file(cnn_file_utils):
   
   def __init__(self, image_resizer=None):
     super(training_file, self).__init__('faces', image_resizer=image_resizer)
+    
+  @property
+  def pairs_file(self):
+    """Gets evaluation face pairs file path
+      Returns:
+        pairs_file - pairs file path
+    """
+    
+    eval_dir = self.eval_dir
+    pairs_file = self.join_and_init_path(eval_dir, 'pairs.txt')
+    
+    return pairs_file

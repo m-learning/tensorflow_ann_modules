@@ -28,19 +28,19 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-from subprocess import Popen, PIPE
-import tensorflow as tf
-from tensorflow.python.framework import ops
-import numpy as np
-from scipy import misc
-import matplotlib.pyplot as plt
-from sklearn.cross_validation import KFold
 from scipy import interpolate
+from scipy import misc
+from sklearn.cross_validation import KFold
+from subprocess import Popen, PIPE
+from tensorflow.python.framework import ops
 from tensorflow.python.training import training
 
+import matplotlib.pyplot as plt
+import numpy as np
+import tensorflow as tf
+
+
 #import h5py
-
-
 def triplet_loss(anchor, positive, negative, alpha):
     """Calculate the triplet loss according to the FaceNet paper
     

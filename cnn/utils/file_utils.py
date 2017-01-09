@@ -240,6 +240,15 @@ class cnn_file_utils(files_and_path_utils):
     ensure_dir_exists(current_dir)
     
     return current_dir
+  
+  @property
+  def model_dir(self):
+    """Gets or creates directory for trained parameters
+      Returns:
+        current_dir - directory for trained parameters
+    """
+    
+    return self.init_files_directory()
 
   def get_or_init_files_path(self):
     """Initializes trained files path
@@ -279,6 +288,15 @@ class cnn_file_utils(files_and_path_utils):
         Evaluation diractory path
     """
     return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_EVALUATION)
+  
+  @property
+  def eval_dir(self):
+    """Gets validation data and files directory
+      Returns:
+        validation data directory
+    """
+    
+    return self.get_or_init_eval_path()
 
 def rename_files(partt, name, dir_path):
   """Renames files in directory
