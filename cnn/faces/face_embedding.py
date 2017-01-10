@@ -21,7 +21,7 @@ from cnn.faces.cnn_files import training_file
 import numpy as np
 import tensorflow as tf
 
-
+# Layer names
 INPUT_LAYER = 'input:0'
 EMBEDDINGS_LAYER = 'embeddings:0'
 
