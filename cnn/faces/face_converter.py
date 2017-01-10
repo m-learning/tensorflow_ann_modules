@@ -27,7 +27,7 @@ face_detector = dlib.get_frontal_face_detector()
 
 # Load the image into an array
 image = io.imread(file_name)
-img = img = cv2.imread(file_name)
+img = cv2.imread(file_name)
 
 # Run the HOG face detector on the image data.
 # The result will be the bounding boxes of the faces in our image.
@@ -51,7 +51,7 @@ for i, face_rect in enumerate(detected_faces):
   roi = img[left:top, right:bottom]
   path = os.path.join(out_image, 'aligned_face_{}_crp.jpg'.format(i))
   print(path)
-  cv2.imwrite(path.format(i), roi)
+  cv2.imwrite(path, roi)
   
 # Write in new file
 path = os.path.join(out_image, 'aligned_face_final.jpg')
