@@ -45,8 +45,10 @@ for i, face_rect in enumerate(detected_faces):
   # Draw a box around each face we found
   cv2.rectangle(image, (face_rect.left(), face_rect.top()), (face_rect.right(), face_rect.bottom()), (255, 0, 255), 2)
   
-  roi = image[face_rect.left():face_rect.top(), face_rect.right():face_rect.bottom()]
-  path = os.path.join(out_image, 'aligned_face_{}.jpg'.format(i))
+  (left, top, right, bottom) = (face_rect.left(), face_rect.top(), face_rect.right(), face_rect.bottom())
+  print(left, top, right, bottom)
+  roi = image[left:top, right:bottom]
+  path = os.path.join(out_image, 'aligned_face_{}_crp.jpg'.format(i))
   print(path)
   cv2.imwrite(path.format(i), roi)
   
