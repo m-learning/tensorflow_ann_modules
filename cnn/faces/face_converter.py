@@ -51,7 +51,8 @@ for i, face_rect in enumerate(detected_faces):
   cv2.imwrite(path.format(i), roi)
   
 # Write in new file
-cv2.imwrite(out_image, image)
+path = os.path.join(out_image, 'aligned_face_final.jpg')
+cv2.imwrite(path, image)
           
 # Wait until the user hits <enter> to close the window          
 dlib.hit_enter_to_continue()
