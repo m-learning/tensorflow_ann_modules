@@ -47,6 +47,7 @@ for i, face_rect in enumerate(detected_faces):
   
   roi = image[face_rect.left():face_rect.top(), face_rect.right():face_rect.bottom()]
   path = os.path.join(out_image, 'aligned_face_{}.jpg'.format(i))
+  print(path)
   cv2.imwrite(path.format(i), roi)
   
 # Write in new file
