@@ -48,7 +48,7 @@ for i, face_rect in enumerate(detected_faces):
   
   (left, top, right, bottom) = (face_rect.left(), face_rect.top(), face_rect.right(), face_rect.bottom())
   print(left, top, right, bottom)
-  roi = img[left:top, right:bottom]
+  roi = img[top:bottom, left:right]
   path = os.path.join(out_image, 'aligned_face_{}_crp.jpg'.format(i))
   print(path)
   cv2.imwrite(path, roi)
