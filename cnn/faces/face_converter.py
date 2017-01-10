@@ -1,10 +1,11 @@
 """
 Created on Jan 10, 2017
 
-Finds faces in image
+Saves detected faces in file
 
 @author: Levan Tsinadze
 """
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -13,15 +14,15 @@ import sys
 
 import dlib
 from skimage import io
+import cv2
 
 
 # Take the image file name from the command line
 file_name = sys.argv[1]
+out_image = sys.argv[2]
 
 # Create a HOG face detector using the built-in dlib class
 face_detector = dlib.get_frontal_face_detector()
-
-win = dlib.image_window()
 
 # Load the image into an array
 image = io.imread(file_name)
@@ -32,8 +33,6 @@ detected_faces = face_detector(image, 1)
 
 print("I found {} faces in the file {}".format(len(detected_faces), file_name))
 
-# Open a window on the desktop showing the image
-win.set_image(image)
 
 # Loop through each face we found in the image
 for i, face_rect in enumerate(detected_faces):
@@ -43,7 +42,10 @@ for i, face_rect in enumerate(detected_faces):
   print("- Face #{} found at Left: {} Top: {} Right: {} Bottom: {}".format(i, face_rect.left(), face_rect.top(), face_rect.right(), face_rect.bottom()))
 
   # Draw a box around each face we found
-  win.add_overlay(face_rect)
+  cv2.rectangle(image, (face_rect.left(), face_rect.top()), (face_rect.right(), face_rect.bottom()), (255, 0, 255), 2)
+  
+#Write in new file
+cv2.imwrite(out_image, image)
           
 # Wait until the user hits <enter> to close the window          
 dlib.hit_enter_to_continue()
