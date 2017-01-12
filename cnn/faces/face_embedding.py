@@ -5,7 +5,6 @@ Face embeddings generator from FaceNet pre-trained model
 
 @author: Levan Tsinadze
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -17,14 +16,13 @@ import sys
 
 from cnn.faces import facenet
 from cnn.faces import lfw
-from cnn.faces.cnn_files import training_file 
+from cnn.faces.cnn_files import training_file
+from cnn.faces.face_utils import EMBEDDINGS_LAYER, INPUT_LAYER
 import numpy as np
 import tensorflow as tf
 
-# Layer names
-INPUT_LAYER = 'input:0'
-EMBEDDINGS_LAYER = 'embeddings:0'
 
+# Layer names
 def image_to_embedding(paths):
   
   embs = []

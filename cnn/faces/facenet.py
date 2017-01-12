@@ -89,7 +89,7 @@ def center_loss(features, label, alfa, nrof_classes):
     centers = tf.scatter_sub(centers, label, diff)
     loss = tf.nn.l2_loss(features - centers_batch)
     
-    return loss, centers
+    return (loss, centers)
 
 def get_image_paths_and_labels(dataset):
     
@@ -99,7 +99,7 @@ def get_image_paths_and_labels(dataset):
         image_paths_flat += dataset[i].image_paths
         labels_flat += [i] * len(dataset[i].image_paths)
     
-    return image_paths_flat, labels_flat
+    return (image_paths_flat, labels_flat)
 
 
 def read_images_from_disk(input_queue):
@@ -113,7 +113,7 @@ def read_images_from_disk(input_queue):
     file_contents = tf.read_file(input_queue[0])
     example = tf.image.decode_png(file_contents, channels=3)
     
-    return example, label
+    return (example, label)
   
 def random_rotate_image(image):
     
@@ -151,7 +151,7 @@ def read_and_augument_data(image_list, label_list, image_size, batch_size, max_n
         capacity=4 * nrof_preprocess_threads * batch_size,
         allow_smaller_final_batch=True)
   
-    return image_batch, label_batch
+    return (image_batch, label_batch)
   
 def _add_loss_summaries(total_loss):
     """Add summaries for losses.
@@ -259,6 +259,7 @@ def to_rgb(img):
     w, h = img.shape
     ret = np.empty((w, h, 3), dtype=np.uint8)
     ret[:, :, 0] = ret[:, :, 1] = ret[:, :, 2] = img
+    
     return ret
   
 def load_data(image_paths, do_random_crop, do_random_flip, image_size, do_prewhiten=True):
@@ -316,6 +317,7 @@ def get_triplet_batch(triplets, batch_index, batch_size):
     return batch
 
 def get_learning_rate_from_file(filename, epoch):
+   
     with open(filename, 'r') as f:
         for line in f.readlines():
             line = line.split('#', 1)[0]
@@ -343,6 +345,7 @@ class ImageClass():
 def get_dataset(paths):
     
     dataset = []
+    
     for path in paths.split(':'):
         path_exp = os.path.expanduser(path)
         classes = os.listdir(path_exp)
@@ -382,33 +385,42 @@ def split_dataset(dataset, split_ratio, mode):
     else:
         raise ValueError('Invalid train/test split mode "%s"' % mode)
     
-    return train_set, test_set
+    return (train_set, test_set)
 
 def load_model(model_dir, meta_file, ckpt_file):
+    
     model_dir_exp = os.path.expanduser(model_dir)
     saver = tf.train.import_meta_graph(os.path.join(model_dir_exp, meta_file))
     saver.restore(tf.get_default_session(), os.path.join(model_dir_exp, ckpt_file))
     
 def get_model_filenames(model_dir):
+  """Gets file names for model
+    Args:
+      model_dir - directory for trained checkpoints
+    Returns:
+      tuple of - 
+        meta_file - meta data file
+        ckpt_file - checkpoint file
+  """
     
-    files = os.listdir(model_dir)
-    meta_files = [s for s in files if s.endswith('.meta')]
-    if len(meta_files) == 0:
-        raise ValueError('No meta file found in the model directory (%s)' % model_dir)
-    elif len(meta_files) > 1:
-        raise ValueError('There should not be more than one meta file in the model directory (%s)' % model_dir)
-    meta_file = meta_files[0]
-    ckpt_files = [s for s in files if 'ckpt' in s]
-    if len(ckpt_files) == 0:
-        raise ValueError('No checkpoint file found in the model directory (%s)' % model_dir)
-    elif len(ckpt_files) == 1:
-        ckpt_file = ckpt_files[0]
-    else:
-        ckpt_iter = [(s, int(s.split('-')[-1])) for s in ckpt_files if 'ckpt' in s]
-        sorted_iter = sorted(ckpt_iter, key=lambda tup: tup[1])
-        ckpt_file = sorted_iter[-1][0]
-    
-    return meta_file, ckpt_file
+  files = os.listdir(model_dir)
+  meta_files = [s for s in files if s.endswith('.meta')]
+  if len(meta_files) == 0:
+      raise ValueError('No meta file found in the model directory (%s)' % model_dir)
+  elif len(meta_files) > 1:
+      raise ValueError('There should not be more than one meta file in the model directory (%s)' % model_dir)
+  meta_file = meta_files[0]
+  ckpt_files = [s for s in files if 'ckpt' in s]
+  if len(ckpt_files) == 0:
+      raise ValueError('No checkpoint file found in the model directory (%s)' % model_dir)
+  elif len(ckpt_files) == 1:
+      ckpt_file = ckpt_files[0]
+  else:
+      ckpt_iter = [(s, int(s.split('-')[-1])) for s in ckpt_files if 'ckpt' in s]
+      sorted_iter = sorted(ckpt_iter, key=lambda tup: tup[1])
+      ckpt_file = sorted_iter[-1][0]
+  
+  return (meta_file, ckpt_file)
 
 def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, seed, nrof_folds=10):
     
@@ -439,9 +451,10 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, seed, nro
         tpr = np.mean(tprs, 0)
         fpr = np.mean(fprs, 0)
     
-    return tpr, fpr, accuracy
+    return (tpr, fpr, accuracy)
 
 def calculate_accuracy(threshold, dist, actual_issame):
+    
     predict_issame = np.less(dist, threshold)
     tp = np.sum(np.logical_and(predict_issame, actual_issame))
     fp = np.sum(np.logical_and(predict_issame, np.logical_not(actual_issame)))
@@ -452,9 +465,10 @@ def calculate_accuracy(threshold, dist, actual_issame):
     fpr = 0 if (fp + tn == 0) else float(fp) / float(fp + tn)
     acc = float(tp + tn) / dist.size
     
-    return tpr, fpr, acc
+    return (tpr, fpr, acc)
 
 def plot_roc(fpr, tpr, label):
+    
     plt.plot(fpr, tpr, label=label)
     plt.title('Receiver Operating Characteristics')
     plt.xlabel('False Positive Rate')
@@ -496,10 +510,11 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
     far_mean = np.mean(far)
     val_std = np.std(val)
     
-    return val_mean, val_std, far_mean
+    return (val_mean, val_std, far_mean)
 
 
 def calculate_val_far(threshold, dist, actual_issame):
+    
     predict_issame = np.less(dist, threshold)
     true_accept = np.sum(np.logical_and(predict_issame, actual_issame))
     false_accept = np.sum(np.logical_and(predict_issame, np.logical_not(actual_issame)))
@@ -508,7 +523,7 @@ def calculate_val_far(threshold, dist, actual_issame):
     val = float(true_accept) / float(n_same)
     far = float(false_accept) / float(n_diff)
     
-    return val, far
+    return (val, far)
 
 def store_revision_info(src_path, output_dir, arg_string):
   

@@ -10,8 +10,9 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-from scipy import misc
 import sys
+
+from scipy import misc
 
 from cnn.faces import detect_face
 from cnn.faces import facenet
@@ -100,7 +101,6 @@ def parse_arguments(argv):
                         type=float,
                         default=1.0,
                         help='Upper bound on the amount of GPU memory that will be used by the process.')
-    
     (argument_flags, _) = parser.parse_known_args()
     
     return argument_flags
