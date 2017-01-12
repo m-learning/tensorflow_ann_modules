@@ -109,6 +109,7 @@ def read_images_from_disk(input_queue):
     Returns:
       Two tensors: the decoded image, and the string label.
     """
+    
     label = input_queue[1]
     file_contents = tf.read_file(input_queue[0])
     example = tf.image.decode_png(file_contents, channels=3)
@@ -545,6 +546,7 @@ def store_revision_info(src_path, output_dir, arg_string):
         text_file.write('%s' % git_diff)
 
 def list_variables(filename):
+    
     reader = training.NewCheckpointReader(filename)
     variable_map = reader.get_variable_to_shape_map()
     names = sorted(variable_map.keys())

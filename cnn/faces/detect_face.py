@@ -523,7 +523,7 @@ def pad(total_boxes, w, h):
     dy[tmp] = np.expand_dims(2 - y[tmp], 1)
     y[tmp] = 1
     
-    return dy, edy, dx, edx, y, ey, x, ex, tmpw, tmph
+    return (dy, edy, dx, edx, y, ey, x, ex, tmpw, tmph)
 
 # function [bboxA] = rerec(bboxA)
 def rerec(bboxA):
@@ -534,10 +534,12 @@ def rerec(bboxA):
     bboxA[:, 0] = bboxA[:, 0] + w * 0.5 - l * 0.5
     bboxA[:, 1] = bboxA[:, 1] + h * 0.5 - l * 0.5
     bboxA[:, 2:4] = bboxA[:, 0:2] + np.transpose(np.tile(l, (2, 1)))
+    
     return bboxA
 
 def imresample(img, sz):
     im_data = cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA)  # pylint: disable=no-member
+    
     return im_data
 
     # This method is kept for debugging purpose

@@ -44,7 +44,7 @@ def evaluate(embeddings, seed, actual_issame, nrof_folds=10):
     val, val_std, far = facenet.calculate_val(thresholds, embeddings1, embeddings2,
         np.asarray(actual_issame), 1e-3, seed, nrof_folds=nrof_folds)
     
-    return tpr, fpr, accuracy, val, val_std, far
+    return (tpr, fpr, accuracy, val, val_std, far)
 
 def get_paths(lfw_dir, pairs, file_ext):
     

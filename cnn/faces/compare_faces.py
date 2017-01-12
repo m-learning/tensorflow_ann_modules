@@ -44,6 +44,49 @@ import numpy as np
 import tensorflow as tf
 
 
+def calculate_embeddings_with_graph(sess, images):
+  """Calculates embeddings for images
+    Args:
+      sess - current TensorFlow session
+      images - image files
+    Returns:
+      emb - embeddings for images
+  """  
+  
+  # Get input and output tensors
+  images_placeholder = tf.get_default_graph().get_tensor_by_name(INPUT_LAYER)
+  embeddings = tf.get_default_graph().get_tensor_by_name(EMBEDDINGS_LAYER)
+
+  # Run forward pass to calculate embeddings
+  feed_dict = { images_placeholder: images }
+  emb = sess.run(embeddings, feed_dict=feed_dict)
+  
+  return emb
+
+def calculate_embeddings(model_dir, images):
+  """Calculates embeddings for images
+    Args:
+      model_dir - model directory
+      images - image files
+    Returns:
+      emb - embeddings for images
+  """
+  
+  with tf.Graph().as_default():
+
+      with tf.Session() as sess:
+    
+          # Load the model
+          print('Model directory: %s' % model_dir)
+          meta_file, ckpt_file = facenet.get_model_filenames(os.path.expanduser(model_dir))
+          print('Metagraph file: %s' % meta_file)
+          print('Checkpoint file: %s' % ckpt_file)
+          facenet.load_model(model_dir, meta_file, ckpt_file)
+  
+          emb = calculate_embeddings_with_graph(sess, images)
+          
+          return emb
+
 def compare_faces(args):
   """Generates face embeddings from files and calculates L2 distances
     Args:
@@ -51,44 +94,27 @@ def compare_faces(args):
   """
 
   images = load_and_align_data(args.image_files, args.image_size, args.margin, args.gpu_memory_fraction)
-  with tf.Graph().as_default():
+  emb = calculate_embeddings(args.model_dir, images)
+          
+  nrof_images = len(args.image_files)
 
-      with tf.Session() as sess:
-    
-          # Load the model
-          print('Model directory: %s' % args.model_dir)
-          meta_file, ckpt_file = facenet.get_model_filenames(os.path.expanduser(args.model_dir))
-          print('Metagraph file: %s' % meta_file)
-          print('Checkpoint file: %s' % ckpt_file)
-          facenet.load_model(args.model_dir, meta_file, ckpt_file)
+  print('Images:')
+  for i in range(nrof_images):
+      print('%1d: %s' % (i, args.image_files[i]))
+  print('')
   
-          # Get input and output tensors
-          images_placeholder = tf.get_default_graph().get_tensor_by_name(INPUT_LAYER)
-          embeddings = tf.get_default_graph().get_tensor_by_name(EMBEDDINGS_LAYER)
-
-          # Run forward pass to calculate embeddings
-          feed_dict = { images_placeholder: images }
-          emb = sess.run(embeddings, feed_dict=feed_dict)
-          
-          nrof_images = len(args.image_files)
-
-          print('Images:')
-          for i in range(nrof_images):
-              print('%1d: %s' % (i, args.image_files[i]))
-          print('')
-          
-          # Print distance matrix
-          print('Distance matrix')
-          print('    ', end='')
-          for i in range(nrof_images):
-              print('    %1d     ' % i, end='')
-          print('')
-          for i in range(nrof_images):
-              print('%1d  ' % i, end='')
-              for j in range(nrof_images):
-                  dist = np.sqrt(np.sum(np.square(np.subtract(emb[i, :], emb[j, :]))))
-                  print('  %1.4f  ' % dist, end='')
-              print('')
+  # Print distance matrix
+  print('Distance matrix')
+  print('    ', end='')
+  for i in range(nrof_images):
+      print('    %1d     ' % i, end='')
+  print('')
+  for i in range(nrof_images):
+      print('%1d  ' % i, end='')
+      for j in range(nrof_images):
+          dist = np.sqrt(np.sum(np.square(np.subtract(emb[i, :], emb[j, :]))))
+          print('  %1.4f  ' % dist, end='')
+      print('')
                         
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
   """Loads and alighn face images from files
