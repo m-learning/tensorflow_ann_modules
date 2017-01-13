@@ -217,7 +217,7 @@ def parse_arguments():
   return argument_flags
 
 if __name__ == '__main__':
-  """Compares faces by embeddings from image files"""
+  """Compares face embeddings from image files"""
   
   argument_flags = parse_arguments()
   if argument_flags.many_faces:
