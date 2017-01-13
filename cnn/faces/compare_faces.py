@@ -135,6 +135,7 @@ def compare_two_faces(args):
   (emb, _) = compare_faces(args)
   dist = np.sqrt(np.sum(np.square(np.subtract(emb[0, :], emb[1, :]))))
   print('  %1.4f  ' % dist, end='')
+  print('')
                         
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
   """Loads and alighn face images from files
