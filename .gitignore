@@ -15,5 +15,6 @@
 /datas/gunbag/
 /datas/transfer/
 /datas/faces/
+/datas/vgg/
 /datas/fcn/test_data/results
 /retrain_inception_logs

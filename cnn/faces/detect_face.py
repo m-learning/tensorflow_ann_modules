@@ -106,6 +106,7 @@ class Network(object):
             except KeyError:
                 raise KeyError('Unknown layer name fed: %s' % fed_layer)
         self.terminals.append(fed_layer)
+        
     return self
 
   def get_output(self):
