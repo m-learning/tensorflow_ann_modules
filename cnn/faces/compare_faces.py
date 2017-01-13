@@ -88,7 +88,7 @@ def calculate_embeddings(model_dir, images):
           return emb
 
 def compare_faces(args):
-  """Generates face embeddings from files and calculates L2 distances
+  """Generates many face embeddings from files and calculates L2 distances
     Args:
       args - command line arguments
   """
@@ -109,12 +109,32 @@ def compare_faces(args):
   for i in range(nrof_images):
       print('    %1d     ' % i, end='')
   print('')
+  
+  return (emb, nrof_images)
+
+def compare_many_faces(args):
+  """Generates many face embeddings from files and calculates L2 distances
+    Args:
+      args - command line arguments
+  """
+
+  (emb, nrof_images) = compare_faces(args)
   for i in range(nrof_images):
       print('%1d  ' % i, end='')
       for j in range(nrof_images):
           dist = np.sqrt(np.sum(np.square(np.subtract(emb[i, :], emb[j, :]))))
           print('  %1.4f  ' % dist, end='')
       print('')
+      
+def compare_two_faces(args):
+  """Generates two face embeddings from files and calculates L2 distances
+    Args:
+      args - command line arguments
+  """
+
+  (emb, _) = compare_faces(args)
+  dist = np.sqrt(np.sum(np.square(np.subtract(emb[0, :], emb[1, :]))))
+  print('  %1.4f  ' % dist, end='')
                         
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
   """Loads and alighn face images from files
@@ -133,8 +153,7 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
   
   print('Creating networks and loading parameters')
   with tf.Graph().as_default():
-      gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction)
-      sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+      sess = tf.Session(config=tf.ConfigProto(log_device_placement=False))
       with sess.as_default():
           pnet, rnet, onet = detect_face.create_mtcnn(sess, _files.model_dir)
 
@@ -166,6 +185,14 @@ def parse_arguments():
     global _files
     _files = training_file()
     parser = argparse.ArgumentParser()
+    parser.add_argument('--many_faces',
+                           dest='many_faces',
+                           action='store_true',
+                           help='Flag to compare only two faces.')
+    parser.add_argument('--two_faces',
+                           dest='many_faces',
+                           action='store_false',
+                           help='Do not print data set file names and labels.')
     parser.add_argument('--model_dir',
                         type=str,
                         default=_files.model_dir,
@@ -191,5 +218,10 @@ def parse_arguments():
     return argument_flags
 
 if __name__ == '__main__':
+    """Compares faces by embeddings from image files"""
+    
     argument_flags = parse_arguments()
-    compare_faces(argument_flags)
+    if argument_flags.many_faces:
+      compare_many_faces(argument_flags)
+    else:
+      compare_two_faces(argument_flags)
