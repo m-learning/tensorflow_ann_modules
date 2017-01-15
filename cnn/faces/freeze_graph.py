@@ -86,7 +86,7 @@ def parse_arguments():
                       type=str,
                       default=_files.graph_file,
                       help='Filename for the exported graphdef protobuf (.pb)')
-  args = parser.parse_known_args()
+  (args, _) = parser.parse_known_args()
   
   return args
 
