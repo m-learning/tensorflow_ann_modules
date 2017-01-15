@@ -11,5 +11,8 @@ from __future__ import print_function
 
 GRAPH_FILE = 'face_embeddings.pb'
 
+INPUT_NAME = 'input'
+
 INPUT_LAYER = 'input:0'
+TRAIN_LAYER = 'phase_train:0'
 EMBEDDINGS_LAYER = 'embeddings:0'

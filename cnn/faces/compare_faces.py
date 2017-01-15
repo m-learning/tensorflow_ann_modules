@@ -185,13 +185,13 @@ def parse_arguments():
   _files = training_file()
   parser = argparse.ArgumentParser()
   parser.add_argument('--many_faces',
-                         dest='many_faces',
-                         action='store_true',
-                         help='Flag to compare only two faces.')
+                       dest='many_faces',
+                       action='store_true',
+                       help='Flag to compare only two faces.')
   parser.add_argument('--two_faces',
-                         dest='many_faces',
-                         action='store_false',
-                         help='Do not print data set file names and labels.')
+                       dest='many_faces',
+                       action='store_false',
+                       help='Do not print data set file names and labels.')
   parser.add_argument('--model_dir',
                       type=str,
                       default=_files.model_dir,

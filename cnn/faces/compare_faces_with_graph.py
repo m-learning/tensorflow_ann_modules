@@ -40,9 +40,10 @@ from scipy import misc
 from cnn.faces import detect_face
 from cnn.faces import facenet
 from cnn.faces.cnn_files import training_file
-from cnn.faces.face_utils import EMBEDDINGS_LAYER, INPUT_LAYER
+from cnn.faces.face_utils import INPUT_NAME, TRAIN_LAYER, EMBEDDINGS_LAYER, INPUT_LAYER
 import numpy as np
 import tensorflow as tf
+from tensorflow.python.platform import gfile
                         
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
   """Loads and alighn face images from files
@@ -103,6 +104,27 @@ def calculate_embeddings_with_graph(sess, images):
   emb = sess.run(embeddings, feed_dict=feed_dict)
   
   return emb
+
+def load_model_graph(args):
+  """Loads graph from file
+    Args:
+      args - command line arguments
+    Returns:
+      tuple of - 
+        images_placeholder - input image placeholder
+        phase_train_placeholder - input image phaze placeholder
+        embeddings - network layer for feed-forward call
+  """
+  
+  images_placeholder = tf.placeholder(tf.float32, shape=(None, args.image_size, args.image_size, 3), name=INPUT_NAME)
+  with gfile.FastGFile(os.path.expanduser(args.model_file), 'rb') as f:
+    graph_def = tf.GraphDef()
+    graph_def.ParseFromString(f.read())
+    return_elements = [TRAIN_LAYER, EMBEDDINGS_LAYER]
+    phase_train_placeholder, embeddings = tf.import_graph_def(graph_def, input_map={INPUT_NAME:images_placeholder},
+        return_elements=return_elements, name=INPUT_NAME)
+    
+    return (images_placeholder, phase_train_placeholder, embeddings)
 
 def calculate_embeddings(model_dir, images):
   """Calculates embeddings for images
@@ -185,13 +207,13 @@ def parse_arguments():
   _files = training_file()
   parser = argparse.ArgumentParser()
   parser.add_argument('--many_faces',
-                         dest='many_faces',
-                         action='store_true',
-                         help='Flag to compare only two faces.')
+                       dest='many_faces',
+                       action='store_true',
+                       help='Flag to compare only two faces.')
   parser.add_argument('--two_faces',
-                         dest='many_faces',
-                         action='store_false',
-                         help='Do not print data set file names and labels.')
+                       dest='many_faces',
+                       action='store_false',
+                       help='Do not print data set file names and labels.')
   parser.add_argument('--model_dir',
                       type=str,
                       default=_files.model_dir,
