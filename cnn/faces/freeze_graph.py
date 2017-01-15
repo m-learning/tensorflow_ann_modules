@@ -76,16 +76,15 @@ def parse_arguments():
   """ 
   
   _files = training_file()
-  model_dir = _files.model_dir
   parser = argparse.ArgumentParser()
   
-  parser.add_argument('model_dir',
+  parser.add_argument('--model_dir',
                       type=str,
-                      default=model_dir,
+                      default=_files.model_dir,
                       help='Directory containing the metagraph (.meta) file and the checkpoint (ckpt) file containing model parameters')
-  parser.add_argument('output_file',
+  parser.add_argument('--output_file',
                       type=str,
-                      default=_files.join_path(model_dir, 'face_embeddings.pb'),
+                      default=_files.graph_file,
                       help='Filename for the exported graphdef protobuf (.pb)')
   args = parser.parse_known_args()
   

@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 from cnn.utils.file_utils import cnn_file_utils
+from cnn.faces.face_utils import GRAPH_FILE
 
 
 class training_file(cnn_file_utils):
@@ -30,3 +31,13 @@ class training_file(cnn_file_utils):
     pairs_file = self.join_and_init_path(eval_dir, 'pairs.txt')
     
     return pairs_file
+  
+  @property
+  def graph_file(self):
+    """Gets graph file path
+      Returns:
+        graph_path - file path for model's graph
+    """
+    
+    graph_path = self.join_path(self.model_dir, GRAPH_FILE)
+    return graph_path

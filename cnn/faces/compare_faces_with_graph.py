@@ -196,6 +196,10 @@ def parse_arguments():
                       type=str,
                       default=_files.model_dir,
                       help='Directory containing the meta_file and ckpt_file')
+  parser.add_argument('--graph_file',
+                      type=str,
+                      default=_files.graph_file,
+                      help='Filename for the exported graphdef protobuf (.pb)')
   parser.add_argument('--image_files',
                       type=str,
                       nargs='+',
