@@ -77,11 +77,12 @@ class Network(object):
     raise NotImplementedError('Must be implemented by the subclass.')
 
   def load(self, data_path, session, ignore_missing=False):
-      '''Load network weights.
-      data_path: The path to the numpy-serialized network weights
-      session: The current TensorFlow session
-      ignore_missing: If true, serialized weights for missing layers are ignored.
-      '''
+      """Load network weights.
+       Args:
+        data_path: The path to the numpy-serialized network weights
+        session: The current TensorFlow session
+        ignore_missing: If true, serialized weights for missing layers are ignored.
+      """
       data_dict = np.load(data_path).item()  # pylint: disable=no-member
       for op_name in data_dict:
         with tf.variable_scope(op_name, reuse=True):
@@ -94,9 +95,9 @@ class Network(object):
                   raise
 
   def feed(self, *args):
-    '''Set the input(s) for the next operation by replacing the terminal nodes.
-    The arguments can be either layer names or the actual layers.
-    '''
+    """Set the input(s) for the next operation by replacing the terminal nodes.
+      The arguments can be either layer names or the actual layers.
+    """
     assert len(args) != 0
     self.terminals = []
     for fed_layer in args:
@@ -110,7 +111,7 @@ class Network(object):
     return self
 
   def get_output(self):
-    '''Returns the current network output.'''
+    """"Returns the current network output."""
     return self.terminals[-1]
 
   def get_unique_name(self, prefix):
