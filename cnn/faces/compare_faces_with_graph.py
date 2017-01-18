@@ -35,12 +35,14 @@ from __future__ import print_function
 import argparse
 import os
 
-from cnn.faces import facenet, face_utils as utils
-from cnn.faces.face_utils import INPUT_NAME, TRAIN_LAYER, EMBEDDINGS_LAYER, INPUT_LAYER
+from tensorflow.python.platform import gfile
+
+from cnn.faces import face_utils as utils
+from cnn.faces import network_interface as interface
 from cnn.faces.cnn_files import training_file
+from cnn.faces.face_utils import INPUT_NAME, TRAIN_LAYER, EMBEDDINGS_LAYER, INPUT_LAYER
 import numpy as np
 import tensorflow as tf
-from tensorflow.python.platform import gfile
 
 
 def calculate_embeddings_with_graph(sess, images):
@@ -83,27 +85,6 @@ def load_model_graph(args):
     
     return (images_placeholder, phase_train_placeholder, embeddings)
 
-def calculate_embeddings(model_dir, images):
-  """Calculates embeddings for images
-    Args:
-      model_dir - model directory
-      images - image files
-    Returns:
-      emb - embeddings for images
-  """
-  
-  with tf.Graph().as_default() as g:
-    with tf.Session(graph=g) as sess:
-      # Load the model
-      print('Model directory: %s' % model_dir)
-      meta_file, ckpt_file = facenet.get_model_filenames(os.path.expanduser(model_dir))
-      print('Metagraph file: %s' % meta_file)
-      print('Checkpoint file: %s' % ckpt_file)
-      facenet.load_model(model_dir, meta_file, ckpt_file)
-      emb = calculate_embeddings_with_graph(sess, images)
-      
-      return emb
-
 def compare_faces(args):
   """Generates many face embeddings from files and calculates L2 distances
     Args:
@@ -111,7 +92,7 @@ def compare_faces(args):
   """
 
   images = utils.load_and_align_data(args.image_files, args.image_size, args.margin, args.gpu_memory_fraction, _files)
-  emb = calculate_embeddings(args.model_dir, images)
+  emb = interface.calculate_embeddings(args.model_dir, images)
           
   nrof_images = len(args.image_files)
 

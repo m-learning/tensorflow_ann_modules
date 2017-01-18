@@ -1,32 +1,9 @@
 """
-Created on Jan 12, 2017
+Created on Jan 18, 2017
 
-Compares faces throw FaceNet model
-Performs face alignment and calculates L2 distance between the embeddings of two images.
+Generates embeddings passed image files and compares to existed files
 
 @author: Levan Tsinadze
-
-MIT License
-# 
-# Copyright (c) 2016 David Sandberg
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -40,7 +17,7 @@ from cnn.faces.cnn_files import training_file
 import numpy as np
 
 
-def compare_faces(args):
+def compare_embeddings(args):
   """Generates many face embeddings from files and calculates L2 distances
     Args:
       args - command line arguments
@@ -66,13 +43,13 @@ def compare_faces(args):
   
   return (emb, nrof_images)
 
-def compare_many_faces(args):
+def compare_many_embeddings(args):
   """Generates many face embeddings from files and calculates L2 distances
     Args:
       args - command line arguments
   """
 
-  (emb, nrof_images) = compare_faces(args)
+  (emb, nrof_images) = compare_embeddings(args)
   for i in range(nrof_images):
     print('    %1d     ' % i, end='')
   print('')
@@ -83,13 +60,13 @@ def compare_many_faces(args):
       print('  %1.4f  ' % dist, end='')
     print('')
       
-def compare_two_faces(args):
+def compare_two_embeddings(args):
   """Generates two face embeddings from files and calculates L2 distances
     Args:
       args - command line arguments
   """
 
-  (emb, _) = compare_faces(args)
+  (emb, _) = compare_embeddings(args)
   print('')
   dist = np.sqrt(np.sum(np.square(np.subtract(emb[0, :], emb[1, :]))))
   print('  %1.4f  ' % dist, end='')
@@ -143,6 +120,7 @@ if __name__ == '__main__':
   
   argument_flags = parse_arguments()
   if argument_flags.many_faces:
-    compare_many_faces(argument_flags)
+    compare_many_embeddings(argument_flags)
   else:
-    compare_two_faces(argument_flags)
+    compare_two_embeddings(argument_flags)
+  
