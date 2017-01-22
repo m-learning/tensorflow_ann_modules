@@ -58,8 +58,15 @@ from keras.utils.data_utils import get_file
 from keras.preprocessing import image
 import keras.callbacks
 
+from cnn.ocr.cnn_files import training_file
 
-OUTPUT_DIR = 'image_ocr'
+
+
+WEIGHTS_FILE = 'keras_weights.h5'
+
+_files = training_file()
+OUTPUT_DIR = _files.model_dir
+weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
 
 np.random.seed(55)
 
@@ -338,7 +345,7 @@ def decode_batch(test_func, word_batch):
     ret = []
     for j in range(out.shape[0]):
         out_best = list(np.argmax(out[j, 2:], 1))
-        out_best = [k for k, g in itertools.groupby(out_best)]
+        out_best = [k for k, _ in itertools.groupby(out_best)]
         # 26 is space, 27 is CTC blank char
         outstr = ''
         for c in out_best:

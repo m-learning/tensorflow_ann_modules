@@ -24,6 +24,8 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 
+from cnn.cifar.cnn_files import training_file
+
 batch_size = 32
 nb_classes = 10
 nb_epoch = 200
@@ -34,6 +36,10 @@ img_rows, img_cols = 32, 32
 # The CIFAR10 images are RGB.
 img_channels = 3
 
+WEIGHTS_FILE = 'keras_weights.h5'
+
+_files = training_file()
+weights_path = _files.join_path(_files.model_dir, WEIGHTS_FILE)
 # The data, shuffled and split between train and test sets:
 (X_train, y_train), (X_test, y_test) = cifar10.load_data()
 print('X_train shape:', X_train.shape)
@@ -110,3 +116,4 @@ else:
                       samples_per_epoch=X_train.shape[0],
                       nb_epoch=nb_epoch,
                       validation_data=(X_test, Y_test))
+model.save_weights(weights_path)
