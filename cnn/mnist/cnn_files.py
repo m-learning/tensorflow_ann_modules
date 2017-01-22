@@ -59,9 +59,18 @@ class training_file(files_and_path_utils):
     
     return current_dir
   
+  @property
+  def model_dir(self):
+    """Gets or creates directory for trained parameters
+      Returns:
+        current_dir - directory for trained parameters
+    """
+    
+    return self.init_files_directory()
+  
   def get_or_init_files_path(self):
     """Gets training data  / parameters directory path
       Returns:
         path to model checkpoint file
     """
-    return self.join_path(self.init_files_directory, WEIGHTS_FILE)
+    return self.join_path(self.model_dir, WEIGHTS_FILE)
