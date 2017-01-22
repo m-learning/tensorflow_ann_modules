@@ -113,7 +113,7 @@ class mnist_model(object):
         network model
     """
     
-    if not self.model:
+    if self.model is None:
       self._init_model()
     
     return self.model
