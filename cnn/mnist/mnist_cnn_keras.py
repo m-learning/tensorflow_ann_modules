@@ -15,18 +15,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from keras import backend as K
+from keras.datasets import mnist
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.models import Sequential
+from keras.utils import np_utils
+
+from cnn.mnist.cnn_files import training_file
 import numpy as np
+
 
 np.random.seed(1337)  # for reproducibility
 
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
-from keras.utils import np_utils
-from keras import backend as K
 
-from cnn.mnist.cnn_files import training_file
 
 
 batch_size = 128
@@ -70,24 +72,67 @@ print(X_test.shape[0], 'test samples')
 Y_train = np_utils.to_categorical(y_train, nb_classes)
 Y_test = np_utils.to_categorical(y_test, nb_classes)
 
-model = Sequential()
+class mnist_model(object):
+  """Defines MNIST network model"""
+  
+  def __init__(self, is_training=False):
+    self._is_training = is_training
+    
+  def _add_dropout(self, prob=0.5):
+    """Adds dropout layer to model
+      Args:
+        prob - keep probability
+    """
+    if self._is_training:
+      self.model.add(Dropout(prob))
+  
+  def _init_model(self):
+    """Defines MNIST network model"""
+    self.model = Sequential()
 
-model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
-                        border_mode='valid',
-                        input_shape=input_shape))
-model.add(Activation('relu'))
-model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1]))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=pool_size))
-model.add(Dropout(0.25))
-
-model.add(Flatten())
-model.add(Dense(128))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-model.add(Dense(nb_classes))
-model.add(Activation('softmax'))
-
+    self.model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
+                          border_mode='valid',
+                          input_shape=input_shape))
+    self.model.add(Activation('relu'))
+    self.model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1]))
+    self.model.add(Activation('relu'))
+    self.model.add(MaxPooling2D(pool_size=pool_size))
+    self._add_dropout(prob=0.25)
+    
+    self.model.add(Flatten())
+    self.model.add(Dense(128))
+    self.model.add(Activation('relu'))
+    self._add_dropout(prob=0.5)
+    self.model.add(Dense(nb_classes))
+    self.model.add(Activation('softmax'))
+    
+  @property
+  def network_model(self):
+    """Gets MNIST network model
+      Returns:
+        network model
+    """
+    
+    if not self.model:
+      self._init_model()
+    
+    return self.model
+  
+  def run_model(self, x):
+    """Runs model interface
+      Args:
+        x - model input
+      Returns:
+        pred - model predictions
+    """
+    self._is_training = False
+    _network_model = self.network_model
+    pred = _network_model(x)
+    
+    return pred
+    
+_model_init = mnist_model(is_training=True)
+model = _model_init.network_model
 model.compile(loss='categorical_crossentropy',
               optimizer='adadelta',
               metrics=['accuracy'])
