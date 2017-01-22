@@ -119,6 +119,18 @@ class mnist_model(object):
     
     return self.model
   
+  def _load_model_and_weights(self):
+    """Gets MNIST network model and loads weights
+      Returns:
+        network model
+    """
+    if self.model is None:
+      self._is_training = False
+      self._init_model()
+      self.model.load_weights(weights_path)
+    
+    return self.model    
+  
   def run_model(self, x):
     """Runs model interface
       Args:
@@ -126,8 +138,7 @@ class mnist_model(object):
       Returns:
         pred - model predictions
     """
-    self._is_training = False
-    _network_model = self.network_model
+    _network_model = self._load_model_and_weights()
     pred = _network_model(x)
     
     return pred
