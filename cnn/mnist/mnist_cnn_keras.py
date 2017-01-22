@@ -77,6 +77,7 @@ class mnist_model(object):
   
   def __init__(self, is_training=False):
     self._is_training = is_training
+    self.model = None
     
   def _add_dropout(self, prob=0.5):
     """Adds dropout layer to model
