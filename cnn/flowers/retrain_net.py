@@ -49,7 +49,6 @@ in.
 
 This produces a new model file that can be loaded and run by any TensorFlow
 program, for example the label_image sample code.
-
 """
 from __future__ import absolute_import
 from __future__ import division
