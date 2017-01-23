@@ -40,6 +40,14 @@ class training_file(cnn_file_utils):
     """
     return super(training_file, self).get_training_directory()
   
+  @property
+  def test_dir(self):
+    """Initializes and gets directory for test images
+      Returns:
+        test directory
+    """
+    return self.join_path(self.get_data_general_directory, 'test_images')
+  
   def _get_data_file_path(self, filename):
     """Gets training or test set CSV file path
       Args:
