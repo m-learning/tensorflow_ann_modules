@@ -71,7 +71,7 @@ def load_image(filename, border=0):
     Returns:
       image_tensor - tensor of face image
   """
-  
+  print('--image is loading--')
   img = image.load_img(filename, target_size=(160, 160))
   x = image.img_to_array(img)
   arr = np.asarray(x)
