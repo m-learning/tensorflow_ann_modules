@@ -35,7 +35,7 @@ import numpy as np
 import re
 from rnn.memory.rnn_files import training_file
 
-_files = training_file
+_files = training_file()
 _model_dir = _files.model_dir
 _weights_path = _files.join_path(_model_dir, 'qa_weights.h5')
 
