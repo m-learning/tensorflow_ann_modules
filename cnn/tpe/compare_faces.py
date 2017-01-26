@@ -57,7 +57,7 @@ def load_file(filename, imsize=96, border=0):
   """
     
   img = io.imread(filename)
-  #(height, width, _) = img.shape
+  # (height, width, _) = img.shape
   print(img.shape)
   face_tensor = load_face_from_image(img, imsize=imsize, norder=border)
   
@@ -75,7 +75,6 @@ def load_image(filename, border=0):
   img = image.load_img(filename, target_size=(160, 160))
   x = image.img_to_array(img)
   arr = np.asarray(x)
-  print(img.shape)
   face_tensor = load_face_from_image(arr, imsize=160, norder=border)
   print(face_tensor)
   
