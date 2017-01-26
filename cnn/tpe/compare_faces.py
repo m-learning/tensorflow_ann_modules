@@ -37,6 +37,7 @@ def load_face_from_image(img, imsize=96, border=0):
   
   total_size = imsize + 2 * border
   faces = fd.detect_faces(img, get_top=1)
+  print(faces)
   if len(faces) == 0:
     face_tensor = None
   else:
