@@ -33,7 +33,11 @@ from functools import reduce
 import tarfile
 import numpy as np
 import re
+from rnn.memory.rnn_files import training_file
 
+_files = training_file
+_model_dir = _files.model_dir
+_weights_path = _files.join_path(_model_dir, 'qa_weights.h5')
 
 def tokenize(sent):
     '''Return the tokens of a sentence including punctuation.
@@ -217,3 +221,4 @@ answer.fit([inputs_train, queries_train, inputs_train], answers_train,
            batch_size=32,
            nb_epoch=120,
            validation_data=([inputs_test, queries_test, inputs_test], answers_test))
+answer.save_weights(_weights_path, overwrite=True)
