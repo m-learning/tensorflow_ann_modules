@@ -71,11 +71,6 @@ def build_tpe(n_in, n_out, W_pca=None):
   base_model.add(Dense(n_out, input_dim=n_in, bias=False, weights=[W_pca], activation='linear'))
   base_model.add(Lambda(lambda x: K.l2_normalize(x, axis=1)))
 
-  # base_model = Sequential()
-  # base_model.add(Dense(178, input_dim=n_in, bias=True, activation='relu'))
-  # base_model.add(Dense(n_out, bias=True, activation='tanh'))
-  # base_model.add(Lambda(lambda x: K.l2_normalize(x, axis=1)))
-
   a_emb = base_model(a)
   p_emb = base_model(p)
   n_emb = base_model(n)

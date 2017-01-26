@@ -16,5 +16,6 @@
 /datas/transfer/
 /datas/faces/
 /datas/vgg/
+/datas/tpe/
 /datas/fcn/test_data/results
 /retrain_inception_logs
