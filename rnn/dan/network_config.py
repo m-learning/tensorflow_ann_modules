@@ -9,6 +9,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
+
+
 max_features = 5000
 maxlen = 400
 batch_size = 32
@@ -22,3 +25,18 @@ nb_hidden_layers = 3
 
 # Trained weights file name
 _WEIGHTS_FILE = 'dan_weights.h5'
+
+def parse_arguments():
+  """Parses command line arguments
+    Returns:
+      args - parsed arguments
+  """
+  
+  parse_args = argparse.ArgumentParser()
+  parse_args.add_argument('--epochs',
+                          type=str,
+                          default=nb_epoch,
+                          help='Number of training epochs')
+  (args, _) = parse_args.parse_known_args()
+  
+  return args

@@ -17,6 +17,7 @@ from rnn.dan import network_config as config
 from rnn.dan import network_model as network
 from rnn.dan.rnn_files import training_file
 
+
 np.random.seed(1337)  #
 
 def _init_dataset():
@@ -64,8 +65,11 @@ def _save_weights(model):
   _weights_path = _init_weights_path()
   model.save_weights(_weights_path, overwrite=True)
 
-def train():
-  """Initializes and trains DAN network module"""
+def train(args):
+  """Initializes and trains DAN network module
+    Args:
+      args - parsed command line arguments
+  """
   
   
   model = network.dan_model()
@@ -76,10 +80,12 @@ def train():
   model.summary()
   model.fit(X_train, y_train,
             batch_size=config.batch_size,
-            nb_epoch=config.nb_epoch,
+            nb_epoch=args.epochs,
             validation_data=(X_test, y_test))
   _save_weights(model)
   
 if __name__ == '__main__':
   """Run DAN network model training on IMDB data set"""
+  
+  args = config.parse_arguments()
   train()
