@@ -1,7 +1,7 @@
 """
 Created on Jan 27, 2017
 
-Deep Averaging Network implementation from Keras repository
+Deep Averaging Network (DAN) implementation from Keras repository
 
 Deep Averaging Networks (DAN) - http://cs.umd.edu/~miyyer/pubs/2015_acl_dan.pdf
 
