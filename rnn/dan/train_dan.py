@@ -38,6 +38,7 @@ def _save_weights(model):
   
   _weights_path = _init_weights_path()
   model.save_weights(_weights_path, overwrite=True)
+  print('Model weights saved in ', _weights_path)
 
 def train(args):
   """Initializes and trains DAN network module
