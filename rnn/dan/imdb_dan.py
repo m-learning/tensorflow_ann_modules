@@ -22,7 +22,6 @@ import numpy as np
 
 np.random.seed(1337)  # for reproducibility
 
-
 # set parameters:
 max_features = 5000
 maxlen = 400
