@@ -23,17 +23,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from keras.models import Sequential
-from keras.layers.embeddings import Embedding
+from functools import reduce
+import re
+import tarfile
+
 from keras.layers import Activation, Dense, Merge, Permute, Dropout
 from keras.layers import LSTM
-from keras.utils.data_utils import get_file
+from keras.layers.embeddings import Embedding
+from keras.models import Sequential
 from keras.preprocessing.sequence import pad_sequences
-from functools import reduce
-import tarfile
+from keras.utils.data_utils import get_file
+
 import numpy as np
-import re
 from rnn.memory.rnn_files import training_file
+
 
 _files = training_file()
 _model_dir = _files.model_dir
