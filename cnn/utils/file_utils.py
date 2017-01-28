@@ -1,11 +1,17 @@
-'''
+"""
 Created on Jul 6, 2016
 
-Utility class for training test and validation data files
+Utility module for training test and validation data files
 
 @author: Levan Tsinadze
-'''
+"""
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+import argparse
+import glob
 import os
 import types
 
@@ -13,7 +19,7 @@ import types
 try:
   from PIL import Image
 except ImportError:
-  print "Importing Image from PIL threw exception"
+  print("Importing Image from PIL threw exception")
   import Image
 
 
@@ -27,7 +33,7 @@ TRAINIG_ZIP_FOLDER = 'training_arch'
 PATH_FOR_PARAMETERS = 'trained_data'
 PATH_FOR_TRAINING = 'training_data'
 PATH_FOR_EVALUATION = 'eval_data'
-PATH_FOR_TRAINING_PHOTOS = 'flower_photos'
+PATH_FOR_TRAINING_PHOTOS = 'training_photos'
 WEIGHTS_FILE = 'output_graph.pb'
 LABELS_FILE = 'output_labels.txt'
 
@@ -35,14 +41,27 @@ LABELS_FILE = 'output_labels.txt'
 TEST_IMAGES_DIR = 'test_images'
 TEST_IMAGE_NAME = 'test_image'
 
-# Counts files in directory
 def count_files(dir_name):
+  """Counts files in directory
+    Args:
+      dir_name - directory name
+    Returns:
+      file_count - amount of files
+  """
   
   file_count = 0
   for _, _, files in os.walk(dir_name):
     file_count += len(files)
   
   return file_count
+
+def ensure_dir_exists(dir_name):
+  """Makes sure the folder exists on disk.
+    Args:
+      dir_name: Path string to the folder we want to create.
+  """
+  if not os.path.exists(dir_name):
+    os.makedirs(dir_name)
 
 class files_and_path_utils(object):
   """Utility class for files and directories"""
@@ -54,21 +73,23 @@ class files_and_path_utils(object):
     else:
       self.path_to_training_photos = path_to_training_photos
   
-    # Creates file if not exists
   def init_file_or_path(self, file_path):
+    """Creates file if not exists
+      Args:
+        file_path - file path
+      Returns:
+        file_path - the same path
+    """
     
-    if not os.path.exists(file_path):
-      os.makedirs(file_path)
-    
+    ensure_dir_exists(file_path)
     return file_path
   
-  # Joins path from method
   def join_path(self, path_inst, *other_path):
     """Joins passed file paths and function generating path
       Args:
-       path_inst file path or function
+        path_inst - file path or function
       Returns:
-       generated file path 
+        generated - file path 
     """
     if isinstance(path_inst, types.StringType):
       init_path = path_inst
@@ -83,9 +104,9 @@ class files_and_path_utils(object):
       Args:
         path_inst - image path or function 
                     returning path
-        other_path - vavargs for other paths
+        other_path - varargs for other paths
                      or functions
-      Return:
+      Returns:
         result - joined path
     """
     
@@ -101,7 +122,7 @@ class files_and_path_utils(object):
         dir_path - directory path
         *other_path - vavargs for other paths
                      or functions
-      Return:
+      Returns:
         result_dir - joined directory path
     """
     
@@ -112,7 +133,7 @@ class files_and_path_utils(object):
   
   def get_current(self):
     """Gets current directory of script
-      Return:
+      Returns:
         current_dir - current directory
     """
       
@@ -128,12 +149,18 @@ class files_and_path_utils(object):
 class cnn_file_utils(files_and_path_utils):
   """Utility class for training and testing files and directories"""
   
-  def __init__(self, parent_cnn_dir, image_resizer=None):
-    super(cnn_file_utils, self).__init__(parent_cnn_dir)
+  def __init__(self, parent_cnn_dir, path_to_training_photos=None, image_resizer=None):
+    super(cnn_file_utils, self).__init__(parent_cnn_dir,
+                                         path_to_training_photos=path_to_training_photos)
     self.image_resizer = image_resizer
     
-    # Reads image with or without resizing
   def read_image(self, pr):
+    """Reads image with or without resizing
+     Args:
+      pr - image path
+     Returns:
+      im - resized image
+    """
     
     if self.image_resizer is None:
       im = Image.open(pr)
@@ -142,16 +169,23 @@ class cnn_file_utils(files_and_path_utils):
       
     return im
   
-  # Writes image with or without resizing
   def write_image(self, im, n_im):
-    
+    """Writes image with or without resizing
+      Args:
+        im - image
+        n_im - new image
+    """
     if self.image_resizer is None:
       im.save(n_im)
     else:
       self.image_resizer.save_resized(im, n_im)
       
-  # Reads and saves (resized or not) image from one path to other
   def read_and_write(self, pr, n_im):
+    """Reads and saves (resized or not) image from one path to other
+      Args:
+        pr - parent directory path
+        n_im - new image
+    """
     
     if self.image_resizer is None:
       im = Image.open(pr)
@@ -159,65 +193,150 @@ class cnn_file_utils(files_and_path_utils):
     else:
       self.image_resizer.read_resize_write(pr, n_im)
   
-  # Gets or creates directories
   def get_data_general_directory(self):
+    """Gets or creates directories
+      Returns:
+        data directory
+    """
     return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
   
-  # Gets training set archives directory
   def get_archives_directory(self):
-    
+    """Gets training set archives directory
+      Args:
+        training archives directory path
+    """
     dest_directory = self.join_path(self.get_data_general_directory, TRAINIG_ZIP_FOLDER)
-    if not os.path.exists(dest_directory):
-      os.mkdir(dest_directory) 
+    ensure_dir_exists(dest_directory)
+    
     return dest_directory
   
-  # Gets training data directory
   def get_training_directory(self):
+    """Gets training data directory
+    Returns:
+      training data directory path
+    """
     return self.join_path(self.get_data_general_directory, PATH_FOR_TRAINING)
 
-  # Gets directory for training set and parameters
   def get_data_directory(self):
+    """Gets directory for training set and parameters
+      Returns:
+        directory for training set and parameters
+    """
     return self.join_path(self.get_training_directory, self.path_to_training_photos)
   
-  # Gets or creates directory for training set and parameters
   def get_or_init_data_directory(self):
+    """Creates directory for training set and parameters"""
     
     dir_path = self.get_data_directory()
-    if not os.path.exists(dir_path):
-      os.makedirs(dir_path)
+    ensure_dir_exists(dir_path)
   
-  # Gets or creates directory for trained parameters
   def init_files_directory(self):
+    """Gets or creates directory for trained parameters
+      Returns:
+        current_dir - directory for trained parameters
+    """
       
     current_dir = self.join_path(self.get_data_general_directory, PATH_FOR_PARAMETERS)
-    
-    if not os.path.exists(current_dir):
-        os.makedirs(current_dir)
+    ensure_dir_exists(current_dir)
     
     return current_dir
+  
+  @property
+  def model_dir(self):
+    """Gets or creates directory for trained parameters
+      Returns:
+        current_dir - directory for trained parameters
+    """
+    
+    return self.init_files_directory()
 
-  # Initializes trained files path
   def get_or_init_files_path(self):
+    """Initializes trained files path
+      Returns:
+        Trained graph and labels path
+    """
     return self.join_path(self.init_files_directory, WEIGHTS_FILE)
       
-  # Gets training data  / parameters directory path
   def get_or_init_labels_path(self):
+    """Gets training data  / parameters directory path
+      Returns:
+        joined path to labels
+    """
     return self.join_path(self.init_files_directory, LABELS_FILE)
 
-  # Gets directory for test images
   def get_or_init_test_dir(self):
+    """Gets directory for test images
+      Returns:
+        current_dir - test images directory
+    """
     
     current_dir = self.join_path(self.get_data_general_directory, TEST_IMAGES_DIR)
-    
-    if not os.path.exists(current_dir):
-      os.mkdir(current_dir)  
+    ensure_dir_exists(current_dir)
     
     return current_dir
     
-  # Gets or initializes test image
   def get_or_init_test_path(self):
+    """Gets or initializes test image
+      Returns:
+        Test image path
+    """
     return self.join_path(self.get_or_init_test_dir, TEST_IMAGE_NAME)
   
-  # Gets / initializes evaluation directory
   def get_or_init_eval_path(self):
+    """Gets / initializes evaluation directory
+      Returns:
+        Evaluation diractory path
+    """
     return self.join_and_init_path(self.get_data_general_directory, PATH_FOR_EVALUATION)
+  
+  @property
+  def eval_dir(self):
+    """Gets validation data and files directory
+      Returns:
+        validation data directory
+    """
+    
+    return self.get_or_init_eval_path()
+
+def rename_files(partt, name, dir_path):
+  """Renames files in directory
+    Args:
+      patt - file name pattern
+      name - new name
+      dir_path - path to directory
+  """
+  
+  scan_path = os.path.join(dir_path , '*.jpg')
+  for pr in glob.glob(scan_path):
+    file_base_name = os.path.basename(pr)
+    print(file_base_name)
+    if file_base_name.startswith(partt):
+      file_name = name + file_base_name
+      full_file_name = os.path.join(dir_path, file_name)
+      os.rename(pr, full_file_name)
+
+def read_arguments_and_run():
+  """Retrieves command line arguments for files processing"""
+  
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--src_dir',
+                          type=str,
+                          help='Source directory.')
+  arg_parser.add_argument('--pattern',
+                          type=str,
+                          help='File name pattern.') 
+  arg_parser.add_argument('--name',
+                          type=str,
+                          default='rnmd__',
+                          help='New file name prefix.')
+  (argument_flags, _) = arg_parser.parse_known_args()
+  if argument_flags.src_dir and argument_flags.pattern:
+    rename_files(argument_flags.pattern,
+                 argument_flags.name,
+                 argument_flags.src_dir)
+  
+    
+if __name__ == '__main__':
+  """Converts images for training data set"""
+  
+  read_arguments_and_run()

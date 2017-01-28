@@ -1,10 +1,10 @@
-'''
+"""
 Created on Sep 23, 2016
 
 Evaluation parameters for CNN model
 
 @author: Levan Tsinadze
-'''
+"""
 
 # Flags to evaluate model
 batch_size = 100  # 'The number of samples in each batch.'

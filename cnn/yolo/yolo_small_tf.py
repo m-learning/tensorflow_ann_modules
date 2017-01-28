@@ -6,11 +6,13 @@ Implementation of YOLO small on TensorFlow library
 @author: Levan Tsinadze
 '''
 
+import sys
+import time
+
+import cv2
 import numpy as np
 import tensorflow as tf
-import cv2
-import time
-import sys
+
 
 class YOLO_TF:
   fromfile = None

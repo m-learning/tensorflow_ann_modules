@@ -6,11 +6,15 @@ Configures distort options
 @author: Levan Tsinadze
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from tensorflow.python.framework import tensor_shape
 
 import  cnn.transfer.bottleneck_config as bottleneck
 import  cnn.transfer.graph_config as graph_config
-import cnn.transfer.training_flags_mod as flags
+import cnn.transfer.training_flags as flags
 import tensorflow as tf
 
 
@@ -24,7 +28,6 @@ def should_distort_images(flip_left_right, random_crop, random_scale,
     crop box.
     random_scale: Integer percentage of how much to vary the scale by.
     random_brightness: Integer range to randomly multiply the pixel values by.
-
   Returns:
     Boolean value indicating whether any distortions should be applied.
   """
@@ -80,7 +83,6 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
     random_scale: Integer percentage of how much to vary the scale by.
     random_brightness: Integer range to randomly multiply the pixel values by.
     graph.
-
   Returns:
     The jpeg input layer and the distorted result tensor.
   """
@@ -104,7 +106,8 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
                                               precrop_shape_as_int)
   precropped_image_3d = tf.squeeze(precropped_image, squeeze_dims=[0])
   cropped_image = tf.random_crop(precropped_image_3d,
-                                 [graph_config.MODEL_INPUT_HEIGHT, graph_config.MODEL_INPUT_WIDTH,
+                                 [graph_config.MODEL_INPUT_HEIGHT,
+                                  graph_config.MODEL_INPUT_WIDTH,
                                   graph_config.MODEL_INPUT_DEPTH])
   if flip_left_right:
     flipped_image = tf.image.random_flip_left_right(cropped_image)
@@ -129,14 +132,13 @@ def distort_images(prepared_parameters):
       and distorted images tensor
   """
   
-  (_, bottleneck_tensor, jpeg_data_tensor,
+  (sess, _, bottleneck_tensor, jpeg_data_tensor,
    _, image_lists) = prepared_parameters
   
   do_distort_images = should_distort_images(
       flags.flip_left_right, flags.random_crop, flags.random_scale,
       flags.random_brightness)
 
-  sess = tf.Session()
   if do_distort_images:
     # We will be applying distortions, so setup the operations we'll need.
     distorted_jpeg_data_tensor, distorted_image_tensor = add_input_distortions(
@@ -146,7 +148,8 @@ def distort_images(prepared_parameters):
     distorted_jpeg_data_tensor, distorted_image_tensor = None, None
     # We'll make sure we've calculated the 'bottleneck' image summaries and
     # cached them on disk.
-    bottleneck.cache_bottlenecks(sess, image_lists, flags.image_dir, flags.bottleneck_dir,
-                      jpeg_data_tensor, bottleneck_tensor)
+    cache_params = (sess, image_lists, flags.image_dir, flags.bottleneck_dir,
+                    jpeg_data_tensor, bottleneck_tensor)
+    bottleneck.cache_bottlenecks(cache_params)
     
-  return (sess, do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)
+  return (do_distort_images, distorted_jpeg_data_tensor, distorted_image_tensor)

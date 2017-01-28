@@ -1,8 +1,9 @@
-# '''
-# Created on Oct 10, 2016
-# Implementation of VGG network
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Oct 10, 2016
+
+Implementation of VGG network
+
+@author: Levan Tsinadze
 
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +19,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Contains model definitions for versions of the Oxford VGG network.
+# Contains model definitions for versions of the Oxford VGG network.
 #
 # These model definitions were introduced in the following technical report:
 #
@@ -42,7 +43,8 @@
 # @@vgg_a
 # @@vgg_16
 # @@vgg_19
-# """
+"""
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -143,7 +145,7 @@ def vgg_a(inputs,
                         normalizer_fn=None,
                         scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = get_endpoints(end_points_collection)
+      end_points = slim.utils.convert_collection_to_dict(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
@@ -194,7 +196,7 @@ def vgg_16(inputs,
                         normalizer_fn=None,
                         scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = get_endpoints(end_points_collection)
+      end_points = slim.utils.convert_collection_to_dict(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
@@ -243,7 +245,7 @@ def vgg_16_fc(inputs,
       logits = slim.fully_connected(net, num_classes,
                                  activation_fn=None, scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = get_endpoints(end_points_collection)
+      end_points = slim.utils.convert_collection_to_dict(end_points_collection)
       if spatial_squeeze:
         logits = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
@@ -295,7 +297,7 @@ def vgg_19(inputs,
                         normalizer_fn=None,
                         scope='fc8')
       # Convert end_points_collection into a end_point dict.
-      end_points = get_endpoints(end_points_collection)
+      end_points = slim.utils.convert_collection_to_dict(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net
@@ -344,7 +346,7 @@ def vgg_19_fc(inputs,
       net = slim.fully_connected(net, num_classeactivation_fn=tf.nn.softmax,
                                  scope='fc8')
       # Convert_points_collection into a end_point dict.
-      end_points = get_endpoints(end_points_collection)
+      end_points = slim.utils.convert_collection_to_dict(end_points_collection)
       if spatial_squeeze:
         net = tf.squeeze(net, [1, 2], name='fc8/squeezed')
         end_points[sc.name + '/fc8'] = net

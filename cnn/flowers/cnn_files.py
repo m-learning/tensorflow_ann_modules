@@ -1,10 +1,13 @@
-'''
+"""
 Created on Jun 21, 2016
 
 Files for training data
 
 @author: Levan Tsinadze
-'''
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import glob
 import os
@@ -19,18 +22,27 @@ from six.moves import urllib
 # Files and directory constant parameters
 TRAINIG_SET_URL = 'http://download.tensorflow.org/example_images/flower_photos.tgz'
 
-# Files and directories for parameters (trained), training, validation and test
 class training_file(cnn_file_utils):
+  """Files and directories for (trained), 
+     training, validation and test parameters"""
   
   def __init__(self, image_resizer=None):
-    super(training_file, self).__init__('flowers', image_resizer)
+    super(training_file, self).__init__('flowers',
+                                        path_to_training_photos='flower_photos',
+                                        image_resizer=image_resizer)
     
-    # Method to get data set directory
   def get_dataset_dir(self):
+    """Method to get data set directory
+      Returns:
+        data set directory
+    """
     return super(training_file, self).get_data_directory()
   
-  # Resizes flower images
   def resize_flower_images(self, training_dir):
+    """Resizes flower images
+      Args:
+        training_dir - training files directory
+    """
     
     if self.image_resizer:
       scan_dir = self.join_path(training_dir, 'flower_photos')
@@ -43,8 +55,8 @@ class training_file(cnn_file_utils):
             for pr in glob.glob(flower_dir):
               self.read_and_write(pr, pr)
       
-  # Gets or generates training set
   def get_or_init_training_set(self):
+    """Gets or generates training set"""
     
     dest_directory = self.get_archives_directory()
     filename = TRAINIG_SET_URL.split('/')[-1]
@@ -54,7 +66,7 @@ class training_file(cnn_file_utils):
         sys.stdout.write('\r>> Downloading %s %.1f%%' % (filename, float(count * block_size) / float(total_size) * 100.0))
         sys.stdout.flush()
       filepath, _ = urllib.request.urlretrieve(TRAINIG_SET_URL, filepath, _progress)
-    print()
+    print("Get statinfo")
     statinfo = os.stat(filepath)
     print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
     training_dir = self.get_training_directory()

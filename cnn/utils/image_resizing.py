@@ -1,12 +1,18 @@
-'''
+"""
 Created on Oct 17, 2016
 Image resizing for VGG network
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import cv2
 
+
 class image_resizer(object):
-  """Resizes images for VGG network"""
+  """Resizes images for Inception and VGG networks"""
   
   def __init__(self, image_height, image_width):
     self.image_height = image_height
@@ -16,9 +22,9 @@ class image_resizer(object):
   def resize_image(self, im):
     """Resizes image for VGG network
     Args: 
-      im image to resize as tensor
+      im - image to resize as tensor
     Returns: 
-      res_im resized image as tensor
+      res_im - resized image as tensor
     """
     im_h, im_w = im.shape[:2]
     if im_h < self.image_height or im_w < self.image_width:
@@ -34,9 +40,9 @@ class image_resizer(object):
   def read_and_resize(self, image_path):
     """Resizes image for VGG network
     Args: 
-      image_path path to image
+      image_path - path to image
     Returns: 
-      res_im resized image as tensor
+      res_im - resized image as tensor
     """
     im = cv2.imread(image_path, 1)
     res_im = self.resize_image(im)
@@ -46,16 +52,16 @@ class image_resizer(object):
   def save_resized(self, im, write_path):
     """Saves image to specific path
     Args: 
-      im image
-      write_path path where to save image
+      im - image
+      write_path - path where to save image
     """
     cv2.imwrite(write_path, im)
     
   def read_resize_write(self, image_path, write_path):
     """Resizes image for VGG network
     Args: 
-      image_path path to image
-      write_path path to save resized image
+      image_path - path to image
+      write_path - path to save resized image
     """
     im = self.read_and_resize(image_path)
     self.save_resized(im, write_path)

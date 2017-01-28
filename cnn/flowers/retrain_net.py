@@ -1,4 +1,4 @@
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
+""" Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Simple transfer learning with an Inception v3 architecture model.
+
+Simple transfer learning with an Inception v3 architecture model.
 
 This example shows how to take a Inception v3 architecture model trained on
 ImageNet images, and train a new top layer that can recognize other classes of
@@ -48,29 +49,24 @@ in.
 
 This produces a new model file that can be loaded and run by any TensorFlow
 program, for example the label_image sample code.
-
 """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from sys import argv
-
 from cnn.flowers.cnn_files import training_file
-from cnn.transfer import training_flags_mod as flags
-import cnn.transfer.retrain_image_net as retrain_image_net
+from cnn.transfer import retrain_network as retrainer
+from cnn.transfer import training_flags as flags
 import tensorflow as tf
 
 
 def retrain_net_main(_):
-  """Retrains Inception custom data set"""
+  """Retrains Inception-V3 on custom data set"""
   
   tr_files = training_file()
-  retrain_image_net.retrain_net(tr_files)
+  flags.parse_and_retrieve(tr_files)
+  retrainer.retrain_net(tr_files)
   
-
 if __name__ == '__main__':
   """Runs training and test process"""
-  
-  flags.retrieve_args(argv)
   tf.app.run(retrain_net_main)

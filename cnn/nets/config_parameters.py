@@ -1,20 +1,22 @@
-# '''
-# Created on Sep 23, 2016
-# General configuration parameters for training testing and evaluation
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Sep 23, 2016
 
+General configuration parameters for training testing and evaluation
+
+@author: Levan Tsinadze
+"""
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 import os
 import sys
 import tarfile
 
-import cnn.nets.evaluation_parameters as EVAL_FLAGS
-import cnn.nets.training_parameters as FLAGS
 import cnn.nets.evaluate_network as eval_network
+import cnn.nets.evaluation_parameters as EVAL_FLAGS
 import cnn.nets.retrain_network as train_network
+import cnn.nets.training_parameters as FLAGS
 from six.moves import urllib
 
 

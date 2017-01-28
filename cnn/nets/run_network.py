@@ -1,8 +1,13 @@
-# '''
-# Created on Oct 6, 2016
-# General interface module for network implementation
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Oct 6, 2016
+
+General interface module for network implementation
+
+@author: Levan Tsinadze
+"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import cnn.vgg.vgg as vgg
 import numpy as np
@@ -43,7 +48,7 @@ class network_interface(object):
     top_k = predictions.argsort()[-5:][::-1]  # Getting top 5 predictions
     labels = self.generate_labels()
     for node_id in top_k:
-      print node_id
+      print(node_id)
       human_string = labels[node_id]
       score = predictions[node_id]
       print('%s (score = %.5f)' % (human_string, score))

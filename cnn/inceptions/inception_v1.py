@@ -1,4 +1,4 @@
-# '''
+"""
 # Created on Sep 14, 2016
 #
 # Implementation of inception_v1 from TensorFlow-slim models
@@ -20,7 +20,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Contains the definition for inception v1 classification network."""
+Contains the definition for inception v1 classification network."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -346,4 +346,5 @@ def inception_v1_arg_scope(weight_decay=0.00004,
         activation_fn=tf.nn.relu,
         normalizer_fn=normalizer_fn,
         normalizer_params=normalizer_params) as sc:
+      
       return sc

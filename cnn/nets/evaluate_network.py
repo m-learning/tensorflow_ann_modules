@@ -1,11 +1,10 @@
-# '''
-# Created on Sep 14, 2016
-#
-# Evaluation for inception ResNet v2 or VGG implementation
-#
-# @author: Levan Tsinadze
-# '''
-#
+"""
+ Created on Sep 14, 2016
+
+ Evaluation for inception ResNet v2 or VGG implementation
+
+ @author: Levan Tsinadze
+
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +19,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Generic evaluation script that evaluates a model using a given dataset."""
+
+Generic evaluation script that evaluates a model using a given dataset."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -29,8 +29,8 @@ from __future__ import print_function
 import math
 
 from cnn.datasets import dataset_factory
-import cnn.nets.evaluation_parameters as FLAGS
 from cnn.nets import nets_factory
+import cnn.nets.evaluation_parameters as FLAGS
 from cnn.preprocessing import preprocessing_factory
 import tensorflow as tf
 

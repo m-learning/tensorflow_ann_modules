@@ -1,4 +1,4 @@
-# '''
+"""
 # Created on Sep 21, 2016
 # Preprocessing module for Inception-RenNet-v2 network
 #
@@ -19,8 +19,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Provides utilities to preprocess images for the Inception networks."""
-
+# Provides utilities to preprocess images for the Inception networks."""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

@@ -1,8 +1,9 @@
-# '''
-# Created on Oct 10, 2016
-# Test classes for VGG network
-# @author: Levan Tsinadze
-# '''
+"""
+Created on Oct 10, 2016
+
+Test classes for VGG network
+
+@author: Levan Tsinadze
 
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +19,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Tests for slim.nets.vgg."""
+
+Tests for slim.nets.vgg."""
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

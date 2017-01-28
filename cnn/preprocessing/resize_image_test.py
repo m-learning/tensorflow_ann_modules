@@ -1,8 +1,12 @@
-'''
+"""
 Created on Oct 17, 2016
 Test for image resizing
 @author: Levan Tsinadze
-'''
+"""
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from cnn.flomen.cnn_files import training_file as flomen_files
 from cnn.preprocessing.vgg_preprocessing import preprocess_image as preprocess_vgg_image
@@ -13,7 +17,7 @@ import tensorflow as tf
 try:
   from PIL import Image
 except ImportError:
-  print "Importing Image from PIL threw exception"
+  print("Importing Image from PIL threw exception")
   import Image
 
 height, width = 224, 224
@@ -34,14 +38,14 @@ def preprocess_image(image_path, create_path):
     cv2.imshow('img', resized_image)
     cv2.imwrite(create_path, resized_image)
     test_image_file = tf.gfile.FastGFile(create_path, 'rb').read()
-    print tf.shape(test_image_file)
+    print(tf.shape(test_image_file))
     test_image = tf.image.decode_jpeg(test_image_file, channels=3)
-    print tf.shape(test_image_file)
+    print(tf.shape(test_image_file))
     test_image = preprocess_vgg_image(test_image, height, width, is_training=True)
     
-    print tf.shape(test_image_file)
+    print(tf.shape(test_image_file))
     
-    print sess
+    print(sess)
 
 if __name__ == '__main__':
   
