@@ -23,6 +23,8 @@ from keras.utils.data_utils import get_file
 from keras.utils.layer_utils import convert_all_kernels_in_model
 
 
+hidden_dim = 512
+
 TH_WEIGHTS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v1.0/rcmalli_vggface_th_weights_th_ordering.h5'
 TF_WEIGHTS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v1.0/rcmalli_vggface_tf_weights_tf_ordering.h5'
 TH_WEIGHTS_PATH_NO_TOP = 'https://github.com/rcmalli/keras-vggface/releases/download/v1.0/rcmalli_vggface_th_weights_th_ordering_notop.h5'
@@ -123,6 +125,27 @@ def _load_weights(include_top, weights, model):
       model.load_weights(weights_path)
       if K.backend() == 'theano':
         convert_all_kernels_in_model(model)
+        
+def network_model(flags):
+  """Initializes last layers of model
+    Args:
+      flags - command line arguments
+    Returns:
+      model - network model
+  """
+  if flags.input_tensor:
+    image_input = Input(shape=(224, 224, 3))
+    vgg_model = VGGFace(input_tensor=image_input, include_top=False)
+    last_layer = vgg_model.get_layer('pool5').output
+    x = Flatten(name='flatten')(last_layer)
+    x = Dense(hidden_dim, activation='relu', name='fc6')(x)
+    x = Dense(hidden_dim, activation='relu', name='fc7')(x)
+    out = Dense(flags.nb_class, activation='softmax', name='fc8')(x)
+    model = Model(image_input, out)
+  else:
+    model = VGGFace(include_top=flags.include_top)
+    
+  return model
                 
 def VGGFace(include_top=True, weights='vggface',
           input_tensor=None):
