@@ -3,7 +3,6 @@ Created on Oct 12, 2016
 Constant parameters for VGG network implementation
 @author: Levan Tsinadze
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
