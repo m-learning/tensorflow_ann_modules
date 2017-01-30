@@ -63,7 +63,7 @@ def _preprocess_image(flags):
     Returns:
       img - binary image
   """
-  im = misc.imread('../image/ak.jpg')
+  im = misc.imread(flags.image_path)
   im = misc.imresize(im, (224, 224)).astype(np.float32)
   aux = copy.copy(im)
   im[:, :, 0] = aux[:, :, 2]
