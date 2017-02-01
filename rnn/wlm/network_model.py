@@ -65,9 +65,6 @@ from __future__ import print_function
 import tensorflow as tf
 
 
-flags = tf.flags
-logging = tf.logging
-
 class NetworkModel(object):
   """The PTB model."""
 

@@ -55,7 +55,7 @@ def _file_to_word_ids(filename, word_to_id):
   return [word_to_id[word] for word in data if word in word_to_id]
 
 
-def ptb_raw_data(data_path=None):
+def read_raw_data(data_path=None):
   """Load PTB raw data from data directory "data_path".
 
   Reads PTB text files, converts strings to integer ids,
@@ -87,7 +87,7 @@ def ptb_raw_data(data_path=None):
   return (train_data, valid_data, test_data, vocabulary)
 
 
-def ptb_producer(raw_data, batch_size, num_steps, name=None):
+def data_producer(raw_data, batch_size, num_steps, name=None):
   """Iterate on the raw PTB data.
 
   This chunks up raw_data into batches of examples and returns Tensors that

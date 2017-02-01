@@ -32,7 +32,7 @@ from rnn.wlm import reader
 import tensorflow as tf
 
 
-class PtbReaderTest(tf.test.TestCase):
+class DataReaderTest(tf.test.TestCase):
 
   def setUp(self):
     self._string_data = "\n".join(
@@ -40,21 +40,21 @@ class PtbReaderTest(tf.test.TestCase):
          " rain as day",
          " want some cheesy puffs ?"])
 
-  def testPtbRawData(self):
+  def testReadRawData(self):
     tmpdir = tf.test.get_temp_dir()
     for suffix in "train", "valid", "test":
       filename = os.path.join(tmpdir, "ptb.%s.txt" % suffix)
       with tf.gfile.GFile(filename, "w") as fh:
         fh.write(self._string_data)
     # Smoke test
-    output = reader.ptb_raw_data(tmpdir)
+    output = reader.read_raw_data(tmpdir)
     self.assertEqual(len(output), 4)
 
-  def testPtbProducer(self):
+  def testDataProducer(self):
     raw_data = [4, 3, 2, 1, 0, 5, 6, 1, 1, 1, 1, 0, 3, 4, 1]
     batch_size = 3
     num_steps = 2
-    x, y = reader.ptb_producer(raw_data, batch_size, num_steps)
+    x, y = reader.data_producer(raw_data, batch_size, num_steps)
     with self.test_session() as session:
       coord = tf.train.Coordinator()
       tf.train.start_queue_runners(session, coord=coord)
