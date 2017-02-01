@@ -5,9 +5,13 @@ Network model configuration
 
 @author: Levan Tsinadze
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from rnn.wlm import reader
 import tensorflow as tf
+
 
 class ModelInput(object):
   """The input data."""
