@@ -7,6 +7,7 @@ Network model configuration
 """
 
 from rnn.wlm import reader
+import tensorflow as tf
 
 class ModelInput(object):
   """The input data."""
@@ -34,6 +35,7 @@ class SmallConfig(object):
   lr_decay = 0.5
   batch_size = 20
   vocab_size = 10000
+  data_type = tf.float32
 
 
 class MediumConfig(object):
@@ -51,6 +53,7 @@ class MediumConfig(object):
   lr_decay = 0.8
   batch_size = 20
   vocab_size = 10000
+  data_type = tf.float32
 
 
 class LargeConfig(object):
@@ -68,6 +71,7 @@ class LargeConfig(object):
   lr_decay = 1 / 1.15
   batch_size = 20
   vocab_size = 10000
+  data_type = tf.float32
 
 
 class TestConfig(object):
@@ -85,9 +89,17 @@ class TestConfig(object):
   lr_decay = 0.5
   batch_size = 20
   vocab_size = 10000
+  data_type = tf.float32
 
-def get_config(FLAGS):
-  """Gets network configuration
+def data_type(FLAGS):
+  """Gets float point type from configuration
+    Returns:
+      float point type
+  """
+  return tf.float16 if FLAGS.use_fp16 else tf.float32
+
+def _init_config(FLAGS):
+  """Initializes network configuration
     Args:
       FLAGS = training flags
     Returns:
@@ -104,5 +116,18 @@ def get_config(FLAGS):
     conf = TestConfig()
   else:
     raise ValueError("Invalid model: %s", FLAGS.model)
+  
+  return conf
+
+def get_config(FLAGS):
+  """Gets network configuration
+    Args:
+      FLAGS = training flags
+    Returns:
+      conf = network configuration
+  """
+  
+  conf = _init_config()
+  conf.data_type = data_type(FLAGS)
   
   return conf
