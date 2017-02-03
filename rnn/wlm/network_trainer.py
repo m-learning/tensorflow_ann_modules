@@ -25,6 +25,7 @@ logging = tf.logging
 
 def run_epoch(session, model, eval_op=None, verbose=False):
   """Runs the model on the given data."""
+  
   start_time = time.time()
   costs = 0.0
   iters = 0
@@ -32,7 +33,7 @@ def run_epoch(session, model, eval_op=None, verbose=False):
 
   fetches = {
       "cost": model.cost,
-      "final_state": model.final_state,
+      "final_state": model.final_state
   }
   if eval_op is not None:
     fetches["eval_op"] = eval_op
@@ -54,8 +55,9 @@ def run_epoch(session, model, eval_op=None, verbose=False):
       print("%.3f perplexity: %.3f speed: %.0f wps" % 
             (step * 1.0 / model.input.epoch_size, np.exp(costs / iters),
              iters * model.input.batch_size / (time.time() - start_time)))
-
-  return np.exp(costs / iters)
+  result = np.exp(costs / iters)
+  
+  return result
 
 def train(_):
   """Runs training epochs and saves weights"""

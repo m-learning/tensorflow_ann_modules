@@ -39,6 +39,7 @@ def _read_words(filename):
 
 
 def _build_vocab(filename):
+  
   data = _read_words(filename)
 
   counter = collections.Counter(data)
@@ -87,16 +88,17 @@ def read_raw_data(data_path=None):
   return (train_data, valid_data, test_data, vocabulary)
 
 
-def data_producer(raw_data, batch_size, num_steps, name=None):
+def data_producer(produce_data, name=None):
   """Iterate on the raw PTB data.
 
   This chunks up raw_data into batches of examples and returns Tensors that
   are drawn from these batches.
 
   Args:
-    raw_data: one of the raw data outputs from ptb_raw_data.
-    batch_size: int, the batch size.
-    num_steps: int, the number of unrolls.
+    produce_data 
+      raw_data: one of the raw data outputs from ptb_raw_data.
+      batch_size: int, the batch size.
+      num_steps: int, the number of unrolls.
     name: the name of this operation (optional).
 
   Returns:
@@ -106,6 +108,7 @@ def data_producer(raw_data, batch_size, num_steps, name=None):
   Raises:
     tf.errors.InvalidArgumentError: if batch_size or num_steps are too high.
   """
+  (raw_data, batch_size, num_steps) = produce_data
   with tf.name_scope(name, "PTBProducer", [raw_data, batch_size, num_steps]):
     raw_data = tf.convert_to_tensor(raw_data, name="raw_data", dtype=tf.int32)
 

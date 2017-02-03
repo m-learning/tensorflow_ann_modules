@@ -41,6 +41,7 @@ class DataReaderTest(tf.test.TestCase):
          " want some cheesy puffs ?"])
 
   def testReadRawData(self):
+    
     tmpdir = tf.test.get_temp_dir()
     for suffix in "train", "valid", "test":
       filename = os.path.join(tmpdir, "ptb.%s.txt" % suffix)
@@ -51,6 +52,7 @@ class DataReaderTest(tf.test.TestCase):
     self.assertEqual(len(output), 4)
 
   def testDataProducer(self):
+    
     raw_data = [4, 3, 2, 1, 0, 5, 6, 1, 1, 1, 1, 0, 3, 4, 1]
     batch_size = 3
     num_steps = 2
@@ -68,7 +70,6 @@ class DataReaderTest(tf.test.TestCase):
       finally:
         coord.request_stop()
         coord.join()
-
 
 if __name__ == "__main__":
   tf.test.main()
