@@ -59,7 +59,7 @@ def run_epoch(session, model, eval_op=None, verbose=False):
   
   return result
 
-def train(_):
+def _train():
   """Runs training epochs and saves weights"""
   
   if not FLAGS.data_path:
@@ -138,6 +138,12 @@ def _parse_arguments():
                       action='store_true',
                       help='Train using 16-bit floats instead of 32bit floats')
   (FLAGS, _) = parser.parse_known_args()
+  
+def config_and_train(_):
+  """Configures (reads command line arguments) and trains network model"""
+  
+  _parse_arguments()
+  _train()
 
 if __name__ == "__main__":
-  tf.app.run(train)
+  tf.app.run(config_and_train)

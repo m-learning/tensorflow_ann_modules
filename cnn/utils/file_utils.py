@@ -230,6 +230,18 @@ class cnn_file_utils(files_and_path_utils):
     dir_path = self.get_data_directory()
     ensure_dir_exists(dir_path)
   
+  @property
+  def data_dir(self):
+    """Creates directory for training set and parameters
+      Returns:
+        _data_dir - data directory path
+    """
+    
+    _data_dir = self.get_or_init_data_directory()
+    ensure_dir_exists(_data_dir)
+    
+    return _data_dir
+  
   def init_files_directory(self):
     """Gets or creates directory for trained parameters
       Returns:
