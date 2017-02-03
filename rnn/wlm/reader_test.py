@@ -56,7 +56,7 @@ class DataReaderTest(tf.test.TestCase):
     raw_data = [4, 3, 2, 1, 0, 5, 6, 1, 1, 1, 1, 0, 3, 4, 1]
     batch_size = 3
     num_steps = 2
-    x, y = reader.data_producer(raw_data, batch_size, num_steps)
+    (x, y) = reader.data_producer(raw_data, batch_size, num_steps)
     with self.test_session() as session:
       coord = tf.train.Coordinator()
       tf.train.start_queue_runners(session, coord=coord)

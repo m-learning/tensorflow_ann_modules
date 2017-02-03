@@ -50,11 +50,9 @@ def _build_vocab(filename):
 
   return word_to_id
 
-
 def _file_to_word_ids(filename, word_to_id):
   data = _read_words(filename)
   return [word_to_id[word] for word in data if word in word_to_id]
-
 
 def read_raw_data(data_path=None):
   """Load PTB raw data from data directory "data_path".
@@ -86,7 +84,6 @@ def read_raw_data(data_path=None):
   vocabulary = len(word_to_id)
   
   return (train_data, valid_data, test_data, vocabulary)
-
 
 def data_producer(produce_data, name=None):
   """Iterate on the raw PTB data.
