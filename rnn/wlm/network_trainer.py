@@ -77,8 +77,7 @@ def _train():
   eval_config.num_steps = 1
 
   with tf.Graph().as_default():
-    initializer = tf.random_uniform_initializer(-config.init_scale,
-                                                config.init_scale)
+    initializer = tf.random_uniform_initializer(-config.init_scale, config.init_scale)
     with tf.name_scope("Train"):
       train_input = ModelInput(config=config, data=train_data, name="TrainInput")
       with tf.variable_scope("Model", reuse=None, initializer=initializer):

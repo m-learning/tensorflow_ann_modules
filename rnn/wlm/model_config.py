@@ -103,7 +103,7 @@ def data_type(FLAGS):
   return tf.float16 if FLAGS.use_fp16 else tf.float32
 
 def _init_config(FLAGS):
-  """Initializes network configuration
+  """Initializes network configuration from arguments
     Args:
       FLAGS = training flags
     Returns:

@@ -81,8 +81,7 @@ class NetworkModel(object):
     # initialized to 1 but the hyperparameters of the model would need to be
     # different than reported in the paper.
     def lstm_cell():
-      return tf.contrib.rnn.BasicLSTMCell(
-          size, forget_bias=0.0, state_is_tuple=True)
+      return tf.contrib.rnn.BasicLSTMCell(size, forget_bias=0.0, state_is_tuple=True)
     attn_cell = lstm_cell
     if is_training and config.keep_prob < 1:
       def attn_cell():
