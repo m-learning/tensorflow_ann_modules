@@ -138,7 +138,6 @@ class NetworkModel(object):
       self._train_op = optimizer.apply_gradients(
           zip(grads, tvars),
           global_step=tf.contrib.framework.get_or_create_global_step())
-  
       self._new_lr = tf.placeholder(
           tf.float32, shape=[], name="new_learning_rate")
       self._lr_update = tf.assign(self._lr, self._new_lr)

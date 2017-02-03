@@ -43,7 +43,7 @@ class SmallConfig(object):
 
 
 class MediumConfig(object):
-  """Medium config."""
+  """Medium configuration."""
   
   init_scale = 0.05
   learning_rate = 1.0
@@ -61,7 +61,7 @@ class MediumConfig(object):
 
 
 class LargeConfig(object):
-  """Large config."""
+  """Large configuration."""
   
   init_scale = 0.04
   learning_rate = 1.0
@@ -79,7 +79,7 @@ class LargeConfig(object):
 
 
 class TestConfig(object):
-  """Tiny config, for testing."""
+  """Tiny configuration, for testing."""
   
   init_scale = 0.1
   learning_rate = 1.0

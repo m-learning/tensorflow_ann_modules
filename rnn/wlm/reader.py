@@ -120,7 +120,7 @@ def data_producer(produce_data, name=None):
       epoch_size = tf.identity(epoch_size, name="epoch_size")
 
     i = tf.train.range_input_producer(epoch_size, shuffle=False).dequeue()
-    x = tf.strided_slice(data, [0, i * num_steps],
+    x = tf.strided_slice(data, 0, i * num_steps,
                          [batch_size, (i + 1) * num_steps])
     x.set_shape([batch_size, num_steps])
     y = tf.strided_slice(data, [0, i * num_steps + 1],
