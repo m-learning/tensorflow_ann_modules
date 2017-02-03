@@ -24,7 +24,10 @@ import tensorflow as tf
 logging = tf.logging
 
 def run_epoch(session, model, eval_op=None, verbose=False):
-  """Runs the model on the given data."""
+  """Runs the model on the given data.
+    Returns:
+      result - result from one epoch
+  """
   
   start_time = time.time()
   costs = 0.0

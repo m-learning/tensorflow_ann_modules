@@ -61,9 +61,7 @@ def read_raw_data(data_path=None):
   and performs mini-batching of the inputs.
 
   The PTB dataset comes from Tomas Mikolov's webpage:
-
   http://www.fit.vutbr.cz/~imikolov/rnnlm/simple-examples.tgz
-
   Args:
     data_path: string path to the directory where simple-examples.tgz has
       been extracted.
