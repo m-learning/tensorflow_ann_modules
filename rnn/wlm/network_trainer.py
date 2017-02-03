@@ -100,7 +100,6 @@ def _train():
       for i in range(config.max_max_epoch):
         lr_decay = config.lr_decay ** max(i + 1 - config.max_epoch, 0.0)
         m.assign_lr(session, config.learning_rate * lr_decay)
-
         print("Epoch: %d Learning rate: %.3f" % (i + 1, session.run(m.lr)))
         train_perplexity = run_epoch(session, m, eval_op=m.train_op,
                                      verbose=True)
@@ -140,8 +139,8 @@ def _parse_arguments():
   (FLAGS, _) = parser.parse_known_args()
   
 def config_and_train(_):
-  """Configures (reads command line arguments) and trains network model"""
   
+  """Configures (reads command line arguments) and trains network model"""
   _parse_arguments()
   _train()
 

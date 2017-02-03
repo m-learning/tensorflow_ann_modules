@@ -131,7 +131,7 @@ def get_config(FLAGS):
       conf = network configuration
   """
   
-  conf = _init_config()
+  conf = _init_config(FLAGS)
   conf.data_type = data_type(FLAGS)
   
   return conf

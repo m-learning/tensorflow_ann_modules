@@ -130,21 +130,19 @@ class NetworkModel(object):
     self._cost = cost = tf.reduce_sum(loss) / batch_size
     self._final_state = state
 
-    if not is_training:
-      return
-
-    self._lr = tf.Variable(0.0, trainable=False)
-    tvars = tf.trainable_variables()
-    grads, _ = tf.clip_by_global_norm(tf.gradients(cost, tvars),
-                                      config.max_grad_norm)
-    optimizer = tf.train.GradientDescentOptimizer(self._lr)
-    self._train_op = optimizer.apply_gradients(
-        zip(grads, tvars),
-        global_step=tf.contrib.framework.get_or_create_global_step())
-
-    self._new_lr = tf.placeholder(
-        tf.float32, shape=[], name="new_learning_rate")
-    self._lr_update = tf.assign(self._lr, self._new_lr)
+    if is_training:
+      self._lr = tf.Variable(0.0, trainable=False)
+      tvars = tf.trainable_variables()
+      grads, _ = tf.clip_by_global_norm(tf.gradients(cost, tvars),
+                                        config.max_grad_norm)
+      optimizer = tf.train.GradientDescentOptimizer(self._lr)
+      self._train_op = optimizer.apply_gradients(
+          zip(grads, tvars),
+          global_step=tf.contrib.framework.get_or_create_global_step())
+  
+      self._new_lr = tf.placeholder(
+          tf.float32, shape=[], name="new_learning_rate")
+      self._lr_update = tf.assign(self._lr, self._new_lr)
 
   def assign_lr(self, session, lr_value):
     session.run(self._lr_update, feed_dict={self._new_lr: lr_value})
