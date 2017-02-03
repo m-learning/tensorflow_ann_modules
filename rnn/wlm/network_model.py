@@ -66,7 +66,7 @@ import tensorflow as tf
 
 
 class NetworkModel(object):
-  """The word language model."""
+  """The word language model netwok."""
 
   def __init__(self, is_training, config, input_):
     self._input = input_

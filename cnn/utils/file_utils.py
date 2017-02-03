@@ -237,7 +237,7 @@ class cnn_file_utils(files_and_path_utils):
         _data_dir - data directory path
     """
     
-    _data_dir = self.get_or_init_data_directory()
+    _data_dir = self.get_training_directory()
     ensure_dir_exists(_data_dir)
     
     return _data_dir

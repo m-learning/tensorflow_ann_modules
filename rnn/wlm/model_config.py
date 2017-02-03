@@ -124,7 +124,7 @@ def _init_config(FLAGS):
   return conf
 
 def get_config(FLAGS):
-  """Gets network configuration
+  """Initializes and gets network model configuration
     Args:
       FLAGS = training flags
     Returns:
