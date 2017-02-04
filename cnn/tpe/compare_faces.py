@@ -14,11 +14,12 @@ import argparse
 from skimage import io
 
 from cnn.tpe.network_model import FaceVerificator
-
+from cnn.tpe.cnn_files import training_file
 
 # ##
 dist = 0.85
 # ##
+_files = training_file()
 
 def _compare_faces(iamge1, image2):
   """Compares two faces
@@ -27,7 +28,7 @@ def _compare_faces(iamge1, image2):
         scores - compared scores
         comps - compared results
   """
-  fv = FaceVerificator('./model')
+  fv = FaceVerificator(_files.model_dir)
   fv.initialize_model()
   
   img_0 = io.imread(iamge1)
