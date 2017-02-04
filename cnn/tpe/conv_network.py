@@ -10,9 +10,8 @@ from __future__ import division
 from __future__ import print_function
 
 from keras.layers import Flatten, Dense, Dropout
-from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.advanced_activations import PReLU
-
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.models import Sequential
 
 

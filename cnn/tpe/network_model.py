@@ -11,12 +11,11 @@ from __future__ import print_function
 
 import os.path
 
-import numpy as np
-
-from cnn.tpe.preprocessing import FaceDetector, FaceAligner, clip_to_range
-from cnn.tpe.conv_network import build_cnn
-from cnn.tpe.tpe_network import build_tpe
 from cnn.tpe.bottleneck import Bottleneck
+from cnn.tpe.conv_network import build_cnn
+from cnn.tpe.preprocessing import FaceDetector, FaceAligner, clip_to_range
+from cnn.tpe.tpe_network import build_tpe
+import numpy as np
 
 
 GREATER_THAN = 32

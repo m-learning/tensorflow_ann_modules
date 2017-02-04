@@ -11,13 +11,12 @@ from __future__ import print_function
 
 from keras.layers import Dense, Lambda, Input, merge
 from keras.models import Model, Sequential
-# from keras.optimizers import SGD
 
 import keras.backend as K
-
 import numpy as np
 
 
+# from keras.optimizers import SGD
 def triplet_loss(y_true, y_pred):
   """Calculates triplet loss
     Args:

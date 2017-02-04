@@ -11,83 +11,75 @@ from __future__ import print_function
 
 import argparse
 
-from keras.preprocessing import image
 from skimage import io
 
-from cnn.tpe.cnn_files import training_file
-from cnn.tpe.preprocessing import FaceDetector, FaceAligner, clip_to_range
-import numpy as np
+from cnn.tpe.network_model import FaceVerificator
 
 
-_files = training_file()
-_model_dir = _files.model_dir
-_landmarks = _files.join_and_init_path(_model_dir, 'shape_predictor_68_face_landmarks.dat')
-_template = _files.join_and_init_path(_model_dir, 'face_template.npy')
-fd = FaceDetector()
-fa = FaceAligner(_landmarks, _template)
+# ##
+dist = 0.85
+# ##
 
-def load_face_from_image(img, imsize=96, border=0):
-  """Loads faces from image
-    img - binary image
-      imsize - image size
-      border - image border
+def _compare_faces(iamge1, image2):
+  """Compares two faces
     Returns:
-      face_tensor - face image tensor
+      tuple of -
+        scores - compared scores
+        comps - compared results
   """
+  fv = FaceVerificator('./model')
+  fv.initialize_model()
   
-  total_size = imsize + 2 * border
-  faces = fd.detect_faces(img, get_top=1)
-  print(faces)
-  if len(faces) == 0:
-    face_tensor = None
-  else:
-    face = fa.align_face(img, faces[0], dim=imsize, border=border).reshape(1, total_size, total_size, 3)
-    face = clip_to_range(face)
-    face_tensor = face.astype(np.float32)
+  img_0 = io.imread(iamge1)
+  img_1 = io.imread(image2)
   
-  return face_tensor
+  faces_0 = fv.process_image(img_0)
+  faces_1 = fv.process_image(img_1)
+  
+  n_faces_0 = len(faces_0)
+  n_faces_1 = len(faces_1)
+  
+  if n_faces_0 == 0 or n_faces_1 == 0:
+      print('Error: No faces found on the {}!'.format(iamge1 if n_faces_0 == 0 else image2))
+      exit()
+  
+  rects_0 = list(map(lambda p: p[0], faces_0))
+  rects_1 = list(map(lambda p: p[0], faces_1))
+  
+  embs_0 = list(map(lambda p: p[1], faces_0))
+  embs_1 = list(map(lambda p: p[1], faces_1))
+  
+  (scores, comps) = fv.compare_many(dist, embs_0, embs_1)
 
-def load_file(filename, imsize=96, border=0):
-  """Generates face image tensor
-    Args:
-      filename - image file path
-      imsize - image size
-      border - image border
-    Returns:
-      face_tensor - face image tensor
-  """
-    
-  img = io.imread(filename)
-  # (height, width, _) = img.shape
-  print(img.shape)
-  face_tensor = load_face_from_image(img, imsize=imsize, norder=border)
-  
-  return face_tensor
+  print('Rects on image 0: {}'.format(rects_0))
+  print('Rects on image 1: {}'.format(rects_1))
 
-def load_image(filename, border=0):
-  """Load faces from images
-    Args:
-      filename - image file name
-      border - image border
-    Returns:
-      image_tensor - tensor of face image
-  """
-  print('--image is loading--')
-  img = image.load_img(filename, target_size=(160, 160))
-  x = image.img_to_array(img)
-  arr = np.asarray(x)
-  face_tensor = load_face_from_image(arr, imsize=160, border=border)
-  print(face_tensor)
+  # print('Embeddings of faces on image 0:')
+  # print(embs_0)
+  #
+  # print('Embeddings of faces on image 1:')
+  # print(embs_1)
   
-  return face_tensor
+  print('Score matrix:')
+  print(scores)
+  
+  print('Decision matrix :')
+  print(comps)
+  
+  return (scores, comps)
 
 if __name__ == '__main__':
   """Generates tensors from images"""
   
   arg_parser = argparse.ArgumentParser()
-  arg_parser.add_argument('--filename',
+  arg_parser.add_argument('--image1',
                           type=str,
-                          help='Image file name')
-  (argument_flags, _) = arg_parser.parse_known_args()
-  if argument_flags.filename:
-    face_tensor = load_image(argument_flags.filename)
+                          help='First image file name')
+  arg_parser.add_argument('--image2',
+                          type=str,
+                          help='Second image file name')
+  (flags, _) = arg_parser.parse_known_args()
+  if flags.image1 and flags.image2:
+    comp_result = _compare_faces(flags.image1, flags.image2)
+  else:
+    print('No images to compare')
