@@ -15,9 +15,9 @@ import numpy as np
 def compare_many(self, dist, xs, ys):
   """Compares two face embedding vectors
     Args:
-      dist = distance threashhold
-      xs - face embeddings
-      ys - face embeddings
+      dist = distance threshold
+      xs - face embedding vectors
+      ys - face embedding vectors
     Returns:
       result - vector compare result
   """
