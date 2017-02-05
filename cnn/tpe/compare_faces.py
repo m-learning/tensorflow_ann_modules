@@ -94,6 +94,6 @@ if __name__ == '__main__':
                           help='Flags for face embedding compare.')
   (flags, _) = arg_parser.parse_known_args()
   if flags.image1 and flags.image2:
-    comp_result = _compare_faces(flags.image1, flags.image2)
+    comp_result = _compare_faces(flags)
   else:
     print('No images to compare')

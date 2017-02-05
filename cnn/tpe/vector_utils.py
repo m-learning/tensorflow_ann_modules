@@ -24,7 +24,7 @@ def compare_many(self, dist, xs, ys):
     
   xs = np.array(xs)
   ys = np.array(ys)
-  scores = np.dot(xs, ys.T)
+  scores = np.linalg.norm(xs, ys.T)
   result = (scores, scores > dist)
   
   return result
