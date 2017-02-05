@@ -32,10 +32,12 @@ def triplet_merge(inputs):
     Args:
       inputs - input triplet
     Returns:
-      merged value
+      merged_result - merged value
   """
   (a, p, n) = inputs
-  return K.sum(a * (p - n), axis=1)
+  merged_result = K.sum(a * (p - n), axis=1)
+  
+  return merged_result
 
 
 def triplet_merge_shape(input_shapes):

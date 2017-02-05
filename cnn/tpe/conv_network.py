@@ -14,15 +14,15 @@ from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.models import Sequential
 
-
-def build_cnn(dim, n_classes):
+def init_model(dim, n_classes):
   """Builds network model
     Args:
       dim - image dimensions
       n_classes - number of output classes
     Returns:
       model - network model
-  """
+  """  
+  
   model = Sequential()
 
   model.add(Convolution2D(96, 11, 11,
@@ -70,7 +70,18 @@ def build_cnn(dim, n_classes):
   model.add(PReLU())
 
   model.add(Dense(n_classes, init='glorot_uniform', activation='softmax'))
-
+  
+  return model
+  
+def build_cnn(dim, n_classes):
+  """Builds network model
+    Args:
+      dim - image dimensions
+      n_classes - number of output classes
+    Returns:
+      model - network model
+  """
+  model = init_model(dim, n_classes)
   model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
   return model

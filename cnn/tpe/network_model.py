@@ -51,6 +51,8 @@ class FaceVerificator:
         raise FileNotFoundError(model_file)
 
   def initialize_model(self):
+    """Initializes network models"""
+    
     self._mean = np.load(self._model_files['mean'])
     self._stddev = np.load(self._model_files['stddev'])
     self._fd = FaceDetector()
@@ -81,11 +83,3 @@ class FaceVerificator:
     faces_y = self._tpe.predict(faces_y, batch_size=BATCH_SIZE)
 
     return list(zip(face_rects, faces_y))
-
-  def compare_many(self, dist, xs, ys):
-      
-    xs = np.array(xs)
-    ys = np.array(ys)
-    scores = xs @ ys.T
-    
-    return (scores, scores > dist)
