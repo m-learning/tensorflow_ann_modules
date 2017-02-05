@@ -57,7 +57,7 @@ def _compare_faces(flags):
   print('Rects on image 0: {}'.format(rects_0))
   print('Rects on image 1: {}'.format(rects_1))
   
-  if flags.scores:
+  if flags.score:
     (scores, comps) = vectors.compare_many(dist, embs_0, embs_1)
   
   
