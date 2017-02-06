@@ -37,8 +37,8 @@ if __name__ == '__main__':
   flags = Images()
   flags.score = command_args.score
   while True:
-    flags.image1 = raw_input('Input image1 path')
-    flags.image2 = raw_input('Input image2 path')
+    flags.image1 = raw_input('Input image1 path: ')
+    flags.image2 = raw_input('Input image2 path: ')
     if flags.image1 and flags.image2:
       comp_result = compare_faces(flags, fv)
     else:
