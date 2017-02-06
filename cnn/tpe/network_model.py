@@ -65,8 +65,11 @@ class FaceVerificator:
     self._tpe = tpe
 
   def normalize(self, img):
+    
     img = clip_to_range(img)
-    return (img - self._mean) / self._stddev
+    norm_result = (img - self._mean) / self._stddev
+    
+    return norm_result
 
   def process_image(self, img):
     

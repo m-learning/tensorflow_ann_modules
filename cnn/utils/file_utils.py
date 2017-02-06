@@ -55,6 +55,16 @@ def count_files(dir_name):
   
   return file_count
 
+def file_exists(_file_path):
+  """Validates if file exists for passed path
+    Args:
+      _file_path - file path
+    Returns;
+      boolean flag if file exists
+  """
+  
+  return os.path.exists(_file_path)
+
 def ensure_dir_exists(dir_name):
   """Makes sure the folder exists on disk.
     Args:
