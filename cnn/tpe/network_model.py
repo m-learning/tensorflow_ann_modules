@@ -36,7 +36,6 @@ class FaceVerificator:
     
   def __init__(self, model_dir):
     self._model_dir = model_dir
-
     self._model_files = {
       'shape_predictor': os.path.join(model_dir, 'shape_predictor_68_face_landmarks.dat'),
       'face_template': os.path.join(model_dir, 'face_template.npy'),

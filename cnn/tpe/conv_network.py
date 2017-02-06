@@ -14,7 +14,8 @@ from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.models import Sequential
 
-def init_model(dim, n_classes):
+
+def init_cnn(dim, n_classes):
   """Builds network model
     Args:
       dim - image dimensions
@@ -81,7 +82,7 @@ def build_cnn(dim, n_classes):
     Returns:
       model - network model
   """
-  model = init_model(dim, n_classes)
+  model = init_cnn(dim, n_classes)
   model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
   return model

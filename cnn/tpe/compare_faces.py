@@ -59,13 +59,6 @@ def _compare_faces(flags):
   
   if flags.score:
     (scores, comps) = vectors.compare_many(dist, embs_0, embs_1)
-  
-  
-    # print('Embeddings of faces on image 0:')
-    # print(embs_0)
-    #
-    # print('Embeddings of faces on image 1:')
-    # print(embs_1)
     
     print('Score matrix:')
     print(scores)
@@ -75,8 +68,10 @@ def _compare_faces(flags):
     
     return (scores, comps)
   else:
-    print('First image embeddings - ', embs_0)
-    print('Second image embeddings - ', embs_1)
+    print('Embeddings of faces on image 0:')
+    print(embs_0)
+    print('Embeddings of faces on image 1:')
+    print(embs_1)
 
 if __name__ == '__main__':
   """Generates tensors from images"""
