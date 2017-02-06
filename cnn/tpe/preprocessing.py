@@ -32,19 +32,19 @@ class FaceDetector:
                    get_top=None):
     
     try:
-        face_rects = list(self.detector(image, upscale_factor))
+      face_rects = list(self.detector(image, upscale_factor))
     except Exception as e:
-        raise FaceDetectorException(e.args)
+      raise FaceDetectorException(e.args)
 
     if greater_than is not None:
-        face_rects = list(filter(lambda r:
-                          r.height() > greater_than and r.width() > greater_than,
-                          face_rects))
+      face_rects = list(filter(lambda r:
+                        r.height() > greater_than and r.width() > greater_than,
+                        face_rects))
 
     face_rects.sort(key=lambda r: r.width() * r.height(), reverse=True)
 
     if get_top is not None:
-        face_rects = face_rects[:get_top]
+      face_rects = face_rects[:get_top]
 
     return face_rects
 
@@ -60,14 +60,14 @@ class FaceAligner:
   def __init__(self,
                dlib_predictor_path,
                face_template_path):
-      self.predictor = dlib.shape_predictor(dlib_predictor_path)
-      self.face_template = np.load(face_template_path)
+    self.predictor = dlib.shape_predictor(dlib_predictor_path)
+    self.face_template = np.load(face_template_path)
 
   def get_landmarks(self,
                     image,
                     face_rect):
-      points = self.predictor(image, face_rect)
-      return np.array(list(map(lambda p: [p.x, p.y], points.parts())))
+    points = self.predictor(image, face_rect)
+    return np.array(list(map(lambda p: [p.x, p.y], points.parts())))
 
   def align_face(self,
                  image,
@@ -103,7 +103,7 @@ class FaceAligner:
     result = []
 
     for rect in face_rects:
-        result.append(self.align_face(image, rect, *args, **kwargs))
+      result.append(self.align_face(image, rect, *args, **kwargs))
 
     return result
 

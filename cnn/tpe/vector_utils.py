@@ -19,7 +19,9 @@ def compare_many(dist, xs, ys):
       xs - face embedding vectors
       ys - face embedding vectors
     Returns:
-      result - vector compare result
+      tuple of -
+      scores - scores for matrices
+      boolean flags
   """
     
   xs = np.array(xs)

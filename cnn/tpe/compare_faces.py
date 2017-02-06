@@ -72,10 +72,6 @@ def _compare_faces_from_files(image1, image2, fv):
       image1 - first image path
       image2 - seconf image path 
       fv - face verification model
-    Returns:
-      tuple of -
-        scores - compared scores
-        comps - compared results
   """
   img_0 = io.imread(image1)
   img_1 = io.imread(image2)
@@ -96,10 +92,6 @@ def compare_faces(flags, fv):
     Args:
       flags - arguments of images and score
       fv - face verification model
-    Returns:
-      tuple of -
-        scores - compared scores
-        comps - compared results
   """
   (image1, image2) = (flags.image1, flags.image2)
   if file_utils.file_exists(image1) and file_utils.file_exists(image2):
@@ -111,10 +103,6 @@ def _compare_faces(flags):
   """Compares two faces
     Args:
       flags - arguments of images and score
-    Returns:
-      tuple of -
-        scores - compared scores
-        comps - compared results
   """
   fv = init_verificator()
   compare_faces(flags, fv)
