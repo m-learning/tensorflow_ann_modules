@@ -21,6 +21,7 @@ class FaceDetectorException (Exception):
 
 
 class FaceDetector:
+  
   def __init__(self):
       self.detector = dlib.get_frontal_face_detector()
 
@@ -55,6 +56,7 @@ class FaceAlignMask(Enum):
 
 class FaceAligner:
   """Aligns detected faces in images"""
+  
   def __init__(self,
                dlib_predictor_path,
                face_template_path):

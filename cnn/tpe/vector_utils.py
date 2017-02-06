@@ -12,7 +12,7 @@ from __future__ import print_function
 import numpy as np
 
 
-def compare_many(self, dist, xs, ys):
+def compare_many(dist, xs, ys):
   """Compares two face embedding vectors
     Args:
       dist = distance threshold

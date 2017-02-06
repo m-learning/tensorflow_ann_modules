@@ -25,7 +25,7 @@ IMBORDER = 5
 
 
 class FaceVerificatorError (Exception):
-    pass
+  pass
 
 
 class FileNotFoundError (FaceVerificatorError):
