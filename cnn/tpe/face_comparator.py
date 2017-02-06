@@ -23,6 +23,16 @@ class Images:
     self.image1 = None
     self.image2 = None
     self.score = True
+    
+def run_comparation(flags, fv):
+  """Runs image comparation
+    Args:
+      flags - image paths and command line flags
+  """
+  if flags.image1 and flags.image2:
+    compare_faces(flags, fv)
+  else:
+    print('No images to compare')
 
 if __name__ == '__main__':
   """Generates tensors from images"""
@@ -39,7 +49,4 @@ if __name__ == '__main__':
   while True:
     flags.image1 = raw_input('Input image1 path: ')
     flags.image2 = raw_input('Input image2 path: ')
-    if flags.image1 and flags.image2:
-      comp_result = compare_faces(flags, fv)
-    else:
-      print('No images to compare')
+    run_comparation(flags, fv)

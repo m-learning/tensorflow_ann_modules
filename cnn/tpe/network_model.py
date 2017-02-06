@@ -75,13 +75,15 @@ class FaceVerificator:
     
     face_rects = self._fd.detect_faces(img, upscale_factor=2, greater_than=GREATER_THAN)
 
-    if not face_rects:
-        return []
-
-    faces = self._fa.align_faces(img, face_rects, dim=IMSIZE, border=IMBORDER)
-    faces = list(map(self.normalize, faces))
-
-    faces_y = self._cnn.predict(faces, batch_size=BATCH_SIZE)
-    faces_y = self._tpe.predict(faces_y, batch_size=BATCH_SIZE)
-
-    return list(zip(face_rects, faces_y))
+    if face_rects:
+      faces = self._fa.align_faces(img, face_rects, dim=IMSIZE, border=IMBORDER)
+      faces = list(map(self.normalize, faces))
+  
+      faces_y = self._cnn.predict(faces, batch_size=BATCH_SIZE)
+      faces_y = self._tpe.predict(faces_y, batch_size=BATCH_SIZE)
+  
+      result = list(zip(face_rects, faces_y))
+    else:
+      result = []
+    
+    return result
