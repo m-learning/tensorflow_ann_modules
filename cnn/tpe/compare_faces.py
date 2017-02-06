@@ -34,7 +34,7 @@ def init_verificator():
   
   return fv
 
-def _compare_found_faces(faces_0, faces_1):
+def _compare_found_faces(faces_0, faces_1, flags):
   """Calculates distance between found faces
     Args:
       faces_0 - faces from first image
@@ -66,7 +66,7 @@ def _compare_found_faces(faces_0, faces_1):
     print('Embeddings of faces on image 1:')
     print(embs_1)
     
-def _compare_faces_from_files(image1, image2, fv):
+def _compare_faces_from_files(image1, image2, fv, flags):
   """Compares two faces
     Args:
       image1 - first image path
@@ -85,7 +85,7 @@ def _compare_faces_from_files(image1, image2, fv):
   if n_faces_0 == 0 or n_faces_1 == 0:
     print('Error: No faces found on the {}!'.format(image1 if n_faces_0 == 0 else image2))
   else:
-    _compare_found_faces(faces_0, faces_1)  
+    _compare_found_faces(faces_0, faces_1, flags)  
   
 def compare_faces(flags, fv):
   """Compares two faces
@@ -95,7 +95,7 @@ def compare_faces(flags, fv):
   """
   (image1, image2) = (flags.image1, flags.image2)
   if file_utils.file_exists(image1) and file_utils.file_exists(image2):
-    _compare_faces_from_files(image1, image2, fv)
+    _compare_faces_from_files(image1, image2, fv, flags)
   else:
     print('Error: No file found on path {} / {}!'.format(image1, image2))
 
