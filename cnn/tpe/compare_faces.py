@@ -21,27 +21,28 @@ from cnn.tpe.network_model import FaceVerificator
 # ##
 dist = 0.85
 # ##
-_files = training_file()
-
-def _init_verificator():
+def init_verificator():
   """Initializes face verificator model
     Returns:
       fv - face verificator model
   """
+  
+  _files = training_file()
   fv = FaceVerificator(_files.model_dir)
   fv.initialize_model()
   
   return fv
 
-def _compare_faces(flags):
+def compare_faces(flags, fv):
   """Compares two faces
+    Args:
+      flags - arguments of images and score
+      fv - face verification model
     Returns:
       tuple of -
         scores - compared scores
         comps - compared results
   """
-  fv = _init_verificator()
-  
   image1 = flags.image1
   image2 = flags.image2
   img_0 = io.imread(image1)
@@ -81,6 +82,18 @@ def _compare_faces(flags):
     print(embs_0)
     print('Embeddings of faces on image 1:')
     print(embs_1)
+
+def _compare_faces(flags):
+  """Compares two faces
+    Args:
+      flags - arguments of images and score
+    Returns:
+      tuple of -
+        scores - compared scores
+        comps - compared results
+  """
+  fv = init_verificator()
+  compare_faces(flags, fv)
 
 if __name__ == '__main__':
   """Generates tensors from images"""
