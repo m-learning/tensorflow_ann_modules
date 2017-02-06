@@ -23,6 +23,16 @@ dist = 0.85
 # ##
 _files = training_file()
 
+def _init_verificator():
+  """Initializes face verificator model
+    Returns:
+      fv - face verificator model
+  """
+  fv = FaceVerificator(_files.model_dir)
+  fv.initialize_model()
+  
+  return fv
+
 def _compare_faces(flags):
   """Compares two faces
     Returns:
@@ -30,8 +40,7 @@ def _compare_faces(flags):
         scores - compared scores
         comps - compared results
   """
-  fv = FaceVerificator(_files.model_dir)
-  fv.initialize_model()
+  fv = _init_verificator()
   
   image1 = flags.image1
   image2 = flags.image2

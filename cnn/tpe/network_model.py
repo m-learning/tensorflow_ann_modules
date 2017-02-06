@@ -12,9 +12,9 @@ from __future__ import print_function
 import os.path
 
 from cnn.tpe.bottleneck import Bottleneck
-from cnn.tpe.conv_network import build_cnn
+from cnn.tpe.conv_network import init_cnn
 from cnn.tpe.preprocessing import FaceDetector, FaceAligner, clip_to_range
-from cnn.tpe.tpe_network import build_tpe
+from cnn.tpe.tpe_network import init_tpe
 import numpy as np
 
 
@@ -57,10 +57,10 @@ class FaceVerificator:
     self._fd = FaceDetector()
     self._fa = FaceAligner(self._model_files['shape_predictor'],
                            self._model_files['face_template'])
-    cnn = build_cnn(227, 266)
+    cnn = init_cnn(227, 266)
     cnn.load_weights(self._model_files['cnn_weights'])
     self._cnn = Bottleneck(cnn, ~1)
-    _, tpe = build_tpe(256, 256)
+    _, tpe = init_tpe(256, 256)
     tpe.load_weights(self._model_files['tpe_weights'])
     self._tpe = tpe
 

@@ -15,7 +15,18 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.models import Sequential
 
 
-def init_cnn(dim, n_classes):
+def _add_dropout(model, is_training, keep_prob=0.5):
+  """Adds dropout layer to model if is training
+    Args:
+      model - network model
+      is_training - flag for training
+      keep_prob - keep probability parameter
+  """
+  
+  if is_training:
+    model.add(Dropout(keep_prob))
+  
+def init_cnn(dim, n_classes, is_training=False):
   """Builds network model
     Args:
       dim - image dimensions
@@ -61,11 +72,11 @@ def init_cnn(dim, n_classes):
   model.add(MaxPooling2D((3, 3), strides=(2, 2)))
 
   model.add(Flatten())
-  model.add(Dropout(0.5))
+  _add_dropout(model, is_training)
 
   model.add(Dense(2048, init='glorot_uniform'))
   model.add(PReLU())
-  model.add(Dropout(0.5))
+  _add_dropout(model, is_training)
 
   model.add(Dense(256, init='glorot_uniform'))
   model.add(PReLU())
@@ -82,7 +93,7 @@ def build_cnn(dim, n_classes):
     Returns:
       model - network model
   """
-  model = init_cnn(dim, n_classes)
+  model = init_cnn(dim, n_classes, is_training=True)
   model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
   return model
