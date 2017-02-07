@@ -43,7 +43,7 @@ if __name__ == '__main__':
   _files = comparator._files
   eval_dir = _files.eval_dir
   arg_parser = argparse.ArgumentParser()
-  (command_args, _) = add_arguments(arg_parser)
+  command_args = add_arguments(arg_parser)
   fv = init_verificator()
   flags = Images()
   flags.score = command_args.score

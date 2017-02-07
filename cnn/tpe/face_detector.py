@@ -9,9 +9,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import random
-
 from PIL import Image, ImageDraw
+import random
 
 import numpy as np
 
@@ -35,6 +34,10 @@ def draw_box(dr, _rec, _color):
   
 
 def draw_matched_faces(faces):
+  """Draw rectangles on similar faces
+    Args:
+      faces - detected faces
+  """
         
   (n_faces_0, n_faces_1, rects_0, rects_1, scores, comps, dr0, dr1) = faces
   drawn_1 = [False] * n_faces_1

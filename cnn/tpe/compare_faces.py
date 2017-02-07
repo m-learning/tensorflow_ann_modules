@@ -169,19 +169,7 @@ if __name__ == '__main__':
   arg_parser.add_argument('--image2',
                           type=str,
                           help='Second image file name')
-  arg_parser.add_argument('--score',
-                          dest='score',
-                          action='store_true',
-                          help='Flags for face embedding compare.')
-  arg_parser.add_argument('--output1',
-                          type=str,
-                          default=output_dir('output1.jpg'),
-                          help='First output image file name')
-  arg_parser.add_argument('--output2',
-                          type=str,
-                          default=output_dir('output2.jpg'),
-                          help='Second output image file name')
-  (flags, _) = arg_parser.parse_known_args()
+  flags = add_arguments(arg_parser)
   if flags.image1 and flags.image2:
     comp_result = _compare_faces(flags)
   else:
