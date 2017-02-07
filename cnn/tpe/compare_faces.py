@@ -10,7 +10,6 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-
 from skimage import io
 
 from cnn.tpe import face_detector as detector
@@ -23,6 +22,18 @@ from cnn.utils import file_utils
 dist = 0.85
 _files = training_file()
 
+def output_dir(_tail):
+  """Gets output file path by file name
+    Args:
+      _tail - output file name
+    Returns:
+      _output_path - output file full path
+  """
+  
+  eval_dir = _files.eval_dir
+  _output_path = _files.join_path(eval_dir, _tail)
+  
+  return _output_path
 
 def init_verificator():
   """Initializes face verificator model
@@ -124,10 +135,33 @@ def _compare_faces(flags):
   fv = init_verificator()
   compare_faces(flags, fv)
 
+def add_arguments(arg_parser):
+  """Adds command line arguments
+    Args:
+      arg_parser - argument parser
+    Returns:
+      flags - command line argument flags
+  """
+  
+  arg_parser.add_argument('--score',
+                          dest='score',
+                          action='store_true',
+                          help='Flags for face embedding compare.')
+  arg_parser.add_argument('--output1',
+                          type=str,
+                          default=output_dir('output1.jpg'),
+                          help='First output image file name')
+  arg_parser.add_argument('--output2',
+                          type=str,
+                          default=output_dir('output2.jpg'),
+                          help='Second output image file name')
+  (flags, _) = arg_parser.parse_known_args()
+  
+  return flags
+
 if __name__ == '__main__':
   """Generates tensors from images"""
   
-  eval_dir = _files.eval_dir
   arg_parser = argparse.ArgumentParser()
   arg_parser.add_argument('--image1',
                           type=str,
@@ -141,11 +175,11 @@ if __name__ == '__main__':
                           help='Flags for face embedding compare.')
   arg_parser.add_argument('--output1',
                           type=str,
-                          default=_files.join_path(eval_dir, 'output1.jpg'),
+                          default=output_dir('output1.jpg'),
                           help='First output image file name')
   arg_parser.add_argument('--output2',
                           type=str,
-                          default=_files.join_path(eval_dir, 'output2.jpg'),
+                          default=output_dir('output2.jpg'),
                           help='Second output image file name')
   (flags, _) = arg_parser.parse_known_args()
   if flags.image1 and flags.image2:

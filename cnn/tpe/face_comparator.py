@@ -11,7 +11,8 @@ from __future__ import print_function
 
 import argparse
 
-from cnn.tpe.compare_faces import init_verificator, compare_faces
+from cnn.tpe import compare_faces as comparator
+from cnn.tpe.compare_faces import init_verificator, add_arguments, compare_faces
 
 
 dist = 0.85
@@ -23,6 +24,8 @@ class Images:
     self.image1 = None
     self.image2 = None
     self.score = True
+    self.output1 = None
+    self.output2 = None
     
 def run_comparation(flags, fv):
   """Runs image comparation
@@ -37,15 +40,15 @@ def run_comparation(flags, fv):
 if __name__ == '__main__':
   """Generates tensors from images"""
   
+  _files = comparator._files
+  eval_dir = _files.eval_dir
   arg_parser = argparse.ArgumentParser()
-  arg_parser.add_argument('--score',
-                          dest='score',
-                          action='store_true',
-                          help='Flags for face embedding compare.')
-  (command_args, _) = arg_parser.parse_known_args()
+  (command_args, _) = add_arguments(arg_parser)
   fv = init_verificator()
   flags = Images()
   flags.score = command_args.score
+  flags.output1 = command_args.output1
+  flags.output2 = command_args.output2
   while True:
     flags.image1 = raw_input('Input image1 path: ')
     flags.image2 = raw_input('Input image2 path: ')

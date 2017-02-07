@@ -58,7 +58,7 @@ def draw_matched_faces(faces):
       draw_box(dr1, rects_1[j], color, 'base', j)
 
 def draw_rectangles(_image, _rectangles, _save_path):
-  """Draws rectangles in images
+  """Draws rectangles on images
     Args:
       _image - image path
       _rectangles - rectangles to draw
