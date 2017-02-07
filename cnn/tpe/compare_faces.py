@@ -55,6 +55,7 @@ def _compare_found_faces(faces, images, flags):
   (faces_0, faces_1) = faces
   rects_0 = list(map(lambda p: p[0], faces_0))
   rects_1 = list(map(lambda p: p[0], faces_1))
+  rects = (rects_0, rects_1)
   
   embs_0 = list(map(lambda p: p[1], faces_0))
   embs_1 = list(map(lambda p: p[1], faces_1))
@@ -70,7 +71,7 @@ def _compare_found_faces(faces, images, flags):
     
     print('Decision matrix :')
     print(comps)
-    _write_output(images)
+    _write_output(images, rects, flags)
     
     return (scores, comps)
   else:
