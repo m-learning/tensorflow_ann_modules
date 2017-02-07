@@ -69,7 +69,7 @@ def draw_rectangles(_image, _rectangles, _save_path):
     im = Image.open(_image)
     dr = ImageDraw.Draw(im)
     for _rec in _rectangles:
-        (x1, y1, x2, y2) = _rec
+        (x1, y1, x2, y2) = (_rec.left(), _rec.top(), _rec.right(), _rec.bottom())
         rec_dr = [x1, y1, x2, y2]
         dr.rectangle(rec_dr)
     im.save(_save_path)
