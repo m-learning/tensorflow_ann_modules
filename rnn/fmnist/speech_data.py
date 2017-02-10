@@ -10,7 +10,6 @@ Utilities for downloading and providing data from openslr.org, libriSpeech, Pann
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-# TODO! see https://github.com/pannous/caffe-speech-recognition for some data sources
 
 import os
 from random import shuffle
@@ -29,6 +28,7 @@ from six.moves import urllib
 from six.moves import xrange  # pylint: disable=redefined-builtin
 
 
+# TODO! see https://github.com/pannous/caffe-speech-recognition for some data sources
 # try:
 #
 # except:
@@ -380,6 +380,7 @@ def read_data_sets(train_dir, source_data=Source.NUMBER_IMAGES, fake_data=False,
   return data_sets
 
 if __name__ == "__main__":
+  
   print("downloading speech datasets")
   maybe_download(Source.DIGIT_SPECTROS)
   maybe_download(Source.DIGIT_WAVES)

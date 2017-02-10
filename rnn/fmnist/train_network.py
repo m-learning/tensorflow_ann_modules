@@ -44,3 +44,7 @@ def train_network():
   (_, trainX, trainY, testX, testY) = prepare_data()
   model.fit(trainX, trainY, batch_size=batch_size, nb_epoch=10, verbose=1, validation_data=(testX, testY))
   model.save_weights(_files.model_dir)
+  
+if __name__ == '__main__':
+  """Runs network training"""
+  train_network()
