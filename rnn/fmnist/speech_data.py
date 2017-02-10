@@ -18,12 +18,13 @@ import sys
 import wave
 
 from enum import Enum
+import librosa
 import matplotlib
 import numpy
 import skimage.io  # scikit-image
 
-import librosa
 import numpy as np
+from rnn.fmnist.rnn_files import training_file 
 from six.moves import urllib
 from six.moves import xrange  # pylint: disable=redefined-builtin
 
@@ -37,7 +38,7 @@ from six.moves import xrange  # pylint: disable=redefined-builtin
 # TRAIN_INDEX='train_words_index.txt'
 # TEST_INDEX='test_words_index.txt'
 SOURCE_URL = 'http://pannous.net/files/'  # spoken_numbers.tar'
-DATA_DIR = 'data/'
+DATA_DIR = None
 pcm_path = "data/spoken_numbers_pcm/"  # 8 bit
 wav_path = "data/spoken_numbers_wav/"  # 16 bit s16le
 path = pcm_path

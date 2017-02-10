@@ -19,5 +19,6 @@
 /datas/vgg/
 /datas/tpe/
 /datas/wlm/
+/datas/fmnist/
 /datas/fcn/test_data/results
 /retrain_inception_logs
