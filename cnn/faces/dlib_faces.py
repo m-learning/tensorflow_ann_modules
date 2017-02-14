@@ -71,7 +71,7 @@ parser.add_argument('--face_folder',
                     type=str,
                     help='Path to folder with images of faces')
 parser.add_argument('--include_gui',
-                    dest='include_top',
+                    dest='include_gui',
                     action='store_true',
                     help='Include top layers')
 (args, _) = parser.parse_known_args()
