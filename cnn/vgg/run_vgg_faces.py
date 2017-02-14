@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
   res = model.predict(im)
   
-  if flags.include.include_top or not flags.input_tensor:
+  if flags.include_top or not flags.input_tensor:
     print(np.argmax(res[0]))
   else:
     print(res)
