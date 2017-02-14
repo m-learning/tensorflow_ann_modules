@@ -96,7 +96,8 @@ detector = dlib.get_frontal_face_detector()
 sp = dlib.shape_predictor(predictor_path)
 facerec = dlib.face_recognition_model_v1(face_rec_model_path);
 
-win = dlib.image_window()
+if args.include_gui:
+  win = dlib.image_window()
 
 # Now process all the images
 for f in glob.glob(os.path.join(faces_folder_path, "*.jpg")):
