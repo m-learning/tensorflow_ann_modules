@@ -11,8 +11,9 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-from skimage import io
 import sys
+
+from skimage import io
 
 import cv2
 import dlib
@@ -34,7 +35,6 @@ img = cv2.imread(file_name)
 detected_faces = face_detector(image, 1)
 
 print("I found {} faces in the file {}".format(len(detected_faces), file_name))
-
 
 # Loop through each face we found in the image
 for i, face_rect in enumerate(detected_faces):

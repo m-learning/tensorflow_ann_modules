@@ -3,10 +3,6 @@ Created on Feb 14, 2017
 
 Face recognition based on DLIB library
 
-@author: Levan Tsinadze
-"""
-
-#!/usr/bin/python
 # The contents of this file are in the public domain. See LICENSE_FOR_EXAMPLE_PROGRAMS.txt
 #
 #   This example shows how to use dlib's face recognition tool.  This tool maps
@@ -53,10 +49,11 @@ Face recognition based on DLIB library
 #       pip install scikit-image
 #   Or downloaded from http://scikit-image.org/download.html. 
 
+@author: Levan Tsinadze
+"""
 import argparse
 import glob
 import os
-import sys
 
 from skimage import io
 
@@ -86,7 +83,7 @@ if args.face_folder is None:
 
 predictor_path = _files.data_file(LANDMARKS_WEIGHTS)
 face_rec_model_path = _files.data_file(RESNET_WEIGHTS)
-faces_folder_path = sys.argv[1]
+faces_folder_path = args.face_folder
 
 # Load all the models we need: a detector to find the faces, a shape predictor
 # to find face landmarks so we can precisely localize the face, and finally the
