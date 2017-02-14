@@ -113,3 +113,12 @@ def _parse_arguments():
   
   return args
   
+if __name__ == '__main__':
+  """Compare face images"""
+  
+  args = _parse_arguments()
+  if args.image1 and args.image2:
+    _network = load_model()
+    compare_files(args.image1, args.image2, _network)
+  else:
+    print('No images to be compared')
