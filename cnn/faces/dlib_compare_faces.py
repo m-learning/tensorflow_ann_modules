@@ -20,6 +20,7 @@ import dlib
 
 LANDMARKS_WEIGHTS = 'shape_predictor_68_face_landmarks.dat'
 RESNET_WEIGHTS = 'dlib_face_recognition_resnet_model_v1.dat'
+EMBEDDING_LENGTH = 128
 THREASHHOLD = 0.6
 
 def load_model():
@@ -95,7 +96,7 @@ def compare_files(_image1, _image2, _network):
   emb2 = calculate_embedding(img2, _network)
   print(type(emb1), type(emb2), len(emb1), len(emb2))
   dist_sum = 0.0
-  for i in range(128):
+  for i in range(EMBEDDING_LENGTH):
     dist_sub = emb1[i] - emb2[i]
     dist_sum += math.pow(dist_sub, 2)
   dist = math.sqrt(dist_sum)
