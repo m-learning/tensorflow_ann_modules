@@ -74,11 +74,8 @@ def read_pairs(pairs_filename):
     
   pairs = []
   with open(pairs_filename, 'r') as f:
-      for line in f.readlines()[1:]:
-          pair = line.strip().split()
-          pairs.append(pair)
+    for line in f.readlines()[1:]:
+      pair = line.strip().split()
+      pairs.append(pair)
   
   return np.array(pairs)
-
-
-
