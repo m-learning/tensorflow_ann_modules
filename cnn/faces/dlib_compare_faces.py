@@ -78,7 +78,7 @@ def calculate_embedding(img, _network):
     
     return face_descriptor
 # Now process all the images
-def compare_files(_image1, _image2, _network):
+def compare_files(_image1, _image2, _network, _verbose=False):
   """Compares two faces from images
     Args:
       _image1 - first image
@@ -87,22 +87,21 @@ def compare_files(_image1, _image2, _network):
     Returns:
       face_dst - distance between embeddings
   """
-    
-  print("Processing files: {} {}".format(_image1, _image2))
+  
+  if _verbose:  
+    print("Processing files: {} {}".format(_image1, _image2))
   img1 = io.imread(_image1)
   img2 = io.imread(_image2)
 
   emb1 = calculate_embedding(img1, _network)
   emb2 = calculate_embedding(img2, _network)
-  print(type(emb1), type(emb2), len(emb1), len(emb2))
+
   dist_sum = 0.0
   for i in range(EMBEDDING_LENGTH):
     dist_sub = emb1[i] - emb2[i]
     dist_sum += math.pow(dist_sub, 2)
   dist = math.sqrt(dist_sum)
   match_faces = dist < THREASHHOLD
-  
-  print(dist, match_faces)
   
   return (dist, match_faces)
   
@@ -122,6 +121,10 @@ def _parse_arguments():
                       dest='include_gui',
                       action='store_true',
                       help='Include top layers')
+  parser.add_argument('--verbose',
+                      dest='verbose',
+                      action='store_true',
+                      help='Print additional information')
   (args, _) = parser.parse_known_args()
   
   return args
@@ -132,6 +135,7 @@ if __name__ == '__main__':
   args = _parse_arguments()
   if args.image1 and args.image2:
     _network = load_model()
-    compare_files(args.image1, args.image2, _network)
+    (dist, match_faces) = compare_files(args.image1, args.image2, _network, args.verbose)
+    print(dist, match_faces)
   else:
     print('No images to be compared')
