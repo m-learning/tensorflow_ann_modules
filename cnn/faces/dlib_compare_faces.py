@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
+import math
 
 from skimage import io
 
@@ -92,8 +93,8 @@ def compare_files(_image1, _image2, _network):
   emb1 = calculate_embedding(img1, _network)
   emb2 = calculate_embedding(img2, _network)
   print(type(emb1), type(emb2))
-  for x in emb1:
-    print(x)
+  for i in range(128):
+    print(math.pow(emb1[i] - emb2[i], 2))
   
 def _parse_arguments():
   """Parses command line arguments
