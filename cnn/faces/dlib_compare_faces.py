@@ -20,6 +20,7 @@ import dlib
 
 LANDMARKS_WEIGHTS = 'shape_predictor_68_face_landmarks.dat'
 RESNET_WEIGHTS = 'dlib_face_recognition_resnet_model_v1.dat'
+THREASHHOLD = 0.6
 
 def load_model():
   """Loads network model weights
@@ -92,14 +93,17 @@ def compare_files(_image1, _image2, _network):
 
   emb1 = calculate_embedding(img1, _network)
   emb2 = calculate_embedding(img2, _network)
-  print(type(emb1), type(emb2))
+  print(type(emb1), type(emb2), len(emb1), len(emb2))
   dist_sum = 0.0
   for i in range(128):
     dist_sub = emb1[i] - emb2[i]
     dist_sum += math.pow(dist_sub, 2)
   dist = math.sqrt(dist_sum)
+  match_faces = dist < THREASHHOLD
   
-  print(dist)
+  print(dist, match_faces)
+  
+  return (dist, match_faces)
   
 def _parse_arguments():
   """Parses command line arguments
