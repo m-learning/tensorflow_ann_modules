@@ -70,6 +70,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--face_folder',
                     type=str,
                     help='Path to folder with images of faces')
+parser.add_argument('--include_gui',
+                    dest='include_top',
+                    action='store_true',
+                    help='Include top layers')
 (args, _) = parser.parse_known_args()
 
 if args.face_folder is None:
@@ -99,8 +103,9 @@ for f in glob.glob(os.path.join(faces_folder_path, "*.jpg")):
     print("Processing file: {}".format(f))
     img = io.imread(f)
 
-    win.clear_overlay()
-    win.set_image(img)
+    if args.include_gui:
+      win.clear_overlay()
+      win.set_image(img)
 
     # Ask the detector to find the bounding boxes of each face. The 1 in the
     # second argument indicates that we should upsample the image 1 time. This
@@ -114,10 +119,12 @@ for f in glob.glob(os.path.join(faces_folder_path, "*.jpg")):
             k, d.left(), d.top(), d.right(), d.bottom()))
         # Get the landmarks/parts for the face in box d.
         shape = sp(img, d)
+        
+        if args.include_gui:
         # Draw the face landmarks on the screen so we can see what face is currently being processed.
-        win.clear_overlay()
-        win.add_overlay(d);
-        win.add_overlay(shape)
+          win.add_overlay(d);
+          win.add_overlay(shape)
+          win.clear_overlay()
 
         # Compute the 128D vector that describes the face in img identified by
         # shape.  In general, if two face descriptor vectors have a Euclidean
