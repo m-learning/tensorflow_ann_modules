@@ -93,8 +93,13 @@ def compare_files(_image1, _image2, _network):
   emb1 = calculate_embedding(img1, _network)
   emb2 = calculate_embedding(img2, _network)
   print(type(emb1), type(emb2))
+  dist_sum = 0.0
   for i in range(128):
-    print(math.pow(emb1[i] - emb2[i], 2))
+    dist_sub = emb1[i] - emb2[i]
+    dist_sum += math.pow(dist_sub, 2)
+  dist = math.sqrt(dist_sum)
+  
+  print(dist)
   
 def _parse_arguments():
   """Parses command line arguments
