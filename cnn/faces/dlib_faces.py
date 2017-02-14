@@ -81,8 +81,8 @@ if args.face_folder is None:
         "    http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2")
     exit()
 
-predictor_path = _files.data_file(LANDMARKS_WEIGHTS)
-face_rec_model_path = _files.data_file(RESNET_WEIGHTS)
+predictor_path = _files.model_file(LANDMARKS_WEIGHTS)
+face_rec_model_path = _files.model_file(RESNET_WEIGHTS)
 faces_folder_path = args.face_folder
 
 # Load all the models we need: a detector to find the faces, a shape predictor
