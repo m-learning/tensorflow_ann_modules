@@ -96,7 +96,7 @@ def calculate_embedding(img, _network):
     _detecteds = len(dets)
     print("Number of faces detected: {}".format(_detecteds))
     # Now process each face we found.
-    for k, d in enumerate(dets):
+    for (k, d) in enumerate(dets):
       
       detected = (k, d.left(), d.top(), d.right(), d.bottom())  
       print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
@@ -114,7 +114,7 @@ def calculate_embedding(img, _network):
       print(face_desc)
       face_descriptors.append(face_descriptor)
     
-    return face_descriptor
+    return face_descriptors
 
 def compare_embeddings(emb1, emb2):
   """Compares embeddings
