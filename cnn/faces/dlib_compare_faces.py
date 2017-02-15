@@ -111,6 +111,7 @@ def calculate_embedding(img, _network):
       # the vector to the screen.
       face_embedding = facerec.compute_face_descriptor(img, shape)
       face_descriptor = face_desc(emb=face_embedding, det=detected)
+      print(face_desc)
       face_descriptors.append(face_descriptor)
     
     return face_descriptor
