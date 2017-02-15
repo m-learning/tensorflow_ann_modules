@@ -46,56 +46,84 @@ def load_model():
   
   return (detector, sp, facerec)
 
+def calculate_embeddings(img, _network, dets):
+  """Calculates embedding from detected faces in image
+    Args:
+      img - face image
+      _network - pre-trained network module
+      dets - detected faces
+  """
+  
+  face_descriptors = []
+  
+  (_, sp, facerec) = _network
+  for k, d in enumerate(dets):
+        
+      print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
+          k, d.left(), d.top(), d.right(), d.bottom()))
+      # Get the landmarks/parts for the face in box d.
+      shape = sp(img, d)
+      
+      # Compute the 128D vector that describes the face in img identified by
+      # shape.  In general, if two face descriptor vectors have a Euclidean
+      # distance between them less than 0.6 then they are from the same
+      # person, otherwise they are from different people.  He we just print
+      # the vector to the screen.
+      face_descriptor = facerec.compute_face_descriptor(img, shape)
+      face_descriptors.append(face_descriptor)
+  
+  return face_descriptors
+  
+
 def calculate_embedding(img, _network):
   """Calculates embedding from image
     Args:
       img - face image
       _network - pre-trained network module
     Returns:
-      face_descriptor - embedding vector
+      face_descriptors - embedding vectors and detected face coordinates
   """
   
+  face_descriptors = []
   (detector, sp, facerec) = _network
   # Ask the detector to find the bounding boxes of each face. The 1 in the
   # second argument indicates that we should upsample the image 1 time. This
   # will make everything bigger and allow us to detect more faces.
   dets = detector(img, 1)
-  print("Number of faces detected: {}".format(len(dets)))
-  # Now process each face we found.
-  for k, d in enumerate(dets):
+  if dets and len(dets) > 0:
+    _detecteds = len(dets)
+    print("Number of faces detected: {}".format(_detecteds))
+    # Now process each face we found.
+    for k, d in enumerate(dets):
       
-    print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
-        k, d.left(), d.top(), d.right(), d.bottom()))
-    # Get the landmarks/parts for the face in box d.
-    shape = sp(img, d)
-    
-    # Compute the 128D vector that describes the face in img identified by
-    # shape.  In general, if two face descriptor vectors have a Euclidean
-    # distance between them less than 0.6 then they are from the same
-    # person, otherwise they are from different people.  He we just print
-    # the vector to the screen.
-    face_descriptor = facerec.compute_face_descriptor(img, shape)
+      detected = (k, d.left(), d.top(), d.right(), d.bottom())  
+      print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
+          k, d.left(), d.top(), d.right(), d.bottom()))
+      # Get the landmarks/parts for the face in box d.
+      shape = sp(img, d)
+      
+      # Compute the 128D vector that describes the face in img identified by
+      # shape.  In general, if two face descriptor vectors have a Euclidean
+      # distance between them less than 0.6 then they are from the same
+      # person, otherwise they are from different people.  He we just print
+      # the vector to the screen.
+      face_embedding = facerec.compute_face_descriptor(img, shape)
+      face_descriptor = (face_embedding, detected)
+      face_descriptors.append(face_descriptor)
     
     return face_descriptor
-# Now process all the images
-def compare_files(_image1, _image2, _network, _verbose=False):
-  """Compares two faces from images
+
+def compare_embeddings(emb1, emb2):
+  """Compares embeddings
     Args:
-      _image1 - first image
-      _image2 - second image
-      _network - pre-trained network module
+      emb1 - first embedding
+      emb2 - second embedding
     Returns:
-      face_dst - distance between embeddings
+      tuple of
+        dist - distance between embeddings
+        match_faces - boolean flag if faces match 
   """
   
-  if _verbose:  
-    print("Processing files: {} {}".format(_image1, _image2))
-  img1 = io.imread(_image1)
-  img2 = io.imread(_image2)
-
-  emb1 = calculate_embedding(img1, _network)
-  emb2 = calculate_embedding(img2, _network)
-
   dist_sum = 0.0
   for i in range(EMBEDDING_LENGTH):
     dist_sub = emb1[i] - emb2[i]
@@ -104,6 +132,33 @@ def compare_files(_image1, _image2, _network, _verbose=False):
   match_faces = dist < THREASHHOLD
   
   return (dist, match_faces)
+# Now process all the images
+def compare_files(_image1, _image2, _network, _verbose=False):
+  """Compares two faces from images
+    Args:
+      _image1 - first image
+      _image2 - second image
+      _network - pre-trained network module
+    Returns:
+      face_dsts - distances between embeddings
+  """
+  
+  face_dsts = []
+  
+  if _verbose:  
+    print("Processing files: {} {}".format(_image1, _image2))
+  img1 = io.imread(_image1)
+  img2 = io.imread(_image2)
+
+  descs1 = calculate_embedding(img1, _network)
+  descs2 = calculate_embedding(img2, _network)
+
+  for (emb1, det1) in descs1:
+      for (emb2, det2) in descs2:
+          (dist, match_faces) = compare_embeddings(emb1, emb2)
+          face_dsts.append((dist, match_faces, det1, det2))
+  
+  return face_dsts
   
 def _parse_arguments():
   """Parses command line arguments
@@ -135,7 +190,8 @@ if __name__ == '__main__':
   args = _parse_arguments()
   if args.image1 and args.image2:
     _network = load_model()
-    (dist, match_faces) = compare_files(args.image1, args.image2, _network, args.verbose)
-    print(dist, match_faces)
+    face_dists = compare_files(args.image1, args.image2, _network, args.verbose)
+    for (dist, match_faces, det1, det2) in face_dists:
+      print(dist, match_faces, det1, det2)
   else:
     print('No images to be compared')
