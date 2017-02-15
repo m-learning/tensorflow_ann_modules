@@ -114,7 +114,7 @@ def calculate_embedding(img, _network):
       print(face_desc)
       face_descriptors.append(face_descriptor)
     
-    return face_descriptors
+  return face_descriptors
 
 def compare_embeddings(emb1, emb2):
   """Compares embeddings
