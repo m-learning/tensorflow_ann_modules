@@ -20,6 +20,10 @@ def _parse_arguments():
       args - parsed command line arguments
   """
   parser = argparse.ArgumentParser()
+  parser.add_argument('--threshold',
+                      type=float,
+                      default=0.6,
+                      help='Threshold for Euclidean distance between face embedding vectors')
   parser.add_argument('--include_gui',
                       dest='include_gui',
                       action='store_true',
@@ -36,6 +40,7 @@ if __name__ == '__main__':
   """Starts face comparator service"""
   
   args = _parse_arguments()
+  comparator.threshold = args.threshold
   _network = comparator.load_model()
   while True:
     image1 = raw_input('Input image1 path: ')

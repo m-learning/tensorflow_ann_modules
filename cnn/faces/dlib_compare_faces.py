@@ -22,7 +22,7 @@ import dlib
 LANDMARKS_WEIGHTS = 'shape_predictor_68_face_landmarks.dat'
 RESNET_WEIGHTS = 'dlib_face_recognition_resnet_model_v1.dat'
 EMBEDDING_LENGTH = 128
-THREASHHOLD = 0.6
+threshold = None
 face_desc = collections.namedtuple('face_desc', ['emb', 'det'])
 
 def load_model():
@@ -131,7 +131,7 @@ def compare_embeddings(emb1, emb2):
     dist_sub = emb1[i] - emb2[i]
     dist_sum += math.pow(dist_sub, 2)
   dist = math.sqrt(dist_sum)
-  match_faces = dist < THREASHHOLD
+  match_faces = dist < threshold
   
   return (dist, match_faces)
 # Now process all the images
@@ -176,6 +176,10 @@ def _parse_arguments():
   parser.add_argument('--image2',
                       type=str,
                       help='Path to second image')
+  parser.add_argument('--threshold',
+                      type=float,
+                      default=0.6,
+                      help='Threshold for Euclidean distance between face embedding vectors')
   parser.add_argument('--include_gui',
                       dest='include_gui',
                       action='store_true',
@@ -202,6 +206,8 @@ if __name__ == '__main__':
   
   args = _parse_arguments()
   if args.image1 and args.image2:
+    global threshold
+    threshold = args.threshold
     _network = load_model()
     face_dists = compare_files(args.image1, args.image2, _network, args.verbose)
     print_faces(face_dists)
