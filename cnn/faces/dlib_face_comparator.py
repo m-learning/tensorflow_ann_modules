@@ -20,12 +20,6 @@ def _parse_arguments():
       args - parsed command line arguments
   """
   parser = argparse.ArgumentParser()
-  parser.add_argument('--image1',
-                      type=str,
-                      help='Path to first image')
-  parser.add_argument('--image2',
-                      type=str,
-                      help='Path to second image')
   parser.add_argument('--include_gui',
                       dest='include_gui',
                       action='store_true',
@@ -46,5 +40,5 @@ if __name__ == '__main__':
   while True:
     image1 = raw_input('Input image1 path: ')
     image2 = raw_input('Input image2 path: ')
-    face_dists = comparator.compare_files(image1, image2, _network)
+    face_dists = comparator.compare_files(image1, image2, _network, args.verbose)
     comparator.print_faces(face_dists)

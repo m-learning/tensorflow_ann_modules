@@ -553,7 +553,7 @@ def rerec(bboxA):
     return bboxA
 
 def imresample(img, sz):
-    return = cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA)  # pylint: disable=no-member
+    return cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA)  # pylint: disable=no-member
 
     # This method is kept for debugging purpose
 #     h=img.shape[0]
