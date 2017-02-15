@@ -37,6 +37,17 @@ def _parse_arguments():
   
   return args
 
+def _run_service(_verbose=False):
+  """Face comparator service
+    Args:
+      _verbose - command line argument for debugging
+  """
+  
+  image1 = raw_input('Input image1 path: ')
+  image2 = raw_input('Input image2 path: ')
+  face_dists = comparator.compare_files(image1, image2, _network, verbose=_verbose)
+  comparator.print_faces(face_dists)
+
 if __name__ == '__main__':
   """Starts face comparator service"""
   
@@ -45,9 +56,6 @@ if __name__ == '__main__':
   _network = comparator.load_model()
   while True:
     try:
-      image1 = raw_input('Input image1 path: ')
-      image2 = raw_input('Input image2 path: ')
-      face_dists = comparator.compare_files(image1, image2, _network, args.verbose)
-      comparator.print_faces(face_dists)
+      _run_service(args.verbose)
     except:
       traceback.print_exc()
