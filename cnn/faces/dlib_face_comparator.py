@@ -44,7 +44,11 @@ def _check_on_proceed():
   """
   
   _proc = raw_input('Would you like to proceed [Y/n]: ')
-  proc_flag = _proc and _proc == 'n'
+  if _proc and _proc == 'n':
+    proc_flag = False
+    print('Application is shutting down')
+  else:
+    proc_flag = True
   
   return proc_flag
 
