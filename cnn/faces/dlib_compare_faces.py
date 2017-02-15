@@ -23,7 +23,7 @@ LANDMARKS_WEIGHTS = 'shape_predictor_68_face_landmarks.dat'
 RESNET_WEIGHTS = 'dlib_face_recognition_resnet_model_v1.dat'
 EMBEDDING_LENGTH = 128
 THREASHHOLD = 0.6
-face_desc = collections.namedtuple('face_desc', 'emb det')
+face_desc = collections.namedtuple('face_desc', ['emb', 'det'])
 
 def load_model():
   """Loads network model weights
