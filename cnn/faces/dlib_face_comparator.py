@@ -80,3 +80,4 @@ if __name__ == '__main__':
       proc_flag = _run_service(args.verbose)
     except:
       traceback.print_exc()
+      proc_flag = _check_on_proceed()
