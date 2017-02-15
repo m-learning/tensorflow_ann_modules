@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
+import collections
 import math
 
 from skimage import io
@@ -22,6 +23,7 @@ LANDMARKS_WEIGHTS = 'shape_predictor_68_face_landmarks.dat'
 RESNET_WEIGHTS = 'dlib_face_recognition_resnet_model_v1.dat'
 EMBEDDING_LENGTH = 128
 THREASHHOLD = 0.6
+face_desc = collections.namedtuple('face_desc', 'emb det')
 
 def load_model():
   """Loads network model weights
@@ -108,7 +110,7 @@ def calculate_embedding(img, _network):
       # person, otherwise they are from different people.  He we just print
       # the vector to the screen.
       face_embedding = facerec.compute_face_descriptor(img, shape)
-      face_descriptor = (face_embedding, detected)
+      face_descriptor = face_desc(emb=face_embedding, det=detected)
       face_descriptors.append(face_descriptor)
     
     return face_descriptor
@@ -154,9 +156,9 @@ def compare_files(_image1, _image2, _network, _verbose=False):
   descs2 = calculate_embedding(img2, _network)
 
   for desc1 in descs1:
-    (emb1, det1) = desc1
+    (emb1, det1) = (desc1.emb, desc1.det)
     for desc2 in descs2:
-      (emb2, det2) = desc2
+      (emb2, det2) = (desc2.emb, desc2.det)
       (dist, match_faces) = compare_embeddings(emb1, emb2)
       face_dsts.append((dist, match_faces, det1, det2))
   
