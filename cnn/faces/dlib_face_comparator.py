@@ -39,7 +39,7 @@ def _parse_arguments():
   return args
 
 if __name__ == '__main__':
-  """Starts face compare service"""
+  """Starts face comparator service"""
   
   args = _parse_arguments()
   _network = comparator.load_model()
