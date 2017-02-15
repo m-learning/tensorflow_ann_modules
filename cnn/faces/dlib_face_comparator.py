@@ -38,23 +38,31 @@ def _parse_arguments():
   return args
 
 def _check_on_proceed():
-  """Validates application to proceed"""
+  """Validates application to proceed
+    Returns:
+      proc_flag - validation flag
+  """
   
   _proc = raw_input('Would you like to proceed [Y/n]: ')
-  if _proc and _proc == 'n':
-    exit()
+  proc_flag = _proc and _proc == 'n'
+  
+  return proc_flag
 
 def _run_service(_verbose=False):
   """Face comparator service
     Args:
       _verbose - command line argument for debugging
+    Returns:
+     proc_flag - validation flag
   """
   
-  _check_on_proceed()
   image1 = raw_input('Input image1 path: ')
   image2 = raw_input('Input image2 path: ')
   face_dists = comparator.compare_files(image1, image2, _network, verbose=_verbose)
   comparator.print_faces(face_dists)
+  proc_flag = _check_on_proceed()
+  
+  return proc_flag
 
 if __name__ == '__main__':
   """Starts face comparator service"""
@@ -62,8 +70,9 @@ if __name__ == '__main__':
   args = _parse_arguments()
   comparator.threshold = args.threshold
   _network = comparator.load_model()
-  while True:
+  proc_flag = True
+  while proc_flag:
     try:
-      _run_service(args.verbose)
+      proc_flag = _run_service(args.verbose)
     except:
       traceback.print_exc()
