@@ -152,4 +152,3 @@ for f in glob.glob(os.path.join(faces_folder_path, "*.jpg")):
 
 
         dlib.hit_enter_to_continue()
-

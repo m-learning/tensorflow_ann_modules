@@ -59,7 +59,7 @@ def calculate_embeddings(img, _network, dets):
   face_descriptors = []
   
   (_, sp, facerec) = _network
-  for k, d in enumerate(dets):
+  for (k, d) in enumerate(dets):
         
       print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
           k, d.left(), d.top(), d.right(), d.bottom()))
@@ -111,7 +111,6 @@ def calculate_embedding(img, _network):
       # the vector to the screen.
       face_embedding = facerec.compute_face_descriptor(img, shape)
       face_descriptor = face_desc(emb=face_embedding, det=detected)
-      print(face_desc)
       face_descriptors.append(face_descriptor)
     
   return face_descriptors
@@ -188,6 +187,15 @@ def _parse_arguments():
   (args, _) = parser.parse_known_args()
   
   return args
+
+def print_faces(face_dists):
+  """Prints compared results
+    Args:
+      face_dists - face distances and detections
+  """
+  
+  for (dist, match_faces, det1, det2) in face_dists:
+      print(dist, match_faces, det1, det2)
   
 if __name__ == '__main__':
   """Compare face images"""
@@ -196,7 +204,6 @@ if __name__ == '__main__':
   if args.image1 and args.image2:
     _network = load_model()
     face_dists = compare_files(args.image1, args.image2, _network, args.verbose)
-    for (dist, match_faces, det1, det2) in face_dists:
-      print(dist, match_faces, det1, det2)
+    print_faces(face_dists)
   else:
     print('No images to be compared')
