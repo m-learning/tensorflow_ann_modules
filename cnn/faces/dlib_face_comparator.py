@@ -37,12 +37,20 @@ def _parse_arguments():
   
   return args
 
+def _check_on_proceed():
+  """Validates application to proceed"""
+  
+  _proc = raw_input('Would you like to proceed [Y/n]: ')
+  if _proc and _proc == 'n':
+    exit()
+
 def _run_service(_verbose=False):
   """Face comparator service
     Args:
       _verbose - command line argument for debugging
   """
   
+  _check_on_proceed()
   image1 = raw_input('Input image1 path: ')
   image2 = raw_input('Input image2 path: ')
   face_dists = comparator.compare_files(image1, image2, _network, verbose=_verbose)
