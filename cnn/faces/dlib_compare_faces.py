@@ -153,10 +153,12 @@ def compare_files(_image1, _image2, _network, _verbose=False):
   descs1 = calculate_embedding(img1, _network)
   descs2 = calculate_embedding(img2, _network)
 
-  for (emb1, det1) in descs1:
-      for (emb2, det2) in descs2:
-          (dist, match_faces) = compare_embeddings(emb1, emb2)
-          face_dsts.append((dist, match_faces, det1, det2))
+  for desc1 in descs1:
+    (emb1, det1) = desc1
+    for desc2 in descs2:
+      (emb2, det2) = desc2
+      (dist, match_faces) = compare_embeddings(emb1, emb2)
+      face_dsts.append((dist, match_faces, det1, det2))
   
   return face_dsts
   
