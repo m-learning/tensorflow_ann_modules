@@ -12,7 +12,7 @@ from __future__ import print_function
 import argparse
 import traceback
 
-from cnn.faces import dlib_compare_faces as comparator 
+from cnn.faces import dlib_faces as comparator 
 
 
 def _parse_arguments():
