@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 from keras import backend as K
+
 from cnn.ocr.cnn_files import training_file
 
 
@@ -20,6 +21,10 @@ pool_size = 2
 rnn_size = 512
 time_dense_size = 32
 act = 'relu'
+
+words_per_epoch = 16000
+val_split = 0.2
+val_words = int(words_per_epoch * (val_split))
 
 _files = training_file()
 OUTPUT_DIR = _files.model_dir

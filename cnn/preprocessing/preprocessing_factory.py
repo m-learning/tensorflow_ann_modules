@@ -1,8 +1,7 @@
-# '''
+"""
 # Created on Sep 21, 2016
 #
 # @author: Levan Tsinadze
-# '''
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Contains a factory for building various models."""
+Contains a factory for building various models."""
 
 from __future__ import absolute_import
 from __future__ import division

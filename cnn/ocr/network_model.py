@@ -9,24 +9,15 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
-
 from keras.layers import Input, Dense, Activation
 from keras.layers import Reshape, Lambda, merge
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
 from keras.models import Model
-from keras.optimizers import SGD
 
-from cnn.ocr.network_config import OUTPUT_DIR
 from cnn.ocr.network_config import img_h, conv_num_filters, filter_size, pool_size, rnn_size, time_dense_size, act
 from cnn.ocr.network_config import init_imput_shape
 
-
-def init_sgd_optimizer():
-  """Initializes stochastic gradient descend optimizer"""
-  
-  return SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 
 def init_model(img_w, img_gen, ctc_lambda_func):
   """Initializes OCR network model
@@ -79,11 +70,3 @@ def init_model(img_w, img_gen, ctc_lambda_func):
   model = Model(input=[input_data, labels, input_length, label_length], output=[loss_out])
   
   return model
-
-def prepare_training(model, run_name, start_epoch, stop_epoch):
-  
-  sgd = init_sgd_optimizer()
-  model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
-  if start_epoch > 0:
-    weight_file = os.path.join(OUTPUT_DIR, os.path.join(run_name, 'weights%02d.h5' % (start_epoch - 1)))
-    model.load_weights(weight_file)

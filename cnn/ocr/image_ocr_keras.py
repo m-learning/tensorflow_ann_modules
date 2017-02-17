@@ -58,16 +58,16 @@ from keras.models import Model
 from keras.optimizers import SGD
 from keras.preprocessing import image
 from keras.utils.data_utils import get_file
+import matplotlib as mpl
+mpl.use('Agg')
 import pylab
 from scipy import ndimage
 
 import cairocffi as cairo
 from cnn.ocr.cnn_files import training_file
-import matplotlib as mpl
 import numpy as np
 
-
-mpl.use('Agg')
+pylab.ioff()
 
 WEIGHTS_FILE = 'keras_weights.h5'
 
@@ -76,7 +76,6 @@ OUTPUT_DIR = _files.model_dir
 weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
 
 np.random.seed(55)
-pylab.ioff()
 
 # this creates larger "blotches" of noise which look
 # more realistic than just adding gaussian noise
