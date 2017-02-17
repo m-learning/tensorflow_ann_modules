@@ -38,28 +38,27 @@ https://github.com/mbhenry/
 
 @author: Levan Tsinadze
 """
-import os
-import itertools
-import re
 import datetime
-import cairocffi as cairo
-import editdistance
-import numpy as np
-from scipy import ndimage
-import pylab
+import itertools
 from keras import backend as K
-from keras.layers.convolutional import Convolution2D, MaxPooling2D
+import keras.callbacks
 from keras.layers import Input, Dense, Activation
 from keras.layers import Reshape, Lambda, merge
-from keras.models import Model
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
+from keras.models import Model
 from keras.optimizers import SGD
-from keras.utils.data_utils import get_file
 from keras.preprocessing import image
-import keras.callbacks
+from keras.utils.data_utils import get_file
+import os
+import pylab
+import re
+from scipy import ndimage
 
+import cairocffi as cairo
 from cnn.ocr.cnn_files import training_file
-
+import editdistance
+import numpy as np
 
 
 WEIGHTS_FILE = 'keras_weights.h5'

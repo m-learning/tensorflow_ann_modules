@@ -120,7 +120,7 @@ def run_evaluation(_):
     # Print the summaries to screen.
     for name, value in names_to_values.iteritems():
       summary_name = 'eval/%s' % name
-      op = tf.scalar_summary(summary_name, value, collections=[])
+      op = tf.summary.scalar(summary_name, value, collections=[])
       op = tf.Print(op, [value], summary_name)
       tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
 

@@ -5,7 +5,6 @@ Utility module for training test and validation data files
 
 @author: Levan Tsinadze
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

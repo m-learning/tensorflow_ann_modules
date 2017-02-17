@@ -9,10 +9,10 @@ from __future__ import division
 from __future__ import print_function
 
 from collections import deque  # queue data structure. fast appends. and pops. replay memory
+import cv2  # read in pixel data
 import random  # random 
 
 import cnn.pong.pong_game as pong  # our class
-import cv2  # read in pixel data
 import numpy as np  # math
 import tensorflow as tf
 
@@ -80,7 +80,7 @@ def trainGraph(inp, out, sess):
     gt = tf.placeholder("float", [None])  # ground truth
 
     # action
-    action = tf.reduce_sum(tf.mul(out, argmax), reduction_indices=1)
+    action = tf.reduce_sum(tf.multiply(out, argmax), reduction_indices=1)
     # cost function we will reduce through backpropagation
     cost = tf.reduce_mean(tf.square(action - gt))
     # optimization fucntion to reduce our minimize our cost function 

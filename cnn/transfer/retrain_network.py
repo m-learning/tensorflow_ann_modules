@@ -56,7 +56,6 @@ from __future__ import division
 from __future__ import print_function
 
 from datetime import datetime
-
 from tensorflow.python.framework import graph_util
 from tensorflow.python.platform import gfile
 

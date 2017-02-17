@@ -133,8 +133,8 @@ class vgg_interface(object):
     
     input_tensor = tf.placeholder(tf.float32, shape=(None, height, width, 3), name='input_image')
     scaled_input_tensor = tf.scalar_mul((1.0 / 255), input_tensor)
-    scaled_input_tensor = tf.sub(scaled_input_tensor, 0.5)
-    scaled_input_tensor = tf.mul(scaled_input_tensor, 2.0)
+    scaled_input_tensor = tf.subtract(scaled_input_tensor, 0.5)
+    scaled_input_tensor = tf.multiply(scaled_input_tensor, 2.0)
     
     sess = tf.Session()
     arg_scope = vgg.vgg_arg_scope()

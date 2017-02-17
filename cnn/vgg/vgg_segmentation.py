@@ -14,11 +14,11 @@ import os
 import urllib2
 
 from cnn.datasets import imagenet
+from cnn.nets.config_parameters import train_and_eval_config
 from cnn.preprocessing import vgg_preprocessing
 from cnn.utils.file_utils import cnn_file_utils
 from cnn.vgg import vgg
 import cnn.vgg.vgg_constants as constants
-from cnn.nets.config_parameters import train_and_eval_config
 import numpy as np
 import tensorflow as tf
 

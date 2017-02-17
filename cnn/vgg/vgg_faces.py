@@ -13,14 +13,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import warnings
-
 from keras import backend as K
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.layers import Flatten, Dense, Input
 from keras.models import Model
 from keras.utils.data_utils import get_file
 from keras.utils.layer_utils import convert_all_kernels_in_model
+import warnings
 
 
 hidden_dim = 512
