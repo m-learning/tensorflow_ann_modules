@@ -396,7 +396,7 @@ class VizCallback(keras.callbacks.Callback):
         else:
             cols = 1
         for i in range(self.num_display_words):
-            pylab.subplot(self.num_display_words // cols, cols, i + 1)
+            #pylab.subplot(self.num_display_words // cols, cols, i + 1)
             if K.image_dim_ordering() == 'th':
                 the_input = word_batch['the_input'][i, 0, :, :]
             else:
