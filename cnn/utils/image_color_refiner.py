@@ -9,8 +9,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from PIL import Image
 import argparse
+
+from PIL import Image
 
 
 def validate_pixel(pixel):

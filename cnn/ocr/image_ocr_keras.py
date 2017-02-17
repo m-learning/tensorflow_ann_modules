@@ -40,6 +40,10 @@ https://github.com/mbhenry/
 """
 import datetime
 import itertools
+import os
+import re
+
+import editdistance
 from keras import backend as K
 import keras.callbacks
 from keras.layers import Input, Dense, Activation
@@ -50,14 +54,11 @@ from keras.models import Model
 from keras.optimizers import SGD
 from keras.preprocessing import image
 from keras.utils.data_utils import get_file
-import os
 import pylab
-import re
 from scipy import ndimage
 
 import cairocffi as cairo
 from cnn.ocr.cnn_files import training_file
-import editdistance
 import numpy as np
 
 
@@ -344,7 +345,7 @@ def decode_batch(test_func, word_batch):
     ret = []
     for j in range(out.shape[0]):
         out_best = list(np.argmax(out[j, 2:], 1))
-        out_best = [k for k, _ in itertools.groupby(out_best)]
+        out_best = [k for k, g in itertools.groupby(out_best)]
         # 26 is space, 27 is CTC blank char
         outstr = ''
         for c in out_best:
