@@ -69,7 +69,7 @@ OUTPUT_DIR = _files.model_dir
 weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
 
 np.random.seed(55)
-
+pylab.ioff()
 
 # this creates larger "blotches" of noise which look
 # more realistic than just adding gaussian noise
@@ -396,12 +396,12 @@ class VizCallback(keras.callbacks.Callback):
         else:
             cols = 1
         for i in range(self.num_display_words):
-            # pylab.subplot(self.num_display_words // cols, cols, i + 1)
+            pylab.subplot(self.num_display_words // cols, cols, i + 1)
             if K.image_dim_ordering() == 'th':
                 the_input = word_batch['the_input'][i, 0, :, :]
             else:
                 the_input = word_batch['the_input'][i, :, :, 0]
-            # pylab.imshow(the_input.T, cmap='Greys_r')
+            pylab.imshow(the_input.T, cmap='Greys_r')
             pylab.xlabel('Truth = \'%s\'\nDecoded = \'%s\'' % (word_batch['source_str'][i], res[i]))
         fig = pylab.gcf()
         fig.set_size_inches(10, 13)
