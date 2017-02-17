@@ -54,12 +54,16 @@ from keras.models import Model
 from keras.optimizers import SGD
 from keras.preprocessing import image
 from keras.utils.data_utils import get_file
+import matplotlib as mpl
+mpl.use('Agg')
 import pylab
 from scipy import ndimage
 
 import cairocffi as cairo
 from cnn.ocr.cnn_files import training_file
 import numpy as np
+
+
 
 
 WEIGHTS_FILE = 'keras_weights.h5'
