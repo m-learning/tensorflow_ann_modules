@@ -251,6 +251,15 @@ class cnn_file_utils(files_and_path_utils):
     
     return _data_dir
   
+  def data_file(self, _file_path):
+    """Joins data directory path to passed file path
+      Args:
+        _file_path - data file path
+      Returns:
+        joined data directory and data file path
+    """
+    return self.join_path(self.data_dir, _file_path)
+  
   def init_files_directory(self):
     """Gets or creates directory for trained parameters
       Returns:
@@ -270,6 +279,15 @@ class cnn_file_utils(files_and_path_utils):
     """
     
     return self.init_files_directory()
+  
+  def model_file(self, _file_path):
+    """Joins models directory path to passed file path
+      Args:
+        _file_path - model file path
+      Returns:
+        joined models directory and model file path
+    """
+    return self.join_path(self.model_dir, _file_path)
 
   def get_or_init_files_path(self):
     """Initializes trained files path

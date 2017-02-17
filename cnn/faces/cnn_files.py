@@ -9,8 +9,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from cnn.utils.file_utils import cnn_file_utils
 from cnn.faces.face_utils import GRAPH_FILE
+from cnn.utils.file_utils import cnn_file_utils
 
 
 class training_file(cnn_file_utils):
@@ -38,6 +38,4 @@ class training_file(cnn_file_utils):
       Returns:
         graph_path - file path for model's graph
     """
-    
-    graph_path = self.join_path(self.model_dir, GRAPH_FILE)
-    return graph_path
+    return self.join_path(self.model_dir, GRAPH_FILE)

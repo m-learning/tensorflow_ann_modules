@@ -22,7 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -74,11 +73,8 @@ def read_pairs(pairs_filename):
     
   pairs = []
   with open(pairs_filename, 'r') as f:
-      for line in f.readlines()[1:]:
-          pair = line.strip().split()
-          pairs.append(pair)
+    for line in f.readlines()[1:]:
+      pair = line.strip().split()
+      pairs.append(pair)
   
   return np.array(pairs)
-
-
-

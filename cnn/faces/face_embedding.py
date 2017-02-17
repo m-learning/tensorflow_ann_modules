@@ -22,7 +22,6 @@ import numpy as np
 import tensorflow as tf
 
 
-# Layer names
 def image_to_embedding(paths):
   
   embs = []
