@@ -9,10 +9,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from rnn.fmnist import speech_data
-from rnn.fmnist.speech_data import DataSet
 from rnn.fmnist import network_model as network
+from rnn.fmnist import speech_data
 from rnn.fmnist.rnn_files import training_file
+from rnn.fmnist.speech_data import DataSet
+
 
 learning_rate = 0.0001
 training_iters = 300000  # steps

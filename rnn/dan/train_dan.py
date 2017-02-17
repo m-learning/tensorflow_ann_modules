@@ -10,9 +10,9 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+from rnn.dan import datasets
 from rnn.dan import network_config as config
 from rnn.dan import network_model as network
-from rnn.dan import datasets
 from rnn.dan.rnn_files import training_file
 
 
