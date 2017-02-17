@@ -12,7 +12,6 @@ from __future__ import print_function
 from cnn.utils.file_utils import cnn_file_utils
 
 
-# Files and directory constant parameters
 class training_file(cnn_file_utils):
   """Files and directories for parameters (trained), 
     training, validation and test"""

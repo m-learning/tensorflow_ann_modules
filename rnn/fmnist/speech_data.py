@@ -11,21 +11,23 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from enum import Enum
-import matplotlib
-import numpy
 import os
 from random import shuffle
 import re
-import skimage.io  # scikit-image
 import sys
 import wave
 
+from enum import Enum
 import librosa
+import matplotlib
+import numpy
+import skimage.io  # scikit-image
+
 import numpy as np
 from rnn.fmnist.rnn_files import training_file 
 from six.moves import urllib
 from six.moves import xrange  # pylint: disable=redefined-builtin
+import tensorflow as tf
 
 
 # TODO! see https://github.com/pannous/caffe-speech-recognition for some data sources

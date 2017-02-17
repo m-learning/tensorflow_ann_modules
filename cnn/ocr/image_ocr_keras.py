@@ -38,6 +38,10 @@ https://github.com/mbhenry/
 
 @author: Levan Tsinadze
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import datetime
 import itertools
 import os
@@ -54,17 +58,16 @@ from keras.models import Model
 from keras.optimizers import SGD
 from keras.preprocessing import image
 from keras.utils.data_utils import get_file
-import matplotlib as mpl
-mpl.use('Agg')
 import pylab
 from scipy import ndimage
 
 import cairocffi as cairo
 from cnn.ocr.cnn_files import training_file
+import matplotlib as mpl
 import numpy as np
 
 
-
+mpl.use('Agg')
 
 WEIGHTS_FILE = 'keras_weights.h5'
 
@@ -349,7 +352,7 @@ def decode_batch(test_func, word_batch):
     ret = []
     for j in range(out.shape[0]):
         out_best = list(np.argmax(out[j, 2:], 1))
-        out_best = [k for k, g in itertools.groupby(out_best)]
+        out_best = [k for k, _ in itertools.groupby(out_best)]
         # 26 is space, 27 is CTC blank char
         outstr = ''
         for c in out_best:
