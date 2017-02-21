@@ -9,12 +9,12 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import argparse
 import collections
 import math
 
 from skimage import io
 
+from cnn.faces import dlib_flags as flags
 from cnn.faces.cnn_files import training_file
 import dlib
 
@@ -134,6 +134,22 @@ def compare_embeddings(emb1, emb2):
   match_faces = dist < threshold
   
   return (dist, match_faces)
+
+def _reshape_image(img):
+  """Improves image shape
+    Args:
+      img - image as tensor
+    Returns:
+      _reshaped - reshaped image tensor
+  """
+  
+  shp = img.shape
+  if len(shp) == 3 and shp[2] > 3:
+    _reshaped = img[:, :, :3].copy()
+  else:
+    _reshaped = img
+  
+  return _reshaped
 # Now process all the images
 def compare_files(_image1, _image2, _network, verbose=False):
   """Compares two faces from images
@@ -149,8 +165,8 @@ def compare_files(_image1, _image2, _network, verbose=False):
   
   if verbose:
     print("Processing files: {} {}".format(_image1, _image2))
-  img1 = io.imread(_image1)
-  img2 = io.imread(_image2)
+  img1 = _reshape_image(io.imread(_image1))
+  img2 = _reshape_image(io.imread(_image2))
 
   descs1 = calculate_embedding(img1, _network)
   descs2 = calculate_embedding(img2, _network)
@@ -163,34 +179,6 @@ def compare_files(_image1, _image2, _network, verbose=False):
       face_dsts.append((dist, match_faces, det1, det2))
   
   return face_dsts
-  
-def _parse_arguments():
-  """Parses command line arguments
-    Returns:
-      args - parsed command line arguments
-  """
-  parser = argparse.ArgumentParser()
-  parser.add_argument('--image1',
-                      type=str,
-                      help='Path to first image')
-  parser.add_argument('--image2',
-                      type=str,
-                      help='Path to second image')
-  parser.add_argument('--threshold',
-                      type=float,
-                      default=0.6,
-                      help='Threshold for Euclidean distance between face embedding vectors')
-  parser.add_argument('--include_gui',
-                      dest='include_gui',
-                      action='store_true',
-                      help='Include top layers')
-  parser.add_argument('--verbose',
-                      dest='verbose',
-                      action='store_true',
-                      help='Print additional information')
-  (args, _) = parser.parse_known_args()
-  
-  return args
 
 def print_faces(face_dists):
   """Prints compared results
@@ -204,7 +192,7 @@ def print_faces(face_dists):
 if __name__ == '__main__':
   """Compare face images"""
   
-  args = _parse_arguments()
+  args = flags.parse_arguments()
   if args.image1 and args.image2:
     global threshold
     threshold = args.threshold

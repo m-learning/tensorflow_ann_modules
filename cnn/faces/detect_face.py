@@ -33,7 +33,6 @@ import numpy as np
 import tensorflow as tf
 
 
-# from math import floor
 def layer(op):
   """Decorator for composable network layers."""
 

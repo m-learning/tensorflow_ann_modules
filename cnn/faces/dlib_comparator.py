@@ -12,7 +12,7 @@ from __future__ import print_function
 import argparse
 import traceback
 
-from cnn.faces import dlib_faces as comparator 
+from cnn.faces import dlib_faces as comparator
 
 
 def _parse_arguments():
@@ -40,7 +40,7 @@ def _parse_arguments():
 def _check_on_proceed():
   """Validates application to proceed
     Returns:
-      proc_flag - validation flag
+      proc_flag - validation result
   """
   
   _proc = raw_input('Would you like to proceed [Y/n]: ')
@@ -57,7 +57,7 @@ def _run_service(_verbose=False):
     Args:
       _verbose - command line argument for debugging
     Returns:
-     proc_flag - validation flag
+     proc_flag - validation result
   """
   
   image1 = raw_input('Input image1 path: ')
