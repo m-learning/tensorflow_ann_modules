@@ -32,6 +32,16 @@ _files = training_file()
 OUTPUT_DIR = _files.model_dir
 DATA_DIR = _files.data_dir
 
+def init_conv_to_rnn_dims(img_w):
+  """Initializes dimentions for RNN conversion
+    Args:
+      img_w
+    Returns:
+      generated dimensions
+  """
+  
+  return (img_w // (pool_size ** 2), (img_h // (pool_size ** 2)) * conv_num_filters)
+
 def init_input_shape(img_w):
   """Initializes image input shape
     Args:

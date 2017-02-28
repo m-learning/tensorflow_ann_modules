@@ -15,7 +15,7 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
 from keras.models import Model
 
-from cnn.ocr.network_config import img_h, conv_num_filters, filter_size, pool_size, \
+from cnn.ocr.network_config import init_conv_to_rnn_dims, conv_num_filters, filter_size, pool_size, \
                                    rnn_size, time_dense_size, act, init_input_shape
 
 
@@ -39,7 +39,7 @@ def init_model(img_w, img_gen, ctc_lambda_func):
                         activation=act, init='he_normal', name='conv2')(inner)
   inner = MaxPooling2D(pool_size=(pool_size, pool_size), name='max2')(inner)
 
-  conv_to_rnn_dims = (img_w // (pool_size ** 2), (img_h // (pool_size ** 2)) * conv_num_filters)
+  conv_to_rnn_dims = init_conv_to_rnn_dims(img_w)
   inner = Reshape(target_shape=conv_to_rnn_dims, name='reshape')(inner)
 
   # cuts down input size going into RNN:

@@ -23,7 +23,6 @@ from cnn.ocr.network_config import words_per_epoch, val_words
 
 def init_sgd_optimizer():
   """Initializes stochastic gradient descend optimizer"""
-  
   return SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 
 def prepare_training(model, train_parameters):
