@@ -85,7 +85,6 @@ def init_training_model(img_w):
   # Keras doesn't currently support loss funcs with extra parameters
   # so CTC loss is implemented in a lambda layer
   loss_out = Lambda(ctc_lambda_func, output_shape=(1,), name='ctc')([y_pred, labels, input_length, label_length])
-
   # clipnorm seems to speeds up convergence
   model = Model(input=[input_data, labels, input_length, label_length], output=[loss_out])
   

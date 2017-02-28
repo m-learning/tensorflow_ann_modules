@@ -16,6 +16,7 @@ from keras.optimizers import SGD
 
 from cnn.ocr import network_model as network
 from cnn.ocr import training_flags as flags
+from cnn.ocr import network_config as config 
 from cnn.ocr.image_ocr_keras import VizCallback
 from cnn.ocr.network_config import OUTPUT_DIR
 from cnn.ocr.network_config import words_per_epoch, val_words
@@ -82,6 +83,7 @@ if __name__ == '__main__':
   
   
   args = flags.parse_arguments()
+  config.download_and_save()
   train_network(args.run_name, args.start_epoch, args.stop_epoch, args.img_width)
   # increase to wider images and start at epoch 20. The learned weights are reloaded
   train_network(args.run_name, args.stop_epoch, args.stop_second_phase, args.second_phase_width)

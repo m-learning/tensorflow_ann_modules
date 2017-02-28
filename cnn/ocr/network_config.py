@@ -9,7 +9,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
+import shutil
+
 from keras import backend as K
+from keras.utils.data_utils import get_file
 
 from cnn.ocr.cnn_files import training_file
 from cnn.ocr.image_ocr_keras import TextImageGenerator
@@ -27,9 +31,15 @@ words_per_epoch = 16000
 val_split = 0.2
 val_words = int(words_per_epoch * (val_split))
 
+# Texts for OCR training
+MONO_TEXT = 'wordlist_mono_clean.txt'
+BT_TEXT = 'wordlist_bi_clean.txt'
+
 _files = training_file()
 OUTPUT_DIR = _files.model_dir
 DATA_DIR = _files.data_dir
+MONO_DATA_FILE = _files.data_file(MONO_TEXT)
+BI_DATA_FILE = _files.data_file(BT_TEXT)
 
 def init_conv_to_rnn_dims(img_w):
   """Initializes dimentions for RNN conversion
@@ -63,8 +73,8 @@ def init_img_gen(img_w):
     Returns:
       img_gen - image generator object
   """
-  img_gen = TextImageGenerator(monogram_file=_files.data_file('wordlist_mono_clean.txt'),
-                               bigram_file=_files.data_file('wordlist_bi_clean.txt'),
+  img_gen = TextImageGenerator(monogram_file=MONO_DATA_FILE,
+                               bigram_file=BI_DATA_FILE,
                                minibatch_size=32,
                                img_w=img_w,
                                img_h=img_h,
@@ -87,3 +97,16 @@ def ctc_lambda_func(args):
   result_fnc = K.ctc_batch_cost(labels, y_pred, input_length, label_length)
   
   return result_fnc
+
+def download_and_save():
+  """Downloads and saves training files"""
+  
+  if not os.path.exists(MONO_DATA_FILE):
+    fdir = os.path.dirname(get_file('wordlists.tgz',
+                                    origin='http://www.isosemi.com/datasets/wordlists.tgz',
+                                    untar=True))
+    mono_path = _files.join_path(fdir, MONO_TEXT)
+    shutil.copy2(mono_path, DATA_DIR)
+    if not os.path.exists(BI_DATA_FILE):
+      bi_path = _files.join_path(fdir, BT_TEXT)
+      shutil.copy2(bi_path, DATA_DIR)
