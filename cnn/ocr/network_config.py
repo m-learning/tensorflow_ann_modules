@@ -36,6 +36,7 @@ val_words = int(words_per_epoch * (val_split))
 MONO_TEXT = 'wordlist_mono_clean.txt'
 BT_TEXT = 'wordlist_bi_clean.txt'
 
+# files and folder paths
 _files = training_file()
 OUTPUT_DIR = _files.model_dir
 DATA_DIR = _files.data_dir

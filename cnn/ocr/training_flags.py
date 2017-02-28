@@ -12,8 +12,9 @@ from __future__ import print_function
 import argparse
 import datetime
 
-import matplotlib as mpl
 import pylab
+
+import matplotlib as mpl
 
 
 mpl.use('Agg')
@@ -49,6 +50,13 @@ def parse_arguments():
                       type=str,
                       default=datetime.datetime.now().strftime('%Y:%m:%d:%H:%M:%S'),
                       help='Training run name')
+  parser.add_argument('--fonts',
+                      action='append',
+                      type=str,
+                      help='Fonts for training')
+  parser.add_argument('--major_font',
+                      type=str,
+                      help='Major font to use')
   (args, _) = parser.parse_known_args()
   
   return args

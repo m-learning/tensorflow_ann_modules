@@ -75,7 +75,7 @@ _files = training_file()
 OUTPUT_DIR = _files.model_dir
 IMG_DIR = _files.join_and_init_path(_files.data_root, 'images')
 weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
-_fonts = ['BPG Arial', 'BPG Glaho', '3D Unicode']
+_fonts = ['BPG Arial', 'BPG Glaho', '3D Unicode', 'Sylfaen', 'Arial GEO']
 
 np.random.seed(55)
 
@@ -109,7 +109,7 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
                                      np.random.choice([cairo.FONT_WEIGHT_BOLD, cairo.FONT_WEIGHT_NORMAL]))
         else:
             #context.select_font_face('Courier', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-            context.select_font_face('BPG Glaho', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            context.select_font_face('Sylfaen', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         context.set_font_size(25)
         box = context.text_extents(text)
         border_w_h = (4, 4)
