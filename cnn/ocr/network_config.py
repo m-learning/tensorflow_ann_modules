@@ -11,7 +11,6 @@ from __future__ import print_function
 
 from keras import backend as K
 
-from cnn.ocr import network_model as network
 from cnn.ocr.cnn_files import training_file
 from cnn.ocr.image_ocr_keras import TextImageGenerator
 
@@ -88,22 +87,3 @@ def ctc_lambda_func(args):
   result_fnc = K.ctc_batch_cost(labels, y_pred, input_length, label_length)
   
   return result_fnc
-
-def init_network_parameters(img_w):
-  """Initializes network parameters
-    Args:
-      img_w - image width
-    Returns:
-      tuple of -
-        model parameters - tuple of
-          model - network model
-          input_data - network input data
-        training parameters - tuple of
-          y_pred - prediction label
-          img_gen - OCR image generator
-  """
-  
-  img_gen = init_img_gen(img_w)
-  (input_data, model, y_pred) = network.init_model(img_w, img_gen, ctc_lambda_func)
-  
-  return ((model, input_data), (y_pred, img_gen))

@@ -14,7 +14,6 @@ import os
 from keras import backend as K
 from keras.optimizers import SGD
 
-from cnn.ocr import network_config as config
 from cnn.ocr import training_flags as flags
 from cnn.ocr.image_ocr_keras import VizCallback
 from cnn.ocr.network_config import OUTPUT_DIR
@@ -71,7 +70,7 @@ def train_network(run_name, start_epoch, stop_epoch, img_w):
       img_w - image width
   """
   
-  network_parameters = config.init_network_parameters(img_w)
+  network_parameters = flags.init_network_parameters(img_w)
   train_parameters = (run_name, start_epoch, stop_epoch)
   train_model(network_parameters, train_parameters)
   
