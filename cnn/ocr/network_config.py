@@ -49,7 +49,6 @@ def init_conv_to_rnn_dims(img_w):
     Returns:
       generated dimensions
   """
-  
   return (img_w // (pool_size ** 2), (img_h // (pool_size ** 2)) * conv_num_filters)
 
 def init_input_shape(img_w):
@@ -74,6 +73,7 @@ def init_img_gen(img_w):
     Returns:
       img_gen - image generator object
   """
+  
   img_gen = TextImageGenerator(monogram_file=MONO_DATA_FILE,
                                bigram_file=BI_DATA_FILE,
                                minibatch_size=32,

@@ -370,6 +370,7 @@ class VizCallback(keras.callbacks.Callback):
         self.test_func = test_func
         self.output_dir = os.path.join(OUTPUT_DIR, run_name)
         self.img_dir = os.path.join(IMG_DIR, run_name)
+        _files.join_and_init_path(self.img_dir)
         self.text_img_gen = text_img_gen
         self.num_display_words = num_display_words
         if not os.path.exists(self.output_dir):

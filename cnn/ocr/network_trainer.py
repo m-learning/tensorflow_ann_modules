@@ -29,7 +29,9 @@ def init_sgd_optimizer():
 def prepare_training(model, train_parameters):
   """Prepares model for training and loads weighs from file
     model - network model
-    train_parameters - training parameters
+    train_parameters - tuple of
+      run_name - training run name
+      start_epoch - training start epoch
   """
   
   (run_name, start_epoch, _) = train_parameters
