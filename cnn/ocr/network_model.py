@@ -17,22 +17,21 @@ from keras.models import Model
 
 from cnn.ocr.network_config import conv_num_filters, filter_size, pool_size, \
                                    rnn_size, time_dense_size, act
-from cnn.ocr.network_config import init_conv_to_rnn_dims, init_input_shape
+from cnn.ocr.network_config import init_img_gen, init_conv_to_rnn_dims, init_input_shape, \
+                                   ctc_lambda_func
 
 
-def init_model(img_w, img_gen, ctc_lambda_func):
+def init_model(img_w, output_size=28):
   """Initializes OCR network model
     Args:
       img_w - input image width
       img_get - image generator
-      ctc_lambda_func - internal Keras loss function
     Returns:
       tuple of -
         input_data - model input data
-        model - network model
-        y_pred - prediction labels
-  """
-  
+        network_model - network model
+  """ 
+
   input_shape = init_input_shape(img_w)
   
   input_data = Input(name='the_input', shape=input_shape, dtype='float32')
@@ -58,9 +57,26 @@ def init_model(img_w, img_gen, ctc_lambda_func):
   gru_2b = GRU(rnn_size, return_sequences=True, go_backwards=True, init='he_normal', name='gru2_b')(gru1_merged)
 
   # transforms RNN output to character activations:
-  inner = Dense(img_gen.get_output_size(), init='he_normal',
-                name='dense2')(merge([gru_2, gru_2b], mode='concat'))
-  y_pred = Activation('softmax', name='softmax')(inner)
+  inner = Dense(output_size, init='he_normal', name='dense2')(merge([gru_2, gru_2b], mode='concat'))
+  network_model = Activation('softmax', name='softmax')(inner)
+  
+  return (input_data, network_model) 
+
+def init_training_model(img_w):
+  """Initializes OCR network model
+    Args:
+      img_w - input image width
+      img_get - image generator
+    Returns:
+      tuple of -
+        input_data - model input data
+        model - network model
+        y_pred - prediction model
+  """
+  
+  img_gen = init_img_gen(img_w)
+  output_size = img_gen.get_output_size()
+  (input_data, y_pred) = init_model(img_w, output_size=output_size)
   Model(input=[input_data], output=y_pred).summary()
 
   labels = Input(name='the_labels', shape=[img_gen.absolute_max_string_len], dtype='float32')
@@ -73,4 +89,4 @@ def init_model(img_w, img_gen, ctc_lambda_func):
   # clipnorm seems to speeds up convergence
   model = Model(input=[input_data, labels, input_length, label_length], output=[loss_out])
   
-  return (input_data, model, y_pred)
+  return ((y_pred, input_data), (model, img_gen))

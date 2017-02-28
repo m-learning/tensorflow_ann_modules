@@ -14,6 +14,7 @@ import os
 from keras import backend as K
 from keras.optimizers import SGD
 
+from cnn.ocr import network_model as network
 from cnn.ocr import training_flags as flags
 from cnn.ocr.image_ocr_keras import VizCallback
 from cnn.ocr.network_config import OUTPUT_DIR
@@ -51,8 +52,10 @@ def train_model(network_parameters, train_parameters):
         stop_epoch - epoch to stop
   """
   
-  ((model, input_data), (y_pred, img_gen)) = network_parameters
+  ((y_pred, input_data), (model, img_gen)) = network_parameters
   (run_name, start_epoch, stop_epoch) = train_parameters
+  sgd = init_sgd_optimizer()
+  model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
   test_func = K.function([input_data], [y_pred])
 
   viz_cb = VizCallback(run_name, test_func, img_gen.next_val())
@@ -70,7 +73,7 @@ def train_network(run_name, start_epoch, stop_epoch, img_w):
       img_w - image width
   """
   
-  network_parameters = flags.init_network_parameters(img_w)
+  network_parameters = network.init_training_model(img_w)
   train_parameters = (run_name, start_epoch, stop_epoch)
   train_model(network_parameters, train_parameters)
   
