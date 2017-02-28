@@ -98,15 +98,30 @@ def ctc_lambda_func(args):
   
   return result_fnc
 
-def download_and_save():
-  """Downloads and saves training files"""
+def _validate_and_download_bigrams(fdir):
+  """Validates and downloads bigram files"""
   
-  if not os.path.exists(MONO_DATA_FILE):
+  if os.path.exists(BI_DATA_FILE):
+    print('Bi - gram files are prepared')
+  else:
+    print('Coping bi - gram files')
+    bi_path = _files.join_path(fdir, BT_TEXT)
+    shutil.copy2(bi_path, DATA_DIR)
+    
+def _download_and_sava_text_files():
+  """Downloads and saves training files"""
+  if os.path.exists(MONO_DATA_FILE):
+    print('Preparing training files')
+  else:
+    print('Downloading training files')
     fdir = os.path.dirname(get_file('wordlists.tgz',
                                     origin='http://www.isosemi.com/datasets/wordlists.tgz',
                                     untar=True))
     mono_path = _files.join_path(fdir, MONO_TEXT)
     shutil.copy2(mono_path, DATA_DIR)
-    if not os.path.exists(BI_DATA_FILE):
-      bi_path = _files.join_path(fdir, BT_TEXT)
-      shutil.copy2(bi_path, DATA_DIR)
+    _validate_and_download_bigrams(fdir)
+
+def download_and_save():
+  """Downloads and saves training files"""
+  _download_and_sava_text_files()
+  print('training files for mono - gram and bi - gram are ready')

@@ -28,7 +28,7 @@ def init_model(img_w, output_size=28):
       img_get - image generator
     Returns:
       tuple of -
-        input_data - model input data
+        input_data - network model input data
         network_model - network model
   """ 
 

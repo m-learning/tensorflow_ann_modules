@@ -45,7 +45,7 @@ def train_model(network_parameters, train_parameters):
       network_parameters - tuple of
         model - network model
         input_data - model input data
-        y_pred - prediction labels
+        y_pred - prediction model
         img_gen - image generator
       train_parameters - tuple of
         run_name - name of epochs
