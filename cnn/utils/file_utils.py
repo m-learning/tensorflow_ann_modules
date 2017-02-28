@@ -209,6 +209,14 @@ class cnn_file_utils(files_and_path_utils):
     """
     return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
   
+  @property
+  def data_root(self):
+    """Root directory for datas
+      Returns:
+        datas root directory
+    """
+    return self.get_data_general_directory()
+  
   def get_archives_directory(self):
     """Gets training set archives directory
       Args:

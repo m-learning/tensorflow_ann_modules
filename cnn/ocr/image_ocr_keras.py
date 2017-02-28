@@ -73,6 +73,7 @@ WEIGHTS_FILE = 'keras_weights.h5'
 
 _files = training_file()
 OUTPUT_DIR = _files.model_dir
+IMG_DIR = _files.join_and_init_path(_files.data_root, 'images')
 weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
 
 np.random.seed(55)
@@ -367,8 +368,8 @@ class VizCallback(keras.callbacks.Callback):
 
     def __init__(self, run_name, test_func, text_img_gen, num_display_words=6):
         self.test_func = test_func
-        self.output_dir = os.path.join(
-            OUTPUT_DIR, run_name)
+        self.output_dir = os.path.join(OUTPUT_DIR, run_name)
+        self.img_dir = os.path.join(IMG_DIR, run_name)
         self.text_img_gen = text_img_gen
         self.num_display_words = num_display_words
         if not os.path.exists(self.output_dir):
@@ -411,7 +412,7 @@ class VizCallback(keras.callbacks.Callback):
             pylab.xlabel('Truth = \'%s\'\nDecoded = \'%s\'' % (word_batch['source_str'][i], res[i]))
         fig = pylab.gcf()
         fig.set_size_inches(10, 13)
-        pylab.savefig(os.path.join(self.output_dir, 'e%02d.png' % (epoch)))
+        pylab.savefig(os.path.join(self.img_dir, 'e%02d.png' % (epoch)))
         pylab.close()
 
 

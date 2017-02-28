@@ -55,8 +55,7 @@ def train_model(network_parameters, train_parameters):
   
   ((y_pred, input_data), (model, img_gen)) = network_parameters
   (run_name, start_epoch, stop_epoch) = train_parameters
-  sgd = init_sgd_optimizer()
-  model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
+  prepare_training(model, train_parameters)
   test_func = K.function([input_data], [y_pred])
 
   viz_cb = VizCallback(run_name, test_func, img_gen.next_val())

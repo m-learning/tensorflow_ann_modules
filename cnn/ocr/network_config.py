@@ -19,6 +19,7 @@ from cnn.ocr.cnn_files import training_file
 from cnn.ocr.image_ocr_keras import TextImageGenerator
 
 
+# static training parameters
 img_h = 64
 conv_num_filters = 16
 filter_size = 3

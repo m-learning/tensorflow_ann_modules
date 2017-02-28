@@ -55,9 +55,9 @@ def init_model(img_w, output_size=28):
   gru1_merged = merge([gru_1, gru_1b], mode='sum')
   gru_2 = GRU(rnn_size, return_sequences=True, init='he_normal', name='gru2')(gru1_merged)
   gru_2b = GRU(rnn_size, return_sequences=True, go_backwards=True, init='he_normal', name='gru2_b')(gru1_merged)
-
+  gru2_merged = merge([gru_2, gru_2b], mode='concat')
   # transforms RNN output to character activations:
-  inner = Dense(output_size, init='he_normal', name='dense2')(merge([gru_2, gru_2b], mode='concat'))
+  inner = Dense(output_size, init='he_normal', name='dense2')(gru2_merged)
   network_model = Activation('softmax', name='softmax')(inner)
   
   return (input_data, network_model) 
