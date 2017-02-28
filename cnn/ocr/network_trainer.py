@@ -77,7 +77,7 @@ def train_network(run_name, start_epoch, stop_epoch, img_w):
   train_model(network_parameters, train_parameters)
   
 if __name__ == '__main__':
-  """Train OCR model"""
+  """Train OCR model on custom images"""
   
   
   args = flags.parse_arguments()

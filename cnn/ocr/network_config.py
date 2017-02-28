@@ -94,8 +94,6 @@ def init_network_parameters(img_w):
   """
   
   img_gen = init_img_gen(img_w)
-  (model, y_pred) = network.init_model(img_w, img_gen, ctc_lambda_func)
-  input_shape = init_input_shape(img_w)
-  input_data = network.init_input_data(input_shape)
+  (input_data, model, y_pred) = network.init_model(img_w, img_gen, ctc_lambda_func)
   
   return ((model, input_data), (y_pred, img_gen))

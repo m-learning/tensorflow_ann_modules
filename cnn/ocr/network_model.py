@@ -15,8 +15,8 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
 from keras.models import Model
 
-from cnn.ocr.network_config import img_h, conv_num_filters, filter_size, pool_size, rnn_size, time_dense_size, act
-from cnn.ocr.network_config import init_imput_shape
+from cnn.ocr.network_config import img_h, conv_num_filters, filter_size, pool_size, \
+                                   rnn_size, time_dense_size, act, init_input_shape
 
 
 def init_model(img_w, img_gen, ctc_lambda_func):
@@ -29,7 +29,7 @@ def init_model(img_w, img_gen, ctc_lambda_func):
       model - network model
   """
   
-  input_shape = init_imput_shape(img_w)
+  input_shape = init_input_shape(img_w)
   
   input_data = Input(name='the_input', shape=input_shape, dtype='float32')
   inner = Convolution2D(conv_num_filters, filter_size, filter_size, border_mode='same',
@@ -69,13 +69,4 @@ def init_model(img_w, img_gen, ctc_lambda_func):
   # clipnorm seems to speeds up convergence
   model = Model(input=[input_data, labels, input_length, label_length], output=[loss_out])
   
-  return (model, y_pred)
-
-def init_input_data(input_shape):
-  """Initializes network input by shape
-    Args:
-      input_shape - shape of input
-    Returns:
-      network input
-  """
-  return Input(name='the_input', shape=input_shape, dtype='float32')
+  return (input_data, model, y_pred)
