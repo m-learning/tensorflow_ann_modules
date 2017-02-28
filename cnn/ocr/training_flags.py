@@ -12,6 +12,12 @@ from __future__ import print_function
 import argparse
 import datetime
 
+import matplotlib as mpl
+import pylab
+
+
+mpl.use('Agg')
+pylab.ioff()
 
 def parse_arguments():
   """Parses command line arguments
