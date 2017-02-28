@@ -108,7 +108,8 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
             context.select_font_face(np.random.choice(fonts), cairo.FONT_SLANT_NORMAL,
                                      np.random.choice([cairo.FONT_WEIGHT_BOLD, cairo.FONT_WEIGHT_NORMAL]))
         else:
-            context.select_font_face('Courier', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            #context.select_font_face('Courier', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            context.select_font_face('BPG Glaho', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         context.set_font_size(25)
         box = context.text_extents(text)
         border_w_h = (4, 4)
