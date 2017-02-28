@@ -80,7 +80,7 @@ def ctc_lambda_func(args):
       result_fnc - result function
   """
  
-  y_pred, labels, input_length, label_length = args
+  (y_pred, labels, input_length, label_length) = args
   # the 2 is critical here since the first couple outputs of the RNN
   # tend to be garbage:
   y_pred = y_pred[:, 2:, :]

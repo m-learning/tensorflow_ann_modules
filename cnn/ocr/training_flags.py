@@ -45,6 +45,10 @@ def parse_arguments():
                       type=int,
                       default=128,
                       help='Input image width')
+  parser.add_argument('--second_phase_width',
+                      type=int,
+                      default=512,
+                      help='Input image width for seconf phase of training')
   parser.add_argument('--start_epoch',
                       type=int,
                       default=0,
@@ -53,7 +57,11 @@ def parse_arguments():
                       type=int,
                       default=20,
                       help='Training stop epoch')
-  parser.add_argument('--Run name',
+  parser.add_argument('--stop_second_phase',
+                      type=int,
+                      default=25,
+                      help='Training stop epoch for seconf phase')
+  parser.add_argument('--run name',
                       type=str,
                       default=datetime.datetime.now().strftime('%Y:%m:%d:%H:%M:%S'),
                       help='Training run name')
