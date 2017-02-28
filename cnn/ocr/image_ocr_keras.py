@@ -75,6 +75,7 @@ _files = training_file()
 OUTPUT_DIR = _files.model_dir
 IMG_DIR = _files.join_and_init_path(_files.data_root, 'images')
 weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
+_fonts = ['BPG Arial', 'BPG Glaho', '3D Unicode']
 
 np.random.seed(55)
 
@@ -102,7 +103,8 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
         context.paint()
         # this font list works in Centos 7
         if multi_fonts:
-            fonts = ['Century Schoolbook', 'Courier', 'STIX', 'URW Chancery L', 'FreeMono']
+            #fonts = ['Century Schoolbook', 'Courier', 'STIX', 'URW Chancery L', 'FreeMono']
+            fonts = _fonts
             context.select_font_face(np.random.choice(fonts), cairo.FONT_SLANT_NORMAL,
                                      np.random.choice([cairo.FONT_WEIGHT_BOLD, cairo.FONT_WEIGHT_NORMAL]))
         else:
