@@ -11,7 +11,9 @@ from __future__ import print_function
 
 from keras import backend as K
 
+from cnn.ocr import network_model as network
 from cnn.ocr.cnn_files import training_file
+from cnn.ocr.image_ocr_keras import TextImageGenerator
 
 
 img_h = 64
@@ -28,8 +30,9 @@ val_words = int(words_per_epoch * (val_split))
 
 _files = training_file()
 OUTPUT_DIR = _files.model_dir
+DATA_DIR = _files.data_dir
 
-def init_imput_shape(img_w):
+def init_input_shape(img_w):
   """Initializes image input shape
     Args:
       img_w - image width
@@ -42,4 +45,57 @@ def init_imput_shape(img_w):
   else:
     input_shape = (img_w, img_h, 1)
     
-  return input_shape  
+  return input_shape
+
+def init_img_gen(img_w):
+  """Image generator from text and words
+    Args:
+      img_w - image width
+    Returns:
+      img_gen - image generator object
+  """
+  img_gen = TextImageGenerator(monogram_file=_files.data_file('wordlist_mono_clean.txt'),
+                               bigram_file=_files.data_file('wordlist_bi_clean.txt'),
+                               minibatch_size=32,
+                               img_w=img_w,
+                               img_h=img_h,
+                               downsample_factor=(pool_size ** 2),
+                               val_split=words_per_epoch - val_words)
+  return img_gen
+
+def ctc_lambda_func(args):
+  """Lambda for CTC input
+    Args:
+      args - arguments
+    Returns:
+      result_fnc - result function
+  """
+ 
+  y_pred, labels, input_length, label_length = args
+  # the 2 is critical here since the first couple outputs of the RNN
+  # tend to be garbage:
+  y_pred = y_pred[:, 2:, :]
+  result_fnc = K.ctc_batch_cost(labels, y_pred, input_length, label_length)
+  
+  return result_fnc
+
+def init_network_parameters(img_w):
+  """Initializes network parameters
+    Args:
+      img_w - image width
+    Returns:
+      tuple of -
+        model parameters - tuple of
+          model - network model
+          input_data - network input data
+        training parameters - tuple of
+          y_pred - prediction label
+          img_gen - OCR image generator
+  """
+  
+  img_gen = init_img_gen(img_w)
+  (model, y_pred) = network.init_model(img_w, img_gen, ctc_lambda_func)
+  input_shape = init_input_shape(img_w)
+  input_data = network.init_input_data(input_shape)
+  
+  return ((model, input_data), (y_pred, img_gen))

@@ -69,4 +69,13 @@ def init_model(img_w, img_gen, ctc_lambda_func):
   # clipnorm seems to speeds up convergence
   model = Model(input=[input_data, labels, input_length, label_length], output=[loss_out])
   
-  return model
+  return (model, y_pred)
+
+def init_input_data(input_shape):
+  """Initializes network input by shape
+    Args:
+      input_shape - shape of input
+    Returns:
+      network input
+  """
+  return Input(name='the_input', shape=input_shape, dtype='float32')
