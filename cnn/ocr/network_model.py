@@ -27,7 +27,10 @@ def init_model(img_w, img_gen, ctc_lambda_func):
       img_get - image generator
       ctc_lambda_func - internal Keras loss function
     Returns:
-      model - network model
+      tuple of -
+        input_data - model input data
+        model - network model
+        y_pred - prediction labels
   """
   
   input_shape = init_input_shape(img_w)

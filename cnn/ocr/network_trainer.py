@@ -25,7 +25,7 @@ def init_sgd_optimizer():
   return SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 
 def prepare_training(model, train_parameters):
-  """Prepares model for training
+  """Prepares model for training and loads weighs from file
     model - network model
     train_parameters - training parameters
   """

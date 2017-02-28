@@ -61,7 +61,7 @@ def parse_arguments():
                       type=int,
                       default=25,
                       help='Training stop epoch for seconf phase')
-  parser.add_argument('--run name',
+  parser.add_argument('--run_name',
                       type=str,
                       default=datetime.datetime.now().strftime('%Y:%m:%d:%H:%M:%S'),
                       help='Training run name')
