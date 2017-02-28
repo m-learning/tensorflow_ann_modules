@@ -15,8 +15,9 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
 from keras.models import Model
 
-from cnn.ocr.network_config import init_conv_to_rnn_dims, conv_num_filters, filter_size, pool_size, \
-                                   rnn_size, time_dense_size, act, init_input_shape
+from cnn.ocr.network_config import conv_num_filters, filter_size, pool_size, \
+                                   rnn_size, time_dense_size, act
+from cnn.ocr.network_config import init_conv_to_rnn_dims, init_input_shape
 
 
 def init_model(img_w, img_gen, ctc_lambda_func):
