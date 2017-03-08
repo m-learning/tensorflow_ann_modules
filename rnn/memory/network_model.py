@@ -9,10 +9,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from keras.models import Sequential
-from keras.layers.embeddings import Embedding
 from keras.layers import Activation, Dense, Merge, Permute, Dropout
 from keras.layers import LSTM
+from keras.layers.embeddings import Embedding
+from keras.models import Sequential
+
 
 def _input_encoder_m(vocab_size, story_maxlen):
   """Embed the input sequence into a sequence of vectors

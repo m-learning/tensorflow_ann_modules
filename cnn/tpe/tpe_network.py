@@ -11,10 +11,8 @@ from __future__ import print_function
 
 from keras.layers import Dense, Lambda, Input, merge
 from keras.models import Model, Sequential
-# from keras.optimizers import SGD
 
 import keras.backend as K
-
 import numpy as np
 
 
@@ -33,10 +31,12 @@ def triplet_merge(inputs):
     Args:
       inputs - input triplet
     Returns:
-      merged value
+      merged_result - merged value
   """
   (a, p, n) = inputs
-  return K.sum(a * (p - n), axis=1)
+  merged_result = K.sum(a * (p - n), axis=1)
+  
+  return merged_result
 
 
 def triplet_merge_shape(input_shapes):
@@ -48,8 +48,8 @@ def triplet_merge_shape(input_shapes):
   """
   return (input_shapes[0][0], 1)
 
-def build_tpe(n_in, n_out, W_pca=None):
-  """Builds TPE model
+def init_tpe(n_in, n_out, W_pca=None):
+  """Initializes TPE model
     Args:
       n_in - number of inputs
       n_out - number of outputs
@@ -59,7 +59,7 @@ def build_tpe(n_in, n_out, W_pca=None):
         model - network model
         predict - prediction function
   """
-    
+  
   a = Input(shape=(n_in,))
   p = Input(shape=(n_in,))
   n = Input(shape=(n_in,))
@@ -79,7 +79,22 @@ def build_tpe(n_in, n_out, W_pca=None):
 
   model = Model(input=[a, p, n], output=e)
   predict = Model(input=a, output=a_emb)
+  
+  return (model, predict)
 
+def build_tpe(n_in, n_out, W_pca=None):
+  """Builds TPE model
+    Args:
+      n_in - number of inputs
+      n_out - number of outputs
+      w_pca - network weights
+    Returns:
+      tuple of -
+        model - network model
+        predict - prediction function
+  """
+    
+  (model, predict) = init_tpe(n_in, n_out, W_pca=W_pca)
   model.compile(loss=triplet_loss, optimizer='rmsprop')
 
   return (model, predict)

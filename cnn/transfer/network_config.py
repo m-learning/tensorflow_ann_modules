@@ -21,7 +21,7 @@ def regularize_weighs(weights):
       weights - weighs for regularization
   """
   if flags.is_training:
-    weight_decay = tf.mul(tf.nn.l2_loss(weights), flags.weight_decay, name='weight_loss')
+    weight_decay = tf.multiply(tf.nn.l2_loss(weights), flags.weight_decay, name='weight_loss')
     tf.add_to_collection(flags.LOSSES, weight_decay)
 
 def weight_variable(shape):

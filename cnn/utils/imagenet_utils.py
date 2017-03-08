@@ -10,9 +10,9 @@ from __future__ import division
 from __future__ import print_function
 
 import json
-
-from keras.utils.data_utils import get_file
 from keras import backend as K
+from keras.utils.data_utils import get_file
+
 
 CLASS_INDEX = None
 CLASS_INDEX_PATH = 'https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json'

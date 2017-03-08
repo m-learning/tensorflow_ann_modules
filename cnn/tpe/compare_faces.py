@@ -10,84 +10,167 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-
-from keras.preprocessing import image
 from skimage import io
 
+from cnn.tpe import face_detector as detector
+from cnn.tpe import vector_utils as vectors
 from cnn.tpe.cnn_files import training_file
-from cnn.tpe.preprocessing import FaceDetector, FaceAligner, clip_to_range
-import numpy as np
+from cnn.tpe.network_model import FaceVerificator
+from cnn.utils import file_utils
 
 
+dist = 0.85
 _files = training_file()
-_model_dir = _files.model_dir
-_landmarks = _files.join_and_init_path(_model_dir, 'shape_predictor_68_face_landmarks.dat')
-_template = _files.join_and_init_path(_model_dir, 'face_template.npy')
-fd = FaceDetector()
-fa = FaceAligner(_landmarks, _template)
 
-def load_face_from_image(img, imsize=96, border=0):
-  """Loads faces from image
-    img - binary image
-      imsize - image size
-      border - image border
-    Returns:
-      face_tensor - face image tensor
-  """
-  
-  total_size = imsize + 2 * border
-  faces = fd.detect_faces(img, get_top=1)
-  print(faces)
-  if len(faces) == 0:
-    face_tensor = None
-  else:
-    face = fa.align_face(img, faces[0], dim=imsize, border=border).reshape(1, total_size, total_size, 3)
-    face = clip_to_range(face)
-    face_tensor = face.astype(np.float32)
-  
-  return face_tensor
-
-def load_file(filename, imsize=96, border=0):
-  """Generates face image tensor
+def output_dir(_tail):
+  """Gets output file path by file name
     Args:
-      filename - image file path
-      imsize - image size
-      border - image border
+      _tail - output file name
     Returns:
-      face_tensor - face image tensor
+      _output_path - output file full path
   """
+  
+  eval_dir = _files.eval_dir
+  _output_path = _files.join_path(eval_dir, _tail)
+  
+  return _output_path
+
+def init_verificator():
+  """Initializes face verificator model
+    Returns:
+      fv - face verificator model
+  """
+  
+  fv = FaceVerificator(_files.model_dir)
+  fv.initialize_model()
+  
+  return fv
+
+def _write_output(images, rects, flags):
+  """Write output images"""
+  
+  if flags.output1 and flags.output2:
+    (image1, image2) = images
+    (rects_0, rects_1) = rects
+    detector.draw_rectangles(image1, rects_0, flags.output1)
+    detector.draw_rectangles(image2, rects_1, flags.output2)
+  
+
+def _compare_found_faces(faces, images, flags):
+  """Calculates distance between found faces
+    Args:
+      faces_0 - faces from first image
+      faces_1 - faces from second image
+  """
+
+  (faces_0, faces_1) = faces
+  rects_0 = list(map(lambda p: p[0], faces_0))
+  rects_1 = list(map(lambda p: p[0], faces_1))
+  rects = (rects_0, rects_1)
+  
+  embs_0 = list(map(lambda p: p[1], faces_0))
+  embs_1 = list(map(lambda p: p[1], faces_1))
+  
+  print('Rects on image 0: {}'.format(rects_0))
+  print('Rects on image 1: {}'.format(rects_1))
+  
+  if flags.score:
+    (scores, comps) = vectors.compare_many(dist, embs_0, embs_1)
     
-  img = io.imread(filename)
-  # (height, width, _) = img.shape
-  print(img.shape)
-  face_tensor = load_face_from_image(img, imsize=imsize, norder=border)
-  
-  return face_tensor
-
-def load_image(filename, border=0):
-  """Load faces from images
+    print('Score matrix:')
+    print(scores)
+    
+    print('Decision matrix :')
+    print(comps)
+    _write_output(images, rects, flags)
+    
+    return (scores, comps)
+  else:
+    print('Embeddings of faces on image 0:')
+    print(embs_0)
+    print('Embeddings of faces on image 1:')
+    print(embs_1)
+    
+def _compare_faces_from_files(images, fv, flags):
+  """Compares two faces
     Args:
-      filename - image file name
-      border - image border
-    Returns:
-      image_tensor - tensor of face image
+      image1 - first image path
+      image2 - seconf image path 
+      fv - face verification model
   """
-  print('--image is loading--')
-  img = image.load_img(filename, target_size=(160, 160))
-  x = image.img_to_array(img)
-  arr = np.asarray(x)
-  face_tensor = load_face_from_image(arr, imsize=160, border=border)
-  print(face_tensor)
   
-  return face_tensor
+  (image1, image2) = images
+  img_0 = io.imread(image1)
+  img_1 = io.imread(image2)
+  
+  faces_0 = fv.process_image(img_0)
+  faces_1 = fv.process_image(img_1)
+  
+  n_faces_0 = len(faces_0)
+  n_faces_1 = len(faces_1)
+  
+  if n_faces_0 == 0 or n_faces_1 == 0:
+    print('Error: No faces found on the {}!'.format(image1 if n_faces_0 == 0 else image2))
+  else:
+    faces = (faces_0, faces_1)
+    _compare_found_faces(faces, images, flags)  
+  
+def compare_faces(flags, fv):
+  """Compares two faces
+    Args:
+      flags - arguments of images and score
+      fv - face verification model
+  """
+  (image1, image2) = (flags.image1, flags.image2)
+  if file_utils.file_exists(image1) and file_utils.file_exists(image2):
+    _compare_faces_from_files((image1, image2), fv, flags)
+  else:
+    print('Error: No file found on path {} / {}!'.format(image1, image2))
+
+def _compare_faces(flags):
+  """Compares two faces
+    Args:
+      flags - arguments of images and score
+  """
+  fv = init_verificator()
+  compare_faces(flags, fv)
+
+def add_arguments(arg_parser):
+  """Adds command line arguments
+    Args:
+      arg_parser - argument parser
+    Returns:
+      flags - command line argument flags
+  """
+  
+  arg_parser.add_argument('--score',
+                          dest='score',
+                          action='store_true',
+                          help='Flags for face embedding compare.')
+  arg_parser.add_argument('--output1',
+                          type=str,
+                          default=output_dir('output1.jpg'),
+                          help='First output image file name')
+  arg_parser.add_argument('--output2',
+                          type=str,
+                          default=output_dir('output2.jpg'),
+                          help='Second output image file name')
+  (flags, _) = arg_parser.parse_known_args()
+  
+  return flags
 
 if __name__ == '__main__':
   """Generates tensors from images"""
   
   arg_parser = argparse.ArgumentParser()
-  arg_parser.add_argument('--filename',
+  arg_parser.add_argument('--image1',
                           type=str,
-                          help='Image file name')
-  (argument_flags, _) = arg_parser.parse_known_args()
-  if argument_flags.filename:
-    face_tensor = load_image(argument_flags.filename)
+                          help='First image file name')
+  arg_parser.add_argument('--image2',
+                          type=str,
+                          help='Second image file name')
+  flags = add_arguments(arg_parser)
+  if flags.image1 and flags.image2:
+    comp_result = _compare_faces(flags)
+  else:
+    print('No images to compare')

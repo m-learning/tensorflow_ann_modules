@@ -57,8 +57,8 @@ class inception_resnet_v2_interface(network_interface):
     
     input_tensor = tf.placeholder(tf.float32, shape=(None, height, width, 3), name='input_image')
     scaled_input_tensor = tf.scalar_mul((1.0 / 255), input_tensor)
-    scaled_input_tensor = tf.sub(scaled_input_tensor, 0.5)
-    scaled_input_tensor = tf.mul(scaled_input_tensor, 2.0)
+    scaled_input_tensor = tf.subtract(scaled_input_tensor, 0.5)
+    scaled_input_tensor = tf.multiply(scaled_input_tensor, 2.0)
     
     sess = tf.Session()
     arg_scope = inception_resnet_v2.inception_resnet_v2_arg_scope()

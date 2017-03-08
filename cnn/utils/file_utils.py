@@ -5,7 +5,6 @@ Utility module for training test and validation data files
 
 @author: Levan Tsinadze
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -54,6 +53,16 @@ def count_files(dir_name):
     file_count += len(files)
   
   return file_count
+
+def file_exists(_file_path):
+  """Validates if file exists for passed path
+    Args:
+      _file_path - file path
+    Returns;
+      boolean flag if file exists
+  """
+  
+  return os.path.exists(_file_path)
 
 def ensure_dir_exists(dir_name):
   """Makes sure the folder exists on disk.
@@ -200,6 +209,14 @@ class cnn_file_utils(files_and_path_utils):
     """
     return self.join_and_init_path(self.get_current, self.path_to_cnn_directory)
   
+  @property
+  def data_root(self):
+    """Root directory for datas
+      Returns:
+        datas root directory
+    """
+    return self.get_data_general_directory()
+  
   def get_archives_directory(self):
     """Gets training set archives directory
       Args:
@@ -230,6 +247,27 @@ class cnn_file_utils(files_and_path_utils):
     dir_path = self.get_data_directory()
     ensure_dir_exists(dir_path)
   
+  @property
+  def data_dir(self):
+    """Creates directory for training set and parameters
+      Returns:
+        _data_dir - data directory path
+    """
+    
+    _data_dir = self.get_training_directory()
+    ensure_dir_exists(_data_dir)
+    
+    return _data_dir
+  
+  def data_file(self, _file_path):
+    """Joins data directory path to passed file path
+      Args:
+        _file_path - data file path
+      Returns:
+        joined data directory and data file path
+    """
+    return self.join_path(self.data_dir, _file_path)
+  
   def init_files_directory(self):
     """Gets or creates directory for trained parameters
       Returns:
@@ -249,6 +287,15 @@ class cnn_file_utils(files_and_path_utils):
     """
     
     return self.init_files_directory()
+  
+  def model_file(self, _file_path):
+    """Joins models directory path to passed file path
+      Args:
+        _file_path - model file path
+      Returns:
+        joined models directory and model file path
+    """
+    return self.join_path(self.model_dir, _file_path)
 
   def get_or_init_files_path(self):
     """Initializes trained files path

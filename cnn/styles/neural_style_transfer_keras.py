@@ -60,15 +60,16 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
+from keras import backend as K
+from keras.applications import vgg16
 from keras.preprocessing.image import load_img, img_to_array
 from scipy.misc import imsave
-import numpy as np
 from scipy.optimize import fmin_l_bfgs_b
 import time
-import argparse
 
-from keras.applications import vgg16
-from keras import backend as K
+import numpy as np
+
 
 parser = argparse.ArgumentParser(description='Neural style transfer with Keras.')
 parser.add_argument('base_image_path', metavar='base', type=str,
@@ -239,6 +240,7 @@ f_outputs = K.function([combination_image], outputs)
 
 
 def eval_loss_and_grads(x):
+    
     if K.image_dim_ordering() == 'th':
         x = x.reshape((1, 3, img_nrows, img_ncols))
     else:

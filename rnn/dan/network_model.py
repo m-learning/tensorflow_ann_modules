@@ -15,6 +15,7 @@ from keras.models import Sequential
 
 from rnn.dan import network_config as config
 
+
 def _add_dropout(model, is_training=False):
   """Adds dropout layer to model
     Args:

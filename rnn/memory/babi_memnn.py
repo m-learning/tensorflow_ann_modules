@@ -24,15 +24,14 @@ from __future__ import division
 from __future__ import print_function
 
 from functools import reduce
-import re
-import tarfile
-
 from keras.layers import Activation, Dense, Merge, Permute, Dropout
 from keras.layers import LSTM
 from keras.layers.embeddings import Embedding
 from keras.models import Sequential
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.data_utils import get_file
+import re
+import tarfile
 
 import numpy as np
 from rnn.memory.rnn_files import training_file

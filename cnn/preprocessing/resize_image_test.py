@@ -3,14 +3,14 @@ Created on Oct 17, 2016
 Test for image resizing
 @author: Levan Tsinadze
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import cv2
+
 from cnn.flomen.cnn_files import training_file as flomen_files
 from cnn.preprocessing.vgg_preprocessing import preprocess_image as preprocess_vgg_image
-import cv2
 import tensorflow as tf
 
 

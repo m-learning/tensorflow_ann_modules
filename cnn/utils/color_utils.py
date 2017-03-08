@@ -11,10 +11,11 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-import os
 import glob
+import os
 
 from cnn.utils import image_color_refiner as refiner
+
 
 try:
   from PIL import Image, ImageFilter
@@ -108,7 +109,7 @@ def read_arguments_and_run():
     scan_dir = os.path.join(argument_flags.src_dir, '*.jpg')
     for pr in glob.glob(scan_dir):
       im = Image.open(pr)
-      #md = sharpen_edges(im)
+      # md = sharpen_edges(im)
       md = im
       refiner.color_refinement(md)
       md.save(pr)

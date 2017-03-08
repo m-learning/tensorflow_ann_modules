@@ -38,38 +38,46 @@ https://github.com/mbhenry/
 
 @author: Levan Tsinadze
 """
-import os
-import itertools
-import re
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import datetime
-import cairocffi as cairo
+import itertools
+import os
+import re
+
 import editdistance
-import numpy as np
-from scipy import ndimage
-import pylab
 from keras import backend as K
-from keras.layers.convolutional import Convolution2D, MaxPooling2D
+import keras.callbacks
 from keras.layers import Input, Dense, Activation
 from keras.layers import Reshape, Lambda, merge
-from keras.models import Model
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
+from keras.models import Model
 from keras.optimizers import SGD
-from keras.utils.data_utils import get_file
 from keras.preprocessing import image
-import keras.callbacks
+from keras.utils.data_utils import get_file
+import matplotlib as mpl
+mpl.use('Agg')
+import pylab
+from scipy import ndimage
 
+import cairocffi as cairo
 from cnn.ocr.cnn_files import training_file
+import numpy as np
 
-
+pylab.ioff()
 
 WEIGHTS_FILE = 'keras_weights.h5'
 
 _files = training_file()
 OUTPUT_DIR = _files.model_dir
+IMG_DIR = _files.join_and_init_path(_files.data_root, 'images')
 weights_path = _files.join_path(OUTPUT_DIR, WEIGHTS_FILE)
+_fonts = ['BPG Arial', 'BPG Glaho', '3D Unicode', 'Sylfaen', 'Arial GEO']
 
 np.random.seed(55)
-
 
 # this creates larger "blotches" of noise which look
 # more realistic than just adding gaussian noise
@@ -95,11 +103,13 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
         context.paint()
         # this font list works in Centos 7
         if multi_fonts:
-            fonts = ['Century Schoolbook', 'Courier', 'STIX', 'URW Chancery L', 'FreeMono']
+            #fonts = ['Century Schoolbook', 'Courier', 'STIX', 'URW Chancery L', 'FreeMono']
+            fonts = _fonts
             context.select_font_face(np.random.choice(fonts), cairo.FONT_SLANT_NORMAL,
                                      np.random.choice([cairo.FONT_WEIGHT_BOLD, cairo.FONT_WEIGHT_NORMAL]))
         else:
-            context.select_font_face('Courier', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            #context.select_font_face('Courier', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            context.select_font_face('Sylfaen', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         context.set_font_size(25)
         box = context.text_extents(text)
         border_w_h = (4, 4)
@@ -361,8 +371,9 @@ class VizCallback(keras.callbacks.Callback):
 
     def __init__(self, run_name, test_func, text_img_gen, num_display_words=6):
         self.test_func = test_func
-        self.output_dir = os.path.join(
-            OUTPUT_DIR, run_name)
+        self.output_dir = os.path.join(OUTPUT_DIR, run_name)
+        self.img_dir = os.path.join(IMG_DIR, run_name)
+        _files.join_and_init_path(self.img_dir)
         self.text_img_gen = text_img_gen
         self.num_display_words = num_display_words
         if not os.path.exists(self.output_dir):
@@ -405,7 +416,7 @@ class VizCallback(keras.callbacks.Callback):
             pylab.xlabel('Truth = \'%s\'\nDecoded = \'%s\'' % (word_batch['source_str'][i], res[i]))
         fig = pylab.gcf()
         fig.set_size_inches(10, 13)
-        pylab.savefig(os.path.join(self.output_dir, 'e%02d.png' % (epoch)))
+        pylab.savefig(os.path.join(self.img_dir, 'e%02d.png' % (epoch)))
         pylab.close()
 
 

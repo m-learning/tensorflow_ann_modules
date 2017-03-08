@@ -1,6 +1,7 @@
 **/.project
 **/.pydevproject
 **/.settings/
+**/.idea
 **/*.pyc
 **/trained_data
 **/bottleneck
@@ -17,5 +18,7 @@
 /datas/faces/
 /datas/vgg/
 /datas/tpe/
+/datas/wlm/
+/datas/fmnist/
 /datas/fcn/test_data/results
 /retrain_inception_logs
