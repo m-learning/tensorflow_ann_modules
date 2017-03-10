@@ -9,8 +9,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from keras.layers import Input, Dense, Activation
-from keras.layers import Reshape, Lambda, merge
+from keras.layers import Input, Dense, Activation, \
+                         Reshape, Lambda, merge
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.recurrent import GRU
 from keras.models import Model
