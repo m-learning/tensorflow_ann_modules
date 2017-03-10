@@ -6,21 +6,22 @@ python -m cnn.ocr.recognizer --weights ./datas/ocr/weights24.h5 --image ./datas/
 image height must be 64 px, width 128 or 512 px (128 is default)
 """
 
-import argparse
 import Image
+import argparse
 import itertools
-import numpy as np
+
 from keras import backend as K
-from keras.models import Model
 from keras.optimizers import SGD
+
 import cnn.ocr.network_model as m
+import numpy as np
 
 
 def decode_result(out):
 	ret = []
 	for j in range(out.shape[0]):
 		out_best = list(np.argmax(out[j, 2:], 1))
-		out_best = [k for k, g in itertools.groupby(out_best)]
+		out_best = [k for k, _ in itertools.groupby(out_best)]
 		# 26 is space, 27 is CTC blank char
 		out_str = ''
 		for c in out_best:
@@ -59,14 +60,14 @@ else:
 	array = array.reshape([1, img_w, img_h, 1])
 print(array.shape)
 
-(input_data, y_pred) = m.init_model(img_w)
-model = Model(input=[input_data], output=y_pred)
+(_, input_data, y_pred, model) = m.ocr_network(img_w)
+model.summary()
 model.load_weights(args.weights)
 model.summary()
 print("Loaded model from disk")
 
-sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+# sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
+# model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 pred = model.predict(array, batch_size=1, verbose=1)
 
 print(decode_result(pred))

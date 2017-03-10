@@ -62,6 +62,24 @@ def init_model(img_w, output_size=28):
   
   return (input_data, network_model) 
 
+def ocr_network(img_w):
+  """Initializes OCR network model
+    Args:
+      img_w - image weight
+    Returns:
+      tuple of -
+        input_data - network model input data
+        y_pred - prediction model
+        network_model - network model
+  """
+  
+  img_gen = init_img_gen(img_w)
+  output_size = img_gen.get_output_size()
+  (input_data, y_pred) = init_model(img_w, output_size=output_size)
+  network_model = Model(input=[input_data], output=y_pred)
+  
+  return (img_gen, input_data, y_pred, network_model)
+
 def init_training_model(img_w):
   """Initializes OCR network model
     Args:
@@ -74,10 +92,8 @@ def init_training_model(img_w):
         y_pred - prediction model
   """
   
-  img_gen = init_img_gen(img_w)
-  output_size = img_gen.get_output_size()
-  (input_data, y_pred) = init_model(img_w, output_size=output_size)
-  Model(input=[input_data], output=y_pred).summary()
+  (img_gen, input_data, y_pred, network_model) = ocr_network(img_w)
+  network_model.summary()
 
   labels = Input(name='the_labels', shape=[img_gen.absolute_max_string_len], dtype='float32')
   input_length = Input(name='input_length', shape=[1], dtype='int64')
