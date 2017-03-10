@@ -16,7 +16,7 @@ from keras import backend as K
 from keras.utils.data_utils import get_file
 
 from cnn.ocr.cnn_files import training_file
-from cnn.ocr.image_ocr_keras import TextImageGenerator
+from cnn.ocr.data_generators import TextImageGenerator
 
 
 # static training parameters

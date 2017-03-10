@@ -17,7 +17,7 @@ from keras.optimizers import SGD
 from cnn.ocr import network_config as config 
 from cnn.ocr import network_model as network
 from cnn.ocr import training_flags as flags
-from cnn.ocr.image_ocr_keras import VizCallback
+from cnn.ocr.data_generators import VizCallback
 from cnn.ocr.network_config import OUTPUT_DIR
 from cnn.ocr.network_config import words_per_epoch, val_words
 

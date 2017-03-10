@@ -84,11 +84,13 @@ np.random.seed(55)
 # assumes greyscale with pixels ranging from 0 to 1
 
 def speckle(img):
+    
     severity = np.random.uniform(0, 0.6)
     blur = ndimage.gaussian_filter(np.random.randn(*img.shape) * severity, 1)
     img_speck = (img + blur)
     img_speck[img_speck > 1] = 1
     img_speck[img_speck <= 0] = 0
+    
     return img_speck
 
 
@@ -97,6 +99,7 @@ def speckle(img):
 # and a random amount of speckle noise
 
 def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
+    
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
     with cairo.Context(surface) as context:
         context.set_source_rgb(1, 1, 1)  # White
@@ -143,6 +146,7 @@ def paint_text(text, w, h, rotate=False, ud=False, multi_fonts=False):
 
 
 def shuffle_mats_or_lists(matrix_list, stop_ind=None):
+    
     ret = []
     assert all([len(i) == len(matrix_list[0]) for i in matrix_list])
     len_val = len(matrix_list[0])
@@ -165,6 +169,7 @@ def shuffle_mats_or_lists(matrix_list, stop_ind=None):
 
 
 def text_to_labels(text, num_classes):
+    
     ret = []
     for char in text:
         if char >= 'a' and char <= 'z':
