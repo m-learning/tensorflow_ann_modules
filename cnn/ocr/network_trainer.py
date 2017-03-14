@@ -60,8 +60,8 @@ def train_model(network_parameters, train_parameters):
   prepare_training(model, train_parameters)
   test_func = K.function([input_data], [y_pred])
   viz_cb = VizCallback(run_name, test_func, img_gen.next_val())
-  model.fit_generator(generator=img_gen.next_train(), samples_per_epoch=(words_per_epoch - val_words),
-                      nb_epoch=stop_epoch, validation_data=img_gen.next_val(), nb_val_samples=val_words,
+  model.fit_generator(generator=img_gen.next_train(), steps_per_epoch=(words_per_epoch - val_words),
+                      epochs=stop_epoch, validation_data=img_gen.next_val(), validation_steps=val_words,
                       callbacks=[viz_cb, img_gen], initial_epoch=start_epoch)
 
 def train_network(run_name, start_epoch, stop_epoch, img_w):

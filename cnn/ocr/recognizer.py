@@ -11,9 +11,8 @@ import argparse
 import itertools
 
 from keras import backend as K
-from keras.optimizers import SGD
 
-import cnn.ocr.network_model as m
+import cnn.ocr.network_model as network
 import numpy as np
 
 
@@ -60,7 +59,7 @@ else:
 	array = array.reshape([1, img_w, img_h, 1])
 print(array.shape)
 
-(_, input_data, y_pred, model) = m.ocr_network(img_w)
+(_, input_data, y_pred, model) = network.ocr_network(img_w)
 model.summary()
 model.load_weights(args.weights)
 model.summary()
