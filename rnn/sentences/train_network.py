@@ -9,10 +9,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import numpy
+
 from rnn.sentences import data_prepocessor as preprocessor
 from rnn.sentences import network_model as network
 from rnn.sentences import training_flags as config
 
+
+numpy.random.seed(7)
 
 def train_model(flags):
   """Trains network and saves weights"""

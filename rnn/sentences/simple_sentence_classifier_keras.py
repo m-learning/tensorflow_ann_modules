@@ -8,8 +8,8 @@ Simple model for sentence classification
 
 from keras.datasets import imdb
 from keras.layers import Dense
+from keras.layers import Embedding
 from keras.layers import LSTM
-from keras.layers.embeddings import Embedding
 from keras.models import Sequential
 from keras.preprocessing import sequence
 import numpy
