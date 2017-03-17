@@ -24,7 +24,7 @@ def train_model(flags):
   model.save_weights(weights_path)
   
   
-def evaluate_model(flags):
+def eval_model(flags):
   """Retrieves trained weights and evaluates network model"""
   
   weights_path = config.init_weights_path()
@@ -42,4 +42,4 @@ if __name__ == '__main__':
   if flags.train:
     train_model(flags)
   else:
-    evaluate_model(flags)
+    eval_model(flags)

@@ -24,7 +24,7 @@ def _dropout_embedding_layer(model, is_training):
   """
   
   if is_training:
-    model.add(Dropout(2.0, training=is_training))
+    model.add(Dropout(0.2))
 
 def _init_lstm_dropouts(is_training):
   """Initializes LSTM layer
