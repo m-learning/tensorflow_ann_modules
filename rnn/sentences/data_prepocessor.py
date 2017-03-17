@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 from keras.datasets import imdb
+
 from rnn.sentences import data_logger as logger
 
 
