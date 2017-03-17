@@ -10,42 +10,42 @@ from __future__ import division
 from __future__ import print_function
 
 from keras.layers import Dense, LSTM
+from keras.layers.core import SpatialDropout1D
 from keras.layers.embeddings import Embedding
 from keras.models import Sequential
 
 from rnn.sentences import data_logger as logger
+from rnn.sentences import training_flags as config
 
 
-def _init_embedding(flags, is_training=False):
-  """Initializes embedding layer
+def _dropout_embedding_layer(model, is_training):
+  """Adds dropout layer if is training
     Args:
-      flags - training parameters
+      model - network model
       is_training - flag to distinguish training and evaluation
-    Returns:
-      network_layer - embedding layer
   """
   
   if is_training:
-    network_layer = Embedding(flags.top_words, flags.embedding_vecor_length, input_length=flags.max_review_length, dropout=0.2)
-  else:
-    network_layer = Embedding(flags.top_words, flags.embedding_vecor_length, input_length=flags.max_review_length)
-  
-  return network_layer
+    model.add(SpatialDropout1D(2.0))
 
-def _init_lstm(is_training):
+def _init_lstm_dropouts(is_training):
   """Initializes LSTM layer
     Args:
       is_training - flag to distinguish training and evaluation
     Returns:
-      network_layer - LSTM layer
+      dropouts - tuple of -
+        dropout - dropout for layer
+        recurrent_dropout - dropout for recurrent sell
   """
   
   if is_training:
-    network_layer = LSTM(100, dropout_W=0.2, dropout_U=0.2)
+    dropout = 0.2 
+    recurrent_dropout = 0.2
   else:
-    network_layer = LSTM(100)
-    
-  return network_layer
+    dropout = 0
+    recurrent_dropout = 0
+        
+  return (dropout, recurrent_dropout)
 
 def init_model(flags, is_training):
   """Initializes network model
@@ -57,10 +57,10 @@ def init_model(flags, is_training):
   """
   
   model = Sequential()
-  embedding_layer = _init_embedding(flags, is_training)
-  model.add(embedding_layer)
-  lstm_layer = _init_lstm(is_training)
-  model.add(lstm_layer)
+  model.add(Embedding(flags.top_words, flags.embedding_vecor_length, input_length=flags.max_review_length))
+  _dropout_embedding_layer(model, is_training)
+  (dropout, recurrent_dropout) = _init_lstm_dropouts(is_training)
+  model.add(LSTM(100, dropout=dropout, recurrent_dropout=recurrent_dropout))
   model.add(Dense(1, activation='sigmoid'))
   
   return model
@@ -76,7 +76,8 @@ def prepare_for_train(flags, is_training=True):
   
   model = init_model(flags, is_training=is_training)
   logger.log_model(flags, model)
-  model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+  loss_function = config.init_loss(flags)
+  model.compile(loss=loss_function, optimizer='adam', metrics=['accuracy'])
   
   return model
   

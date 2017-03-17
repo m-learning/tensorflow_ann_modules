@@ -9,7 +9,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-def init_training_set():
+from keras.datasets import imdb
+
+
+def init_training_set(flags):
   """Should be implemented
     Returns:
       tuple of -
@@ -21,6 +24,9 @@ def init_training_set():
           y_test - test labels
   """
   
-  ((X_train, y_train), (X_test, y_test)) = None
+  if flags.train_on_imdb:
+    ((X_train, y_train), (X_test, y_test)) = imdb.load_data(nb_words=flags.top_words)
+  else:
+    ((X_train, y_train), (X_test, y_test)) = None
   
   return ((X_train, y_train), (X_test, y_test))
