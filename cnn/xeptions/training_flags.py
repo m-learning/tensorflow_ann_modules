@@ -163,7 +163,21 @@ def retrieve_args(argument_flags, _files):
   if argument_flags.print_dataset:
     global print_dataset
     print_dataset = True
-          
+  
+def parse_eval_arguments():
+  """Parses command line arguments for evaluation
+    Returns:
+      argument_flags - command line arguments
+  """
+  
+  arg_parser = argparse.ArgumentParser()
+  arg_parser.add_argument('--image_path',
+                          type=str,
+                          help='Image path for recognition')
+  (argument_flags, _) = arg_parser.parse_known_args()
+  
+  return argument_flags
+                          
 def parse_and_retrieve(tr_files=None):
   """Retrieves command line arguments
     Args:

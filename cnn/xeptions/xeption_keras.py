@@ -48,6 +48,8 @@ from keras.models import Model
 from keras.preprocessing import image
 from keras.utils.data_utils import get_file
 
+from cnn.xeptions import training_flags as flags
+
 import numpy as np
 
 
@@ -280,13 +282,17 @@ def preprocess_input(x):
 if __name__ == '__main__':
     model = Xception(include_top=True, weights='imagenet')
 
-    img_path = 'elephant.jpg'
-    img = image.load_img(img_path, target_size=(299, 299))
-    x = image.img_to_array(img)
-    x = np.expand_dims(x, axis=0)
-    x = preprocess_input(x)
-    print('Input image shape:', x.shape)
-
-    preds = model.predict(x)
-    print(np.argmax(preds))
-    print('Predicted:', decode_predictions(preds, 1))
+    args = flags.parse_eval_arguments()
+    img_path = args.image_path
+    if img_path:
+      img = image.load_img(img_path, target_size=(299, 299))
+      x = image.img_to_array(img)
+      x = np.expand_dims(x, axis=0)
+      x = preprocess_input(x)
+      print('Input image shape:', x.shape)
+  
+      preds = model.predict(x)
+      print(np.argmax(preds))
+      print('Predicted:', decode_predictions(preds, 1))
+    else:
+      print('Image path is not set')
