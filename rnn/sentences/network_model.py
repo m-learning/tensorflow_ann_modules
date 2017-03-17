@@ -9,9 +9,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from keras.layers import Dense, LSTM
-from keras.layers.core import Dropout
-from keras.layers.embeddings import Embedding
+from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.models import Sequential
 
 from rnn.sentences import data_logger as logger
