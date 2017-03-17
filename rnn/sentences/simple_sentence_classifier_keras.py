@@ -20,7 +20,7 @@ import numpy
 numpy.random.seed(7)
 # load the dataset but only keep the top n words, zero the rest
 top_words = 5000
-(X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=top_words)
+((X_train, y_train), (X_test, y_test)) = imdb.load_data(num_words=top_words)
 # truncate and pad input sequences
 max_review_length = 500
 X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
