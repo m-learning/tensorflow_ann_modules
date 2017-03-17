@@ -25,7 +25,7 @@ def init_training_set(flags):
   """
   
   if flags.train_on_imdb:
-    ((X_train, y_train), (X_test, y_test)) = imdb.load_data(nb_words=flags.top_words)
+    ((X_train, y_train), (X_test, y_test)) = imdb.load_data(num_words=flags.top_words)
   else:
     ((X_train, y_train), (X_test, y_test)) = None
   
