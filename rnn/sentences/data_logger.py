@@ -19,3 +19,14 @@ def log_model(flags, model):
   
   if flags.verbose:
     print(model.summary())
+    
+def log_message(flags, _message):
+  """Logs passed message
+    Args:
+      flags - configuration parameters
+      _message - message to log
+  """
+  
+  if flags.verbose:
+    print(_message)
+  

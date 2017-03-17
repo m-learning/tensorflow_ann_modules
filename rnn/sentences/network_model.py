@@ -75,6 +75,7 @@ def prepare_for_train(flags, is_training=True):
   model = init_model(flags, is_training=is_training)
   logger.log_model(flags, model)
   loss_function = config.init_loss(flags)
+  logger.log_message(flags, loss_function)
   model.compile(loss=loss_function, optimizer='adam', metrics=['accuracy'])
   
   return model
