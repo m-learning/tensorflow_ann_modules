@@ -8,6 +8,7 @@ Simple model for sentence classification
 
 from keras.datasets import imdb
 from keras.layers import Dense
+from keras.layers import Dropout
 from keras.layers import Embedding
 from keras.layers import LSTM
 from keras.models import Sequential
@@ -27,7 +28,8 @@ X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
 # create the model
 embedding_vecor_length = 32
 model = Sequential()
-model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length, dropout=0.2))
+model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
+model.add(Dropout(0.2))
 model.add(LSTM(100, dropout_W=0.2, dropout_U=0.2))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])

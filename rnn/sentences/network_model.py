@@ -55,8 +55,8 @@ def init_model(flags, is_training):
   """
   
   model = Sequential()
-  model.add(Embedding(flags.top_words, flags.embedding_vecor_length, input_length=flags.max_review_length, dropout=0.2))
-  #_dropout_embedding_layer(model, is_training)
+  model.add(Embedding(flags.top_words, flags.embedding_vecor_length, input_length=flags.max_review_length))
+  _dropout_embedding_layer(model, is_training)
   (dropout, recurrent_dropout) = _init_lstm_dropouts(is_training)
   model.add(LSTM(100, dropout=dropout, recurrent_dropout=recurrent_dropout))
   model.add(Dense(1, activation='sigmoid'))
