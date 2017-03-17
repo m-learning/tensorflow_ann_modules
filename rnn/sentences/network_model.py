@@ -10,7 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 from keras.layers import Dense, LSTM
-from keras.layers.core import SpatialDropout1D
+from keras.layers.core import Dropout
 from keras.layers.embeddings import Embedding
 from keras.models import Sequential
 
@@ -26,7 +26,7 @@ def _dropout_embedding_layer(model, is_training):
   """
   
   if is_training:
-    model.add(SpatialDropout1D(2.0))
+    model.add(Dropout(2.0))
 
 def _init_lstm_dropouts(is_training):
   """Initializes LSTM layer
