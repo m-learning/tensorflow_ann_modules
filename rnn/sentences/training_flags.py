@@ -21,27 +21,17 @@ _BINARY_LOSS_FUNCTION = 'binary_crossentropy'
 _files = None
 
 def _init_files():
-  """Initializes file manager object
-    Returns:
-      _files - file manager object instance
-  """
+  """Initializes files manager object instance"""
   
-  if _files is None:
-    global _files
-    _files = training_file()
-    
-  return _files
+  global _files
+  _files = training_file()
 
 def init_weights_path():
   """Initializes weights path to save and retrieve for network
     Returns:
       weights_path - path for serialized weights file
   """
-  
-  file_namager = _init_files()
-  weights_path = file_namager.model_file(_WEIGHTS_FILE_PATH)
-  
-  return weights_path
+  return _files.model_file(_WEIGHTS_FILE_PATH)
 
 def init_loss(args):
   """Initializes loss function
@@ -66,6 +56,7 @@ def parse_args():
       args - command line arguments
   """
 
+  _init_files()
   parser = argparse.ArgumentParser()
   parser.add_argument('--max_review_length',
                       type=int,

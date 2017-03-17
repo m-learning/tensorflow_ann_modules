@@ -49,7 +49,7 @@ def init_model(flags, is_training):
       flags - training parameters
       is_training - flag to distinguish training and evaluation
     Return:
-      model - training model
+      model - network model
   """
   
   model = Sequential()

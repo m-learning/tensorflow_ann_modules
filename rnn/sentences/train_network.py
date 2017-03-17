@@ -16,6 +16,7 @@ from rnn.sentences import network_model as network
 from rnn.sentences import training_flags as config
 
 
+# fix random seed for reproducibility
 numpy.random.seed(7)
 
 def train_model(flags):
