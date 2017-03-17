@@ -35,7 +35,7 @@ def eval_model(flags):
   (_, (X_test, y_test)) = preprocessor.init_training_set(flags)
   model = network.init_model(flags, is_training=False)
   model.load_weights(weights_path)
-  scores = model.evaluate(X_test, y_test, verbose=0)
+  scores = model.evaluate(X_test, y_test, verbose=bool(flags.verbose))
   print("Accuracy: %.2f%%" % (scores[1] * 100))
 
 
