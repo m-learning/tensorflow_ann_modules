@@ -11,6 +11,7 @@ from __future__ import print_function
 
 import numpy
 
+from rnn.sentences import data_logger as logger
 from rnn.sentences import data_prepocessor as preprocessor
 from rnn.sentences import network_model as network
 from rnn.sentences import training_flags as config
@@ -30,6 +31,7 @@ def train_model(flags):
   model.fit(X_train, y_train, epochs=3, batch_size=64)
   weights_path = config.init_weights_path()
   model.save_weights(weights_path)
+  logger.log_message(flags, 'Weights are saved')
   
   
 def eval_model(flags):
