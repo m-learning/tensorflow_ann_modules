@@ -1,10 +1,9 @@
-'''
+"""
 Created on Jun 21, 2016
 
 Files for training data
 
 @author: Levan Tsinadze
-'''
 
 from os import walk
 import os
@@ -29,4 +28,4 @@ def get_current_directory():
 
 print 'Checking modules and dependencies'
 get_current_directory()
-
+"""
