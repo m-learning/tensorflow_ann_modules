@@ -6,9 +6,10 @@ Files for training data
 @author: Levan Tsinadze
 '''
 
-import os
 from os import walk
+import os
 import sys
+
 
 path_is_not_appended = True
 
