@@ -37,11 +37,9 @@ def _init_lstm_dropouts(is_training):
   """
   
   if is_training:
-    dropout = 0.2 
-    recurrent_dropout = 0.2
+    (dropout, recurrent_dropout) = (0.2, 0.2) 
   else:
-    dropout = 0
-    recurrent_dropout = 0
+    (dropout, recurrent_dropout) = (0, 0)
         
   return (dropout, recurrent_dropout)
 

@@ -19,7 +19,10 @@ from rnn.sentences import training_flags as config
 numpy.random.seed(7)
 
 def train_model(flags):
-  """Trains network and saves weights"""
+  """Trains network and saves weights
+   Args:
+    flags - training configuration flags
+  """
   
   ((X_train, y_train), _) = preprocessor.init_training_set(flags)
   model = network.prepare_for_train(flags, is_training=True)
@@ -29,7 +32,10 @@ def train_model(flags):
   
   
 def eval_model(flags):
-  """Retrieves trained weights and evaluates network model"""
+  """Retrieves trained weights and evaluates network model
+   Args:
+    flags - training configuration flags  
+  """
   
   weights_path = config.init_weights_path()
   (_, (X_test, y_test)) = preprocessor.init_training_set(flags)

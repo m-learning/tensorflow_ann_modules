@@ -18,7 +18,6 @@ _WEIGHTS_FILE_PATH = 'sentence_classifier_weights.h5'
 _DEFAULT_LOSS_FUNCTION = 'categorical_crossentropy'
 _BINARY_LOSS_FUNCTION = 'binary_crossentropy'
 
-flags = None
 _files = None
 
 def _init_files():
@@ -100,8 +99,6 @@ def parse_args():
                       dest='verbose',
                       action='store_true',
                       help='Log training or not')
-  (args, _) = parser.parse_known_args()
-  global flags
-  flags = args
+  (flags, _) = parser.parse_known_args()
   
-  return args
+  return flags
