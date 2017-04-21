@@ -105,16 +105,10 @@ def InceptionV3(include_top=True, weights='imagenet',
                        '`None` (random initialization) or `imagenet` '
                        '(pre-training on ImageNet).')
   # Determine proper input shape
-  if K.image_dim_ordering() == 'th':
-      if include_top:
-          input_shape = (3, 299, 299)
-      else:
-          input_shape = (3, None, None)
+  if include_top:
+      input_shape = (299, 299, 3)
   else:
-      if include_top:
-          input_shape = (299, 299, 3)
-      else:
-          input_shape = (None, None, 3)
+      input_shape = (None, None, 3)
 
   if input_tensor is None:
       img_input = Input(shape=input_shape)

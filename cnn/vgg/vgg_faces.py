@@ -13,13 +13,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import warnings
+
 from keras import backend as K
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Flatten, Dense, Input
 from keras.models import Model
 from keras.utils.data_utils import get_file
 from keras.utils.layer_utils import convert_all_kernels_in_model
-import warnings
 
 
 hidden_dim = 512
@@ -37,16 +38,10 @@ def _get_input_shape(include_top):
       input_shape - input tensor's shape
   """
   
-  if K.image_dim_ordering() == 'th':
-    if include_top:
-      input_shape = (3, 224, 224)
-    else:
-      input_shape = (3, None, None)
+  if include_top:
+    input_shape = (224, 224, 3)
   else:
-    if include_top:
-      input_shape = (224, 224, 3)
-    else:
-      input_shape = (None, None, 3)
+    input_shape = (None, None, 3)
       
   return input_shape
 
