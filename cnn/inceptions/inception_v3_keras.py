@@ -63,7 +63,7 @@ def conv2d_bn(x, nb_filter, nb_row, nb_col,
       bn_axis = 1
   else:
       bn_axis = 3
-  x = Conv2D(nb_filter, nb_row, nb_col,
+  x = Conv2D(nb_filter, (nb_row, nb_col),
                     subsample=subsample,
                     activation='relu',
                     border_mode=border_mode,

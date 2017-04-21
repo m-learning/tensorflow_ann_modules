@@ -91,11 +91,11 @@ class mnist_model(object):
     """Defines MNIST network model"""
     self.model = Sequential()
 
-    self.model.add(Conv2D(nb_filters, kernel_size[0], kernel_size[1],
+    self.model.add(Conv2D(nb_filters, kernel_size,
                           border_mode='valid',
                           input_shape=input_shape))
     self.model.add(Activation('relu'))
-    self.model.add(Conv2D(nb_filters, kernel_size[0], kernel_size[1]))
+    self.model.add(Conv2D(nb_filters, kernel_size))
     self.model.add(Activation('relu'))
     self.model.add(MaxPooling2D(pool_size=pool_size))
     self._add_dropout(prob=0.25)
