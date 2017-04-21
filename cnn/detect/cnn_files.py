@@ -1,12 +1,13 @@
-'''
+"""
 Created on Aug 8, 2016
 
 Files for object detection
 
 @author: Levan Tsinadze
-'''
+"""
 
 from cnn.utils.file_utils import cnn_file_utils
+
 
 HYPES_DIR = 'hypes'
 DATA_DIR = 'data'

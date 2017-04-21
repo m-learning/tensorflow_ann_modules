@@ -1,8 +1,7 @@
-# '''
+"""
 # Created on Sep 21, 2016
 #
 # @author: Levan Tsinadze
-# '''
 #
 # Copyright 2016 The TensorFlow Authors. All Rights Reserved.
 #
@@ -18,7 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-# """Deploy Slim models across multiple clones and replicas.
+# Deploy Slim models across multiple clones and replicas.
 #
 # TODO(sguada) docstring paragraph by (a) motivating the need for the file and
 # (b) defining clones.
@@ -99,13 +98,14 @@
 #  - analyze the possibility of calling deploy more than once.
 #
 #
-# """
+"""
 
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 import collections
+
 from tensorflow.python.ops import control_flow_ops
 
 import tensorflow as tf
