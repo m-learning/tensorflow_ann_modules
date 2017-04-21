@@ -17,7 +17,7 @@ from __future__ import print_function
 
 from keras import backend as K
 from keras.datasets import mnist
-from keras.layers import Convolution2D, MaxPooling2D
+from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.models import Sequential
 from keras.utils import np_utils
@@ -91,11 +91,11 @@ class mnist_model(object):
     """Defines MNIST network model"""
     self.model = Sequential()
 
-    self.model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
+    self.model.add(Conv2D(nb_filters, kernel_size[0], kernel_size[1],
                           border_mode='valid',
                           input_shape=input_shape))
     self.model.add(Activation('relu'))
-    self.model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1]))
+    self.model.add(Conv2D(nb_filters, kernel_size[0], kernel_size[1]))
     self.model.add(Activation('relu'))
     self.model.add(MaxPooling2D(pool_size=pool_size))
     self._add_dropout(prob=0.25)
@@ -149,7 +149,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer='adadelta',
               metrics=['accuracy'])
 
-model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
+model.fit(X_train, Y_train, batch_size=batch_size, epoch=nb_epoch,
           verbose=1, validation_data=(X_test, Y_test))
 score = model.evaluate(X_test, Y_test, verbose=0)
 print('Test score:', score[0])

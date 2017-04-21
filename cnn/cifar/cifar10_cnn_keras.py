@@ -18,13 +18,14 @@ from __future__ import division
 from __future__ import print_function
 
 from keras.datasets import cifar10
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
+from keras.models import Sequential
+from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 
 from cnn.cifar.cnn_files import training_file
+
 
 batch_size = 32
 nb_classes = 10
@@ -52,17 +53,17 @@ Y_test = np_utils.to_categorical(y_test, nb_classes)
 
 model = Sequential()
 
-model.add(Convolution2D(32, 3, 3, border_mode='same',
+model.add(Conv2D(32, 3, 3, border_mode='same',
                         input_shape=X_train.shape[1:]))
 model.add(Activation('relu'))
-model.add(Convolution2D(32, 3, 3))
+model.add(Conv2D(32, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Convolution2D(64, 3, 3, border_mode='same'))
+model.add(Conv2D(64, 3, 3, border_mode='same'))
 model.add(Activation('relu'))
-model.add(Convolution2D(64, 3, 3))
+model.add(Conv2D(64, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))

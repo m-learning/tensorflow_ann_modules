@@ -28,7 +28,7 @@ from __future__ import print_function
 import warnings
 
 from keras import backend as K
-from keras.layers import Convolution2D, MaxPooling2D, AveragePooling2D
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
 from keras.layers import Flatten, Dense, Input, BatchNormalization, merge
 from keras.models import Model
 from keras.preprocessing import image
@@ -63,7 +63,7 @@ def conv2d_bn(x, nb_filter, nb_row, nb_col,
       bn_axis = 1
   else:
       bn_axis = 3
-  x = Convolution2D(nb_filter, nb_row, nb_col,
+  x = Conv2D(nb_filter, nb_row, nb_col,
                     subsample=subsample,
                     activation='relu',
                     border_mode=border_mode,
