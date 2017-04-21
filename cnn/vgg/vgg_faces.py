@@ -172,31 +172,31 @@ def VGGFace(include_top=True, weights='vggface',
   img_input = _get_image_input(include_top, input_tensor)
   # Determine proper input shape
   # Block 1
-  x = Conv2D(64, (3, 3), activation='relu', border_mode='same', name='conv1_1')(img_input)
-  x = Conv2D(64, (3, 3), activation='relu', border_mode='same', name='conv1_2')(x)
+  x = Conv2D(64, (3, 3), activation='relu', padding='same', name='conv1_1')(img_input)
+  x = Conv2D(64, (3, 3), activation='relu', padding='same', name='conv1_2')(x)
   x = MaxPooling2D((2, 2), strides=(2, 2), name='pool1')(x)
 
   # Block 2
-  x = Conv2D(128, (3, 3), activation='relu', border_mode='same', name='conv2_1')(x)
-  x = Conv2D(128, (3, 3), activation='relu', border_mode='same', name='conv2_2')(x)
+  x = Conv2D(128, (3, 3), activation='relu', padding='same', name='conv2_1')(x)
+  x = Conv2D(128, (3, 3), activation='relu', padding='same', name='conv2_2')(x)
   x = MaxPooling2D((2, 2), strides=(2, 2), name='pool2')(x)
 
   # Block 3
-  x = Conv2D(256, (3, 3), activation='relu', border_mode='same', name='conv3_1')(x)
-  x = Conv2D(256, (3, 3), activation='relu', border_mode='same', name='conv3_2')(x)
-  x = Conv2D(256, (3, 3), activation='relu', border_mode='same', name='conv3_3')(x)
+  x = Conv2D(256, (3, 3), activation='relu', padding='same', name='conv3_1')(x)
+  x = Conv2D(256, (3, 3), activation='relu', padding='same', name='conv3_2')(x)
+  x = Conv2D(256, (3, 3), activation='relu', padding='same', name='conv3_3')(x)
   x = MaxPooling2D((2, 2), strides=(2, 2), name='pool3')(x)
 
   # Block 4
-  x = Conv2D(512, (3, 3), activation='relu', border_mode='same', name='conv4_1')(x)
-  x = Conv2D(512, (3, 3), activation='relu', border_mode='same', name='conv4_2')(x)
-  x = Conv2D(512, (3, 3), activation='relu', border_mode='same', name='conv4_3')(x)
+  x = Conv2D(512, (3, 3), activation='relu', padding='same', name='conv4_1')(x)
+  x = Conv2D(512, (3, 3), activation='relu', padding='same', name='conv4_2')(x)
+  x = Conv2D(512, (3, 3), activation='relu', padding='same', name='conv4_3')(x)
   x = MaxPooling2D((2, 2), strides=(2, 2), name='pool4')(x)
 
   # Block 5
-  x = Conv2D(512, (3, 3), activation='relu', border_mode='same', name='conv5_1')(x)
-  x = Conv2D(512, (3, 3), activation='relu', border_mode='same', name='conv5_2')(x)
-  x = Conv2D(512, (3, 3), activation='relu', border_mode='same', name='conv5_3')(x)
+  x = Conv2D(512, (3, 3), activation='relu', padding='same', name='conv5_1')(x)
+  x = Conv2D(512, (3, 3), activation='relu', padding='same', name='conv5_2')(x)
+  x = Conv2D(512, (3, 3), activation='relu', padding='same', name='conv5_3')(x)
   x = MaxPooling2D((2, 2), strides=(2, 2), name='pool5')(x)
 
   if include_top:
