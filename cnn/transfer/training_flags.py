@@ -23,19 +23,19 @@ BOTTLENECK_DIR = 'bottleneck'
 LOSSES = 'losses'
 
 # Keep probability for "dropout" layers
-keep_prob = 0.5
+keep_prob = 0.45
 
 # L2 regularization weight decay
 weight_decay = 0.00004
 
 # Details of the training configuration.
 how_many_training_steps = 25000  # How many training steps to run before ending
-learning_rate = 0.01  # How large a learning rate to use when training
-testing_percentage = 10  # What percentage of images to use as a test set
-validation_percentage = 10  # What percentage of images to use as a validation set
+learning_rate = 0.008  # How large a learning rate to use when training
+testing_percentage = 15  # What percentage of images to use as a test set
+validation_percentage = 15  # What percentage of images to use as a validation set
 eval_step_interval = 10  # How often to evaluate the training results
-train_batch_size = 100  # How many images to train on at a time
-test_batch_size = 500  # How many images to test on at a time. This
+train_batch_size = 512  # How many images to train on at a time
+test_batch_size = 512  # How many images to test on at a time. This
                             # test set is only used infrequently to verify
 # the overall accuracy of the model.
 validation_batch_size = 100
