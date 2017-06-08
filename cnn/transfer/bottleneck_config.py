@@ -315,18 +315,23 @@ def get_random_distorted_bottlenecks(bottleneck_params):
     image_path = dataset.get_image_path(path_parameters)
     if not gfile.Exists(image_path):
       tf.logging.fatal('File does not exist %s', image_path)
-    jpeg_data = gfile.FastGFile(image_path, 'rb').read()
-    # Note that we materialize the distorted_image_data as a numpy array before
-    # sending running inference on the image. This involves 2 memory copies and
-    # might be optimized in other implementations.
-    distorted_image_data = sess.run(distorted_image,
-                                    {input_jpeg_tensor: jpeg_data})
-    bottleneck_params = (sess, distorted_image_data,
-                         resized_input_tensor, bottleneck_tensor)
-    bottleneck = run_bottleneck_on_image(bottleneck_params)
-    ground_truth = np.zeros(class_count, dtype=np.float32)
-    ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
-    bottlenecks.append(bottleneck)
-    ground_truths.append(ground_truth)
+    else:
+      try:
+        jpeg_data = gfile.FastGFile(image_path, 'rb').read()
+        # Note that we materialize the distorted_image_data as a numpy array before
+        # sending running inference on the image. This involves 2 memory copies and
+        # might be optimized in other implementations.
+        distorted_image_data = sess.run(distorted_image,
+                                        {input_jpeg_tensor: jpeg_data})
+        bottleneck_params = (sess, distorted_image_data,
+                             resized_input_tensor, bottleneck_tensor)
+        bottleneck = run_bottleneck_on_image(bottleneck_params)
+        ground_truth = np.zeros(class_count, dtype=np.float32)
+        ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
+        bottlenecks.append(bottleneck)
+        ground_truths.append(ground_truth)
+      except:
+        tf.logging.fatal('Could not process file %s', image_path)
+        traceback.print_exc()
   
   return (bottlenecks, ground_truths)

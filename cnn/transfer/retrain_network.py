@@ -298,6 +298,8 @@ def retrain_net(tr_file):
   """Retrains Inception on different data set
     Args:
       tr_file - utility object to manage files
+    Returns:
+      result_code - result code of training
   """
   # Prepares training parameters
   prepared_parameters = prepare_parameters(tr_file)
