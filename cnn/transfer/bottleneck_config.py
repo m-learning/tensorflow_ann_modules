@@ -42,6 +42,19 @@ def run_bottleneck_on_image(bottleneck_params):
   
   return bottleneck_values
 
+def _read_bottleneck_values(bottleneck_path):
+  """Reads values from bottleneck path
+    Args:
+      bottleneck_path - path to bottleneck file
+    Returns:
+      bottleneck_values - values from bottleneck file
+  """
+  with open(bottleneck_path, 'r') as bottleneck_file:
+    bottleneck_string = bottleneck_file.read()
+  bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+  
+  return bottleneck_values
+
 def get_or_create_bottleneck_and_path(create_params):
   """Retrieves or calculates bottleneck values for an image.
 
@@ -88,6 +101,7 @@ def get_or_create_bottleneck_and_path(create_params):
     try:
       if not gfile.Exists(image_path):
         tf.logging.fatal('File does not exist %s', image_path)
+        (bottleneck_values, bottleneck_path) = (None, None)
       else:
         image_data = gfile.FastGFile(image_path, 'rb').read()
         bottleneck_params = (sess, image_data, jpeg_data_tensor, bottleneck_tensor)
@@ -95,15 +109,15 @@ def get_or_create_bottleneck_and_path(create_params):
         bottleneck_string = ','.join(str(x) for x in bottleneck_values)
         with open(bottleneck_path, 'w') as bottleneck_file:
           bottleneck_file.write(bottleneck_string)
-
-      with open(bottleneck_path, 'r') as bottleneck_file:
-        bottleneck_string = bottleneck_file.read()
-      bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+        # Creating bottleneck values
+        bottleneck_values = _read_bottleneck_values(bottleneck_path)
     except:
       print('Not valid image ', image_path)
       traceback.print_exc()
       file_utils.remove_file(image_path)
       (bottleneck_values, bottleneck_path) = (None, None)
+  else:
+    bottleneck_values = _read_bottleneck_values(bottleneck_path)
   
   return (bottleneck_values, bottleneck_path)
   
