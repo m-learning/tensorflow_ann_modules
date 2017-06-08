@@ -5,7 +5,6 @@ Configures bottleneck cache for training
 
 @author: Levan Tsinadze
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -217,10 +216,11 @@ def get_random_cached_bottlenecks(bottleneck_params):
                  image_dir, category, bottleneck_dir,
                  jpeg_data_tensor, bottleneck_tensor, None)
     bottleneck = get_or_create_bottleneck(create_params)
-    ground_truth = np.zeros(class_count, dtype=np.float32)
-    ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
-    bottlenecks.append(bottleneck)
-    ground_truths.append(ground_truth)
+    if bottleneck is not None:
+      ground_truth = np.zeros(class_count, dtype=np.float32)
+      ground_truth[label_index] = conts.GROUND_TRUTH_VALUE
+      bottlenecks.append(bottleneck)
+      ground_truths.append(ground_truth)
     
   return (bottlenecks, ground_truths)
 
