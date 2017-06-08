@@ -31,14 +31,14 @@ weight_decay = 0.00004
 # Details of the training configuration.
 how_many_training_steps = 25000  # How many training steps to run before ending
 learning_rate = 0.008  # How large a learning rate to use when training
-testing_percentage = 15  # What percentage of images to use as a test set
-validation_percentage = 15  # What percentage of images to use as a validation set
-eval_step_interval = 10  # How often to evaluate the training results
+testing_percentage = 20  # What percentage of images to use as a test set
+validation_percentage = 20  # What percentage of images to use as a validation set
+eval_step_interval = 100  # How often to evaluate the training results
 train_batch_size = 512  # How many images to train on at a time
 test_batch_size = 512  # How many images to test on at a time. This
                             # test set is only used infrequently to verify
 # the overall accuracy of the model.
-validation_batch_size = 100
+validation_batch_size = 512
     # How many images to use in an evaluation batch. This validation set is
     # used much more often than the test set, and is an early indicator of
     # how accurate the model is during training

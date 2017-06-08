@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import os
 import random
+import traceback
 
 from tensorflow.python.platform import gfile
 
@@ -87,19 +88,22 @@ def get_or_create_bottleneck_and_path(create_params):
     try:
       if not gfile.Exists(image_path):
         tf.logging.fatal('File does not exist %s', image_path)
-      image_data = gfile.FastGFile(image_path, 'rb').read()
-      bottleneck_params = (sess, image_data, jpeg_data_tensor, bottleneck_tensor)
-      bottleneck_values = run_bottleneck_on_image(bottleneck_params)
-      bottleneck_string = ','.join(str(x) for x in bottleneck_values)
-      with open(bottleneck_path, 'w') as bottleneck_file:
-        bottleneck_file.write(bottleneck_string)
+      else:
+        image_data = gfile.FastGFile(image_path, 'rb').read()
+        bottleneck_params = (sess, image_data, jpeg_data_tensor, bottleneck_tensor)
+        bottleneck_values = run_bottleneck_on_image(bottleneck_params)
+        bottleneck_string = ','.join(str(x) for x in bottleneck_values)
+        with open(bottleneck_path, 'w') as bottleneck_file:
+          bottleneck_file.write(bottleneck_string)
+
+      with open(bottleneck_path, 'r') as bottleneck_file:
+        bottleneck_string = bottleneck_file.read()
+      bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
     except:
       print('Not valid image ', image_path)
-      raise
-
-  with open(bottleneck_path, 'r') as bottleneck_file:
-    bottleneck_string = bottleneck_file.read()
-  bottleneck_values = [float(x) for x in bottleneck_string.split(',')]
+      traceback.print_exc()
+      file_utils.remove_file(image_path)
+      (bottleneck_values, bottleneck_path) = (None, None)
   
   return (bottleneck_values, bottleneck_path)
   

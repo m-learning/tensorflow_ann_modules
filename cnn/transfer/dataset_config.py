@@ -14,6 +14,7 @@ import os.path
 import re
 import sys
 import tarfile
+
 from tensorflow.python.platform import gfile
 
 import cnn.transfer.training_flags as flags

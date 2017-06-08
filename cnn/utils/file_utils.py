@@ -12,6 +12,7 @@ from __future__ import print_function
 import argparse
 import glob
 import os
+import shutil
 import types
 
 
@@ -71,6 +72,20 @@ def ensure_dir_exists(dir_name):
   """
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)
+    
+def remove_file(_file_path, recursive=True):
+  """Removes file or directory from file system
+    Args:
+      _file_path - path to file to remove
+      recursive - remove directory contents recursively or not
+  """
+  
+  if file_exists(_file_path):
+    if os.path.isdir(_file_path):
+      shutil.rmtree(_file_path) if recursive else os.rmdir(_file_path)
+    else:
+      os.remove(_file_path)
+    
 
 class files_and_path_utils(object):
   """Utility class for files and directories"""
