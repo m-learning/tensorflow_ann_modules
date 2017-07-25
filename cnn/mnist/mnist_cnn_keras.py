@@ -37,12 +37,12 @@ epochs = 12
 
 # input image dimensions
 img_rows, img_cols = 28, 28
-# number of convolutional filters to use
+# number of filters to use
 first_conv_filters = 32
 second_conv_filters = 64
 # size of pooling area for max pooling
 pool_size = (2, 2)
-# convolution kernel size
+# kernel size
 kernel_size = (3, 3)
 
 WEIGHTS_FILE = 'keras_weights.h5'

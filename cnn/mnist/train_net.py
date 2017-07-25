@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
+
 from tensorflow.examples.tutorials.mnist import input_data
 
 from cnn.mnist import network_parameters as pr

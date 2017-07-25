@@ -7,8 +7,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import cv2
 import math
+
+import cv2
 from scipy import ndimage
 
 import numpy as np
