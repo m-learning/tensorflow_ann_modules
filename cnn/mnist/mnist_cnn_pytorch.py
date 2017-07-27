@@ -182,6 +182,10 @@ def parse_args():
                       action='store_true',
                       default=False,
                       help='disables CUDA training')
+  parser.add_argument('--cuda',
+                      action='store_false',
+                      default=False,
+                      help='disables CUDA training')
   parser.add_argument('--seed',
                       type=int,
                       default=1,
