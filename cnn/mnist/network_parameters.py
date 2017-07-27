@@ -1,7 +1,7 @@
 """
 Created on Jun 18, 2016
 
-Weights and biases for network
+Weights and biases for network model
 
 @author: Levan Tsinadze
 """

@@ -58,6 +58,8 @@ def init_network(flags):
   model = Net()
   if flags.cuda:
     model.cuda()
+  
+  return model
 
 def init_optimizer(flags, model):
   """Initializes model optimizer
