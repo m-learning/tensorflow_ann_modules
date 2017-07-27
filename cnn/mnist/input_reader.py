@@ -26,8 +26,9 @@ def getBestShift(img):
     Args:
       img - image
     Returns:
-      shiftx - shift by x
-      shifty - shift by y
+      tuple of -
+        shiftx - shift by x
+        shifty - shift by y
   """
     
   cy, cx = ndimage.measurements.center_of_mass(img)
