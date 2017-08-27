@@ -9,6 +9,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from keras import backend as K
 from keras.layers import (Input, Conv2D, MaxPool2D, \
                           Activation, Flatten, Dense, \
                           BatchNormalization, Dropout)
@@ -23,6 +24,22 @@ SOFTMAX = 'softmax'
 KERNEL_SIZE = (3, 3)
 POOL_SIZE = (2, 2)
 POOL_STRIDE = (2, 2)
+
+def init_input_shape(flags):
+  """Initializes network input shape
+    Args:
+      flags - configuration parameters
+    Returns:
+      input_shape - input shape for network model
+  """
+  
+  (img_rows, img_cols) = (flags.image_width, flags.image_height)
+  if K.image_data_format() == 'channels_first':
+    input_shape = (1, flags.img_rows, img_cols)
+  else:
+    input_shape = (img_rows, img_cols, 1)
+  
+  return input_shape
 
 def _add_dropout(keep_prob, net, is_training):
   """Adds dropout layer to model
@@ -67,8 +84,8 @@ def init_model(input_shape, num_classes, is_training=False):
   net = Activation(RELU)(net)
   net = _add_dropout(0.5, net, is_training)
   logits = Dense(num_classes)(net)
-  prediction = Activation(SOFTMAX)(logits)
-  model = Model(inputs=input_image, outputs=prediction)
+  predictions = Activation(SOFTMAX)(logits)
+  model = Model(inputs=input_image, outputs=predictions)
   
   return model
 
